@@ -42,7 +42,7 @@ import java.util.*;
  * enable a lot of game variants. This is also
  * why it is not called 'AlphaGame'.
  */
-
+// endnu en kommentar
 public class StandardHotStoneGame implements Game {
   private int turnNumber = 1;
   private StandardHero findusHero;
