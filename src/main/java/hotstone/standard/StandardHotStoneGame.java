@@ -174,9 +174,14 @@ public class StandardHotStoneGame implements Game {
   }
 
   private void drawCard(Player who, int amount) {
-    for (int i = 0; i < amount; i++) {
-      Card card = getDeckObject(who).draw();
-      getHandObject(who).add(card);
+    if(getDeckObject(who).getSize() > 0){
+      for (int i = 0; i < amount; i++) {
+        Card card = getDeckObject(who).draw();
+        getHandObject(who).add(card);
+      }
+    } else {
+      StandardHero hero = (StandardHero) getHero(who);
+      hero.decreaseHealth(2);
     }
   }
 

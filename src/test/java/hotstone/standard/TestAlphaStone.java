@@ -427,6 +427,30 @@ public class TestAlphaStone {
     assertThat(status, is(Status.OK));
   }
 
+  @Test
+  public void FindusLosesTwoHealthWhenDrawWithEmptyDeck(){
+    // When 4 rounds have passed
+    game.endTurn();
+    game.endTurn();
+    game.endTurn();
+    game.endTurn();
+    game.endTurn();
+    game.endTurn();
+    game.endTurn();
+    game.endTurn();
+    // Then Findus's deck is empty
+    int deckSize = game.getDeckSize(Player.FINDUS);
+    assertThat(deckSize, is(0));
+    // When another round passes and Findus draws another card
+    int healthBefore = game.getHero(Player.FINDUS).getHealth();
+    game.endTurn();
+    game.endTurn();
+    // Then Findus loses two health
+    int healthAfter = game.getHero(Player.FINDUS).getHealth();
+    assertThat(healthBefore - healthAfter, is(2));
+
+  }
+
   /** REMOVE ME. Not a test of HotStone, just an example of the
    matchers that the hamcrest library has... */
 

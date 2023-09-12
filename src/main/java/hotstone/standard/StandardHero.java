@@ -1,5 +1,6 @@
 package hotstone.standard;
 
+import hotstone.framework.Game;
 import hotstone.framework.Hero;
 import hotstone.framework.Player;
 
@@ -7,10 +8,12 @@ public class StandardHero implements Hero {
 
     private boolean powerStatus;
     private int mana;
+    private int health;
 
     public StandardHero(){
         powerStatus = true;
         mana = 3;
+        health = GameConstants.HERO_MAX_HEALTH;
     }
     @Override
     public int getMana() {
@@ -19,8 +22,7 @@ public class StandardHero implements Hero {
 
     @Override
     public int getHealth() {
-        //fake it
-        return GameConstants.HERO_MAX_HEALTH;
+        return health;
     }
 
     @Override
@@ -49,4 +51,6 @@ public class StandardHero implements Hero {
     public void setMana(int amount) {
         mana = amount;
     }
+
+    public void decreaseHealth(int amount) { health -= amount; }
 }
