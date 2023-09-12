@@ -409,6 +409,15 @@ public class TestAlphaStone {
     assertThat(status, is(Status.OK));
   }
 
+  @Test
+  public void CannotUseHeroPowerIfNotEnoughMana(){
+    // Given a game
+    // When Findus plays dos and uses 2 mana
+    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 1));
+    // The Findus should not be allowed to use hero power
+    Status status = game.usePower(Player.FINDUS);
+    assertThat(status, is(Status.NOT_ENOUGH_MANA));
+  }
 
 
   /** REMOVE ME. Not a test of HotStone, just an example of the

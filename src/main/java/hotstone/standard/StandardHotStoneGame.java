@@ -206,15 +206,18 @@ public class StandardHotStoneGame implements Game {
   @Override
   public Status usePower(Player who) {
     // Control that the player can use its hero power
-    if (getHero(who).canUsePower()) {
+    if (!getHero(who).canUsePower()){
+      return Status.POWER_USE_NOT_ALLOWED_TWICE_PR_ROUND;
+    }else if(getHero(who).getMana() < 2) {
+      return Status.NOT_ENOUGH_MANA;
+    } else {
       StandardHero hero = (StandardHero) getHero(who);
       hero.setPowerStatus(false);
       hero.decreaseMana(2);
       return Status.OK;
-    } else {
-      return null;
     }
-  }
+    }
+
 
   public StandardField getFieldObject(Player who) {
     if (who == Player.FINDUS) {
