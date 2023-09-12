@@ -414,11 +414,18 @@ public class TestAlphaStone {
     // Given a game
     // When Findus plays dos and uses 2 mana
     game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 1));
-    // The Findus should not be allowed to use hero power
+    // Then Findus should not be allowed to use hero power
     Status status = game.usePower(Player.FINDUS);
     assertThat(status, is(Status.NOT_ENOUGH_MANA));
   }
 
+  @Test
+  public void CanUseHeroPowerIfEnoughMana(){
+    // Given a game
+    // Then Findus should be allowed to use hero power
+    Status status = game.usePower(Player.FINDUS);
+    assertThat(status, is(Status.OK));
+  }
 
   /** REMOVE ME. Not a test of HotStone, just an example of the
    matchers that the hamcrest library has... */
