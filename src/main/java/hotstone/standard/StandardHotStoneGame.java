@@ -127,7 +127,7 @@ public class StandardHotStoneGame implements Game {
 
   @Override
   public Card getCardInField(Player who, int indexInField) {
-    ArrayList<Card> field = (ArrayList<Card>) getField(Player.FINDUS);
+    ArrayList<Card> field = (ArrayList<Card>) getField(who);
     return field.get(indexInField);
   }
 
@@ -222,7 +222,11 @@ public class StandardHotStoneGame implements Game {
       // If active attack and set inactive
       StandardCard card = (StandardCard) attackingCard;
       card.setStatus(false);
-      StandardHero hero = (StandardHero) getHero(Player.PEDDERSEN);
+      // Get defending player
+      Player playerDefending;
+      if(playerAttacking==Player.FINDUS){playerDefending = Player.PEDDERSEN;}
+      else{playerDefending = Player.FINDUS;}
+      StandardHero hero = (StandardHero) getHero(playerDefending);
       hero.decreaseHealth(card.getAttack());
       return Status.OK;
     }

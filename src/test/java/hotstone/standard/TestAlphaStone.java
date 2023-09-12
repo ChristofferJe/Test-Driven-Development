@@ -549,8 +549,21 @@ public class TestAlphaStone {
     game.endTurn();
     game.endTurn();
     game.attackHero(Player.FINDUS, game.getCardInField(Player.FINDUS, 0));
-    // Then Peddersen's hero should have 20 health
+    // Then Peddersen's hero should have 19 health
     assertThat(game.getHero(Player.PEDDERSEN).getHealth(), is(19));
+  }
+
+  @Test
+  public void FindusHeroShouldHave19HealtAfterAttackFromDos(){
+    // Given a game, Peddersen plays Dos
+    game.endTurn();
+    game.playCard(Player.PEDDERSEN, game.getCardInHand(Player.PEDDERSEN, 1));
+    // When it is Peddersen's turn again and Uno attacks Findus' hero
+    game.endTurn();
+    game.endTurn();
+    game.attackHero(Player.PEDDERSEN, game.getCardInField(Player.PEDDERSEN, 0));
+    // Then Findus' hero should have 19 health
+    assertThat(game.getHero(Player.FINDUS).getHealth(), is(19));
   }
 
   public void shouldDefinitelyBeRemoved() {
