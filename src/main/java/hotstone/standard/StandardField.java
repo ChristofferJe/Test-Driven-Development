@@ -14,7 +14,7 @@ public class StandardField implements Field {
     }
     @Override
     public int getSize() {
-        return 0;
+        return field.size();
     }
 
     public void add(Card card) {

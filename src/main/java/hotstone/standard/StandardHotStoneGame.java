@@ -139,7 +139,7 @@ public class StandardHotStoneGame implements Game {
 
   @Override
   public int getFieldSize(Player who) {
-    return 0;
+    return getFieldObject(who).getSize();
   }
 
   @Override
@@ -200,7 +200,16 @@ public class StandardHotStoneGame implements Game {
 
   @Override
   public Status attackCard(Player playerAttacking, Card attackingCard, Card defendingCard) {
-    return null;
+    // Check if card is active
+    if(!attackingCard.isActive()) {
+      // If inactive return appropriate status
+      return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
+    } else {
+      // If active attack and set inactive
+      StandardCard card = (StandardCard) attackingCard;
+      card.setStatus(false);
+      return Status.OK;
+    }
   }
 
   @Override

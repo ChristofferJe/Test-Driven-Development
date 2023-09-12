@@ -451,6 +451,59 @@ public class TestAlphaStone {
 
   }
 
+  @Test
+  public void FieldSizeShouldIncreaseByOne(){
+    // Given a game, Findus have a field size of zero
+    int fieldSize = game.getFieldSize(Player.FINDUS);
+    assertThat(fieldSize, is(0));
+    // When Findus play card Tres
+    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 0));
+    // Then Findus's field size is one
+    fieldSize = game.getFieldSize(Player.FINDUS);
+    assertThat(fieldSize, is(1));
+  }
+
+  @Test
+  public void UnoOwnedByFindusCanAttackDosOwnedByPeddersen(){
+    // Given a game, Findus plays Uno
+    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    // When Findus ends its turn and Peddersen plays dos
+    game.endTurn();
+    game.playCard(Player.PEDDERSEN, game.getCardInHand(Player.PEDDERSEN, 1));
+    // Then Findus should be able to attack dos with uno in his turn
+    game.endTurn();
+    Status status = game.attackCard(Player.FINDUS, game.getCardInField(Player.FINDUS,0), game.getCardInField(Player.PEDDERSEN,0));
+    assertThat(status, is(Status.OK));
+  }
+
+  @Test
+  public void DosOwnedByPeddersenCannotAttackWhenInactive(){
+    // Given a game, Findus plays Uno
+    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    // When Findus ends its turn and Peddersen plays dos
+    game.endTurn();
+    game.playCard(Player.PEDDERSEN, game.getCardInHand(Player.PEDDERSEN, 1));
+    // Then Peddersen isn't allowed to attack with the inactive dos card
+    Status status = game.attackCard(Player.PEDDERSEN, game.getCardInField(Player.PEDDERSEN,0), game.getCardInField(Player.FINDUS,0));
+    assertThat(status, is(Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION));
+  }
+
+  @Test
+  public void UnoBecomesInactiveAfterAttack(){
+    // Given a game, Findus plays Uno
+    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    // When Findus ends its turn and Peddersen plays dos
+    game.endTurn();
+    game.playCard(Player.PEDDERSEN, game.getCardInHand(Player.PEDDERSEN, 1));
+    // When Findus attacks dos with uno in his turn
+    game.endTurn();
+    Status status = game.attackCard(Player.FINDUS, game.getCardInField(Player.FINDUS,0), game.getCardInField(Player.PEDDERSEN,0));
+    assertThat(status, is(Status.OK));
+    // Then uno becomes inactive
+    assertThat(game.getCardInField(Player.FINDUS,0).isActive(), is(false));
+
+  }
+
   /** REMOVE ME. Not a test of HotStone, just an example of the
    matchers that the hamcrest library has... */
 
