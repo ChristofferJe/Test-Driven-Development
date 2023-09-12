@@ -529,6 +529,30 @@ public class TestAlphaStone {
   /** REMOVE ME. Not a test of HotStone, just an example of the
    matchers that the hamcrest library has... */
 
+  @Test
+  public void PeddersenHeroShouldHave20HealtAfterAttackFromUno(){
+    // Given a game, Findus plays Uno
+    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    // When it is Findus' turn again and Uno attacks Peddersen's hero
+    game.endTurn();
+    game.endTurn();
+    game.attackHero(Player.FINDUS, game.getCardInField(Player.FINDUS, 0));
+    // Then Peddersen's hero should have 20 health
+    assertThat(game.getHero(Player.PEDDERSEN).getHealth(), is(20));
+  }
+
+  @Test
+  public void PeddersenHeroShouldHave19HealtAfterAttackFromDos(){
+    // Given a game, Findus plays Dos
+    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 1));
+    // When it is Findus' turn again and Uno attacks Peddersen's hero
+    game.endTurn();
+    game.endTurn();
+    game.attackHero(Player.FINDUS, game.getCardInField(Player.FINDUS, 0));
+    // Then Peddersen's hero should have 20 health
+    assertThat(game.getHero(Player.PEDDERSEN).getHealth(), is(19));
+  }
+
   public void shouldDefinitelyBeRemoved() {
     // Matching null and not null values
     // 'is' require an exact match

@@ -222,6 +222,8 @@ public class StandardHotStoneGame implements Game {
       // If active attack and set inactive
       StandardCard card = (StandardCard) attackingCard;
       card.setStatus(false);
+      StandardHero hero = (StandardHero) getHero(Player.PEDDERSEN);
+      hero.decreaseHealth(card.getAttack());
       return Status.OK;
     }
   }
