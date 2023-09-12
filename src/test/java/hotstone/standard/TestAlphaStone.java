@@ -501,7 +501,29 @@ public class TestAlphaStone {
     assertThat(status, is(Status.OK));
     // Then uno becomes inactive
     assertThat(game.getCardInField(Player.FINDUS,0).isActive(), is(false));
+  }
 
+  @Test
+  public void UnoOwnedByFindusCanAttackPeddersenHero(){
+    // Given a game, Findus plays Uno
+    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    // When it is Findus' turn again
+    game.endTurn();
+    game.endTurn();
+    //Then Uno can attack Peddersen's hero
+    Status status = game.attackHero(Player.FINDUS, game.getCardInField(Player.FINDUS, 0));
+    assertThat(status, is(Status.OK));
+  }
+
+  @Test
+  public void UnoOwnedByFindusCannotAttackPeddersenHeroWhenInactive(){
+    // Given a game, Findus plays Uno
+    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    // When Uno is inactive
+    assertThat(game.getCardInField(Player.FINDUS,0).isActive(), is(false));
+    // Then Uno cannot attack Peddersen's hero
+    Status status = game.attackHero(Player.FINDUS, game.getCardInField(Player.FINDUS, 0));
+    assertThat(status, is(Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION));
   }
 
   /** REMOVE ME. Not a test of HotStone, just an example of the

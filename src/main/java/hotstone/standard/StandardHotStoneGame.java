@@ -214,7 +214,16 @@ public class StandardHotStoneGame implements Game {
 
   @Override
   public Status attackHero(Player playerAttacking, Card attackingCard) {
-    return null;
+    // Check if card is active
+    if(!attackingCard.isActive()) {
+      // If inactive return appropriate status
+      return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
+    } else {
+      // If active attack and set inactive
+      StandardCard card = (StandardCard) attackingCard;
+      card.setStatus(false);
+      return Status.OK;
+    }
   }
 
   @Override
