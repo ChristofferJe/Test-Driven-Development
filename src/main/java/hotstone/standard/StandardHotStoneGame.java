@@ -54,7 +54,7 @@ public class StandardHotStoneGame implements Game {
   private StandardField findusField;
   private StandardField peddersenField;
 
-  public StandardHotStoneGame(){
+  public StandardHotStoneGame() {
     findusHero = new StandardHero();
     findusDeck = new StandardDeck();
     findusHand = new StandardHand();
@@ -64,30 +64,32 @@ public class StandardHotStoneGame implements Game {
     findusField = new StandardField();
     peddersenField = new StandardField();
     drawCard(Player.FINDUS, 3);
-    drawCard(Player.PEDDERSEN,3);
+    drawCard(Player.PEDDERSEN, 3);
 
   }
+
   @Override
   public Player getPlayerInTurn() {
-    if(turnNumber % 2 == 1){
+    if (turnNumber % 2 == 1) {
       return Player.FINDUS;
     } else {
-      return  Player.PEDDERSEN;
+      return Player.PEDDERSEN;
     }
   }
 
   @Override
   public Hero getHero(Player who) {
-    if(who == Player.FINDUS){
+    if (who == Player.FINDUS) {
       return findusHero;
-    }else{
+    } else {
       return peddersenHero;
     }
   }
 
+
   @Override
   public Player getWinner() {
-    if(getTurnNumber() > 8){
+    if (getTurnNumber() > 8) {
       return Player.FINDUS;
     } else {
       return null;
@@ -101,12 +103,9 @@ public class StandardHotStoneGame implements Game {
 
   @Override
   public int getDeckSize(Player who) {
-    if(who == Player.FINDUS){
-      return findusDeck.getSize();
-    }else{
-      return peddersenDeck.getSize();
-    }
+    return getDeckObject(who).getSize();
   }
+
 
   @Override
   public Card getCardInHand(Player who, int indexInHand) {
@@ -115,26 +114,16 @@ public class StandardHotStoneGame implements Game {
   }
 
 
-
   @Override
   public Iterable<? extends Card> getHand(Player who) {
-    if(who == Player.FINDUS){
-      return findusHand.getHand();
-    }else{
-      return peddersenHand.getHand();
-    }
-
+    return getHandObject(who).getHand();
   }
 
   @Override
   public int getHandSize(Player who) {
-    if(who == Player.FINDUS){
-      return findusHand.getSize();
-    }else{
-      return peddersenHand.getSize();
-    }
-
+    return getHandObject(who).getSize();
   }
+
 
   @Override
   public Card getCardInField(Player who, int indexInField) {
@@ -144,12 +133,9 @@ public class StandardHotStoneGame implements Game {
 
   @Override
   public Iterable<? extends Card> getField(Player who) {
-    if(who == Player.FINDUS){
-      return findusField.getField();
-    }else{
-      return peddersenField.getField();
-    }
+    return getFieldObject(who).getField();
   }
+
 
   @Override
   public int getFieldSize(Player who) {
@@ -167,9 +153,9 @@ public class StandardHotStoneGame implements Game {
     hero.setMana(3);
 
     // Draw card and activate minions for the player who is now in turn
-    if (player == Player.FINDUS){
+    if (player == Player.FINDUS) {
       // Draw card
-      drawCard(Player.PEDDERSEN,1);
+      drawCard(Player.PEDDERSEN, 1);
       // Set active
       ArrayList<StandardCard> field = (ArrayList<StandardCard>) getField(Player.PEDDERSEN);
       for (StandardCard c : field) {
@@ -184,34 +170,25 @@ public class StandardHotStoneGame implements Game {
         c.setStatus(true);
       }
     }
-    turnNumber +=1;
+    turnNumber += 1;
   }
 
-  private void drawCard(Player who,int amount) {
-    if(who == Player.FINDUS) {
-      for(int i=0; i < amount; i++){
-        Card card = findusDeck.draw();
-        findusHand.add(card);
-      }
-    } else{
-      for(int i=0; i < amount; i++){
-        Card card = peddersenDeck.draw();
-        peddersenHand.add(card);
-      }
+  private void drawCard(Player who, int amount) {
+    for (int i = 0; i < amount; i++) {
+      Card card = getDeckObject(who).draw();
+      getHandObject(who).add(card);
     }
   }
 
   @Override
   public Status playCard(Player who, Card card) {
-    if (who == Player.FINDUS) {
-      findusField.add(card);
-      findusHand.remove(card);
-      findusHero.decreaseMana(card.getManaCost());
-      return Status.OK;
-    } else {
-      peddersenField.add(card);
-      peddersenHand.remove(card);
-      peddersenHero.decreaseMana(card.getManaCost());
+    if (getHero(who).getMana() < card.getManaCost()) {
+      return Status.NOT_ENOUGH_MANA;
+    } else{
+      getFieldObject(who).add(card);
+      getHandObject(who).remove(card);
+      StandardHero hero = (StandardHero) getHero(who);
+      hero.decreaseMana(card.getManaCost());
       return Status.OK;
     }
   }
@@ -229,15 +206,37 @@ public class StandardHotStoneGame implements Game {
   @Override
   public Status usePower(Player who) {
     // Control that the player can use its hero power
-    if(getHero(who).canUsePower()){
-       StandardHero hero = (StandardHero) getHero(who);
-       hero.setPowerStatus(false);
-       hero.decreaseMana(2);
-       return Status.OK;
-    } else{
-       return null;
+    if (getHero(who).canUsePower()) {
+      StandardHero hero = (StandardHero) getHero(who);
+      hero.setPowerStatus(false);
+      hero.decreaseMana(2);
+      return Status.OK;
+    } else {
+      return null;
     }
+  }
 
+  public StandardField getFieldObject(Player who) {
+    if (who == Player.FINDUS) {
+      return findusField;
+    } else {
+      return peddersenField;
+    }
+  }
 
+  public StandardHand getHandObject(Player who) {
+    if (who == Player.FINDUS) {
+      return findusHand;
+    } else {
+      return peddersenHand;
+    }
+  }
+
+  public StandardDeck getDeckObject(Player who) {
+    if (who == Player.FINDUS) {
+      return findusDeck;
+    } else {
+      return peddersenDeck;
+    }
   }
 }

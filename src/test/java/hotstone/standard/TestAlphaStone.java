@@ -30,9 +30,7 @@ package hotstone.standard;
  *      Aarhus University
  */
 
-import hotstone.framework.Card;
-import hotstone.framework.Hero;
-import hotstone.framework.Player;
+import hotstone.framework.*;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -40,8 +38,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-
-import hotstone.framework.Game;
 
 /** Template for your own ongoing TDD process.
  * Fill it out until you have covered all
@@ -392,11 +388,32 @@ public class TestAlphaStone {
   }
 
 
+  @Test
+  public void FindusCannotPlayTresIfNotEnoughMana(){
+    // Given a game
+    // Findus plays card uno
+    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    // Then Findus mana is 2
+    assertThat(game.getHero(Player.FINDUS).getMana(),is(2));
+    // Then Findus should not be allowed to play card tres:
+    Status status = game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 0));
+    assertThat(status, is(Status.NOT_ENOUGH_MANA));
+  }
+
+  @Test
+  public void FindusCanPlayTresIfEnoughMana(){
+    // Given a game
+    // When Findus plays card tres
+    Status status = game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 0));
+    // Then it is allowed:
+    assertThat(status, is(Status.OK));
+  }
+
 
 
   /** REMOVE ME. Not a test of HotStone, just an example of the
    matchers that the hamcrest library has... */
-  @Test
+
   public void shouldDefinitelyBeRemoved() {
     // Matching null and not null values
     // 'is' require an exact match
