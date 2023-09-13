@@ -239,7 +239,6 @@ public class TestAlphaStone {
     card = game.getCardInHand(Player.FINDUS, 2);
     // Then is it Uno
     assertThat(card.getName(), is(GameConstants.UNO_CARD));
-
   }
 
   @Test
@@ -555,9 +554,11 @@ public class TestAlphaStone {
 
   @Test
   public void FindusHeroShouldHave19HealtAfterAttackFromDos(){
-    // Given a game, Peddersen plays Dos
+    // Given a game, Peddersen plays Dos at index 2 after drawing a card
     game.endTurn();
-    game.playCard(Player.PEDDERSEN, game.getCardInHand(Player.PEDDERSEN, 1));
+    Card card = game.getCardInHand(Player.PEDDERSEN, 2);
+    assertThat(card.getName(), is(GameConstants.DOS_CARD));
+    game.playCard(Player.PEDDERSEN, card);
     // When it is Peddersen's turn again and Uno attacks Findus' hero
     game.endTurn();
     game.endTurn();
