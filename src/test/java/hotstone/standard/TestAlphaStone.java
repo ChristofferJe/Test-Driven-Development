@@ -464,15 +464,18 @@ public class TestAlphaStone {
   }
 
   @Test
-  public void UnoOwnedByFindusCanAttackDosOwnedByPeddersen(){
+  public void UnoOwnedByFindusCanAttackDosOwnedByPeddersenWhenActive(){
     // Given a game, Findus plays Uno
-    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
     // When Findus ends its turn and Peddersen plays dos
     game.endTurn();
-    game.playCard(Player.PEDDERSEN, game.getCardInHand(Player.PEDDERSEN, 1));
+    Card dos = game.getCardInHand(Player.PEDDERSEN, 1);
+    game.playCard(Player.PEDDERSEN, dos);
     // Then Findus should be able to attack dos with uno in his turn
     game.endTurn();
-    Status status = game.attackCard(Player.FINDUS, game.getCardInField(Player.FINDUS,0), game.getCardInField(Player.PEDDERSEN,0));
+    assertThat(uno.isActive(), is(true));
+    Status status = game.attackCard(Player.FINDUS, uno, dos);
     assertThat(status, is(Status.OK));
   }
 
@@ -566,6 +569,24 @@ public class TestAlphaStone {
     game.attackHero(Player.PEDDERSEN, game.getCardInField(Player.PEDDERSEN, 0));
     // Then Findus' hero should have 19 health
     assertThat(game.getHero(Player.FINDUS).getHealth(), is(19));
+  }
+
+  @Test
+  public void WhenLessThanFourRoundsNoWinner(){
+    // Given a game, no winner should be declared
+    Player winner = game.getWinner();
+    assertThat(winner, is(nullValue()));
+    // When 7 turns have passed
+    game.endTurn();
+    game.endTurn();
+    game.endTurn();
+    game.endTurn();
+    game.endTurn();
+    game.endTurn();
+    game.endTurn();
+    // Then no winner should have been declared
+    winner = game.getWinner();
+    assertThat(winner, is(nullValue()));
   }
 
 }
