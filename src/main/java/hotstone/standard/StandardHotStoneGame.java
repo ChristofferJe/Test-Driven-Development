@@ -191,7 +191,12 @@ public class StandardHotStoneGame implements Game {
 
   @Override
   public Status playCard(Player who, Card card) {
-    if (getHero(who).getMana() < card.getManaCost()) {
+    // Check if player in turn
+    if(!(getPlayerInTurn() == who)){
+      return Status.NOT_PLAYER_IN_TURN;
+    }
+    // Check if enough mana
+    else if (getHero(who).getMana() < card.getManaCost()) {
       return Status.NOT_ENOUGH_MANA;
     } else{
       fieldMap.get(who).add(0, (StandardCard) card);

@@ -842,4 +842,23 @@ public class TestAlphaStone {
     assertThat(status, is(Status.ATTACK_NOT_ALLOWED_ON_OWN_MINION));
   }
 
+  @Test
+  public void PeddersenShouldNotBeAllowedToPlayCardWhenNotHisTurn(){
+    // Given game
+    // When Peddersen tries to play card tres and it is not his turn
+    Card tres = game.getCardInHand(Player.PEDDERSEN,0);
+    Status status = game.playCard(Player.PEDDERSEN, tres);
+    // THen it is not allowed
+    assertThat(status, is(Status.NOT_PLAYER_IN_TURN));
+  }
+  @Test
+  public void FindusShouldNotBeAllowedToPlayCardWhenNotHisTurn(){
+    // Given game when it is Pedersen turn
+    game.endTurn();
+    // When Findus tries to play card dos and it is not its turn
+    Card dos = game.getCardInHand(Player.FINDUS,1);
+    Status status = game.playCard(Player.FINDUS, dos);
+    // Then it is not allowed
+    assertThat(status, is(Status.NOT_PLAYER_IN_TURN));
+  }
 }
