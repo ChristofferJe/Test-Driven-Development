@@ -725,4 +725,90 @@ public class TestAlphaStone {
     // Then it should not be allowed
     assertThat(status, is(Status.NOT_OWNER));
   }
+  @Test
+  public void FindusCannotAttackHeroWithUnoInFieldOwnedByPeddersen(){
+    // Given a game
+    // When Findus ends its turn Peddersen plays uno and end his turn
+    game.endTurn();
+    Card uno = game.getCardInHand(Player.PEDDERSEN, 3);
+    game.playCard(Player.PEDDERSEN, uno);
+    game.endTurn();
+    // When Findus tries to attack Peddersen with uno
+    Status status = game.attackHero(Player.FINDUS, uno);
+    // Then it should not be allowed
+    assertThat(status, is(Status.NOT_OWNER));
+  }
+
+  @Test
+  public void PeddersenCannotAttackUnoWithDosBothOwnedByFindus(){
+    // Given a game where Findus plays uno and dos
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    Card dos = game.getCardInHand(Player.FINDUS, 1);
+    game.playCard(Player.FINDUS, uno);
+    game.playCard(Player.FINDUS, dos);
+    game.endTurn();
+    // When Peddersen tries to attack uno with dos
+    Status status = game.attackCard(Player.PEDDERSEN, dos, uno);
+    // Then this is not allowed
+    assertThat(status, is(Status.NOT_OWNER));
+  }
+
+  @Test
+  public void PeddersenShoulNotBeAllowedToAttackHeroWhenNotHisTurn(){
+    // Given a game
+    game.endTurn();
+    // When Peddersen plays card uno
+    Card uno = game.getCardInHand(Player.PEDDERSEN, 3);
+    game.playCard(Player.PEDDERSEN, uno);
+    game.endTurn();
+    // When Peddersen tries to attack a hero with uno and it isn't his turn
+    Status status = game.attackHero(Player.PEDDERSEN, uno);
+    // Then this shouldn't be allowed
+    assertThat(status, is(Status.NOT_PLAYER_IN_TURN));
+  }
+
+  @Test
+  public void FindusShoulNotBeAllowedToAttackHeroWhenNotHisTurn(){
+    // Given a game
+    // When Findus plays card dos
+    Card dos = game.getCardInHand(Player.FINDUS, 1);
+    game.playCard(Player.FINDUS, dos);
+    game.endTurn();
+    // When Findus tries to attack a hero with dos and it isn't his turn
+    Status status = game.attackHero(Player.FINDUS, dos);
+    // Then this shouldn't be allowed
+    assertThat(status, is(Status.NOT_PLAYER_IN_TURN));
+  }
+
+  @Test
+  public void FindusShoulNotBeAllowedToAttackMinionWhenNotItsTurn(){
+    // Given a game
+    // When Findus plays card uno
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
+    game.endTurn();
+    // When Peddersen plays card dos
+    Card dos = game.getCardInHand(Player.PEDDERSEN, 2);
+    game.playCard(Player.PEDDERSEN, dos);
+    // When Findus tries to attack dos with uno and it isn't its turn
+    Status status = game.attackCard(Player.FINDUS, uno, dos);
+    // Then it is not allowed
+    assertThat(status, is(Status.NOT_PLAYER_IN_TURN));
+  }
+  @Test
+  public void PeddersenShoulNotBeAllowedToAttackMinionWhenNotHisTurn(){
+    // Given a game
+    // When Findus plays card uno
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
+    game.endTurn();
+    // When Peddersen plays card dos
+    Card dos = game.getCardInHand(Player.PEDDERSEN, 2);
+    game.playCard(Player.PEDDERSEN, dos);
+    game.endTurn();
+    // When Peddersen tries to attack uno with dos and it isn't his turn
+    Status status = game.attackCard(Player.PEDDERSEN, dos, uno);
+    // Then it is not allowed
+    assertThat(status, is(Status.NOT_PLAYER_IN_TURN));
+  }
 }
