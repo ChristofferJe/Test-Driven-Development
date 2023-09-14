@@ -143,7 +143,8 @@ public class TestAlphaStone {
     // When Findus uses its hero power
     game.usePower(Player.FINDUS);
     // Then Findus cannot use its hero power again in same turn
-    assertThat(hero.canUsePower(), is(false));
+    Status status = game.usePower(Player.FINDUS);
+    assertThat(status, is(Status.POWER_USE_NOT_ALLOWED_TWICE_PR_ROUND));
 
   }
 
@@ -565,34 +566,6 @@ public class TestAlphaStone {
     game.attackHero(Player.PEDDERSEN, game.getCardInField(Player.PEDDERSEN, 0));
     // Then Findus' hero should have 19 health
     assertThat(game.getHero(Player.FINDUS).getHealth(), is(19));
-  }
-
-  public void shouldDefinitelyBeRemoved() {
-    // Matching null and not null values
-    // 'is' require an exact match
-    // Hamcrest uses the 'equals()' method
-    String s = null;
-    assertThat(s, is(nullValue()));
-    s = "Ok";
-    assertThat(s, is(notNullValue()));
-    assertThat(s, is("Ok"));
-
-    // If you only validate substrings, use containsString
-    assertThat("This is a dummy test", containsString("dummy"));
-
-    // You can use is on any type
-    int answerToLifeUniverseAndEverything = 42;
-    assertThat(answerToLifeUniverseAndEverything, is(42));
-
-    // Match contents of Lists
-    List<String> l = new ArrayList<String>();
-    l.add("Bimse");
-    l.add("Bumse");
-    // Note - ordering is ignored when matching using hasItems
-    assertThat(l, hasItems(new String[] {"Bumse","Bimse"}));
-
-    // Matchers may be combined, like is-not
-    assertThat(l.get(0), is(not("Bumse")));
   }
 
 }
