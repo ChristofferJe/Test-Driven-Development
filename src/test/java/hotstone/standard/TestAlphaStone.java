@@ -811,4 +811,35 @@ public class TestAlphaStone {
     // Then it is not allowed
     assertThat(status, is(Status.NOT_PLAYER_IN_TURN));
   }
+  @Test
+  public void FindusShouldNotBeAllowedToAttackOwnMinion(){
+    // Given a game where Findus plays uno and dos
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    Card dos = game.getCardInHand(Player.FINDUS, 1);
+    game.playCard(Player.FINDUS, uno);
+    game.playCard(Player.FINDUS, dos);
+    game.endTurn();
+    game.endTurn();
+    // When Findus tries to attack dos with uno
+    Status status = game.attackCard(Player.FINDUS, uno, dos);
+    // Then this shouldn't be allowed
+    assertThat(status, is(Status.ATTACK_NOT_ALLOWED_ON_OWN_MINION));
+  }
+
+  @Test
+  public void PeddersenShouldNotBeAllowedToAttackOwnMinion(){
+    // Given a game where Peddersen plays uno and dos
+    game.endTurn();
+    Card uno = game.getCardInHand(Player.PEDDERSEN, 3);
+    Card dos = game.getCardInHand(Player.PEDDERSEN, 2);
+    game.playCard(Player.PEDDERSEN, uno);
+    game.playCard(Player.PEDDERSEN, dos);
+    game.endTurn();
+    game.endTurn();
+    // When Peddersen tries to attack uno with dos
+    Status status = game.attackCard(Player.PEDDERSEN, dos, uno);
+    // Then this shouldn't be allowed
+    assertThat(status, is(Status.ATTACK_NOT_ALLOWED_ON_OWN_MINION));
+  }
+
 }

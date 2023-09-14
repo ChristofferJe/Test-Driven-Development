@@ -209,24 +209,28 @@ public class StandardHotStoneGame implements Game {
       return Status.NOT_PLAYER_IN_TURN;
     }
     // Check if attacking player is owner of attacking card
-    if(!(attackingCard.getOwner() == playerAttacking)){
+    else if(!(attackingCard.getOwner() == playerAttacking)){
       return Status.NOT_OWNER;
     }
     // Check if card is active
     else if(!attackingCard.isActive()) {
-      // If inactive return appropriate status
       return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
-    } else {
-      // If active attack and set inactive
+    }
+    // Check if attacking own minion
+    else if(attackingCard.getOwner() == defendingCard.getOwner()){
+      return Status.ATTACK_NOT_ALLOWED_ON_OWN_MINION;
+    }else {
+      // Cast attacking and defending card to StandardCard class
       StandardCard standardAttackingCard = (StandardCard) attackingCard;
-      standardAttackingCard.setStatus(false);
-      // Change the health of the attacking card and attacked card
       StandardCard standardDefendingCard = (StandardCard) defendingCard;
+      // Change the health of the attacking card and attacked card
       standardAttackingCard.decreaseHealth(defendingCard.getAttack());
       standardDefendingCard.decreaseHealth(attackingCard.getAttack());
       // Check if card's health are below zero and set inactive
       setInactiveAndRemoveIfDead(defendingCard, getOtherPlayer.get(playerAttacking));
       setInactiveAndRemoveIfDead(attackingCard,playerAttacking);
+      // Set inactive if still alive
+      standardAttackingCard.setStatus(false);
 
       return Status.OK;
     }
@@ -240,20 +244,21 @@ public class StandardHotStoneGame implements Game {
     if(!(getPlayerInTurn() == playerAttacking)){
       return Status.NOT_PLAYER_IN_TURN;
     }
-    if(!(attackingCard.getOwner() == playerAttacking)){
+    // Check if player attacking owns attacking card
+    else if(!(attackingCard.getOwner() == playerAttacking)){
       return Status.NOT_OWNER;
     }
     // Check if card is active
     else if(!attackingCard.isActive()) {
-      // If inactive return appropriate status
       return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
     } else {
-      // If active, attack and set inactive
+      // Cast attacking card to StandardCard class
       StandardCard card = (StandardCard) attackingCard;
-      card.setStatus(false);
       // Reduce the attacked heroes health
       StandardHero hero = (StandardHero) getHero(playerAttacked);
       hero.decreaseHealth(card.getAttack());
+      // Set attacking card inactive
+      card.setStatus(false);
       return Status.OK;
     }
   }
