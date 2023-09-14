@@ -52,4 +52,6 @@ public class StandardCard implements Card {
     public void setStatus(Boolean status){
         this.status = status;
     }
+
+    public void decreaseHealth(int amount) { health -= amount; }
 }

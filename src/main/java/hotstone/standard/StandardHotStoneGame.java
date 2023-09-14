@@ -210,8 +210,13 @@ public class StandardHotStoneGame implements Game {
       return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
     } else {
       // If active attack and set inactive
-      StandardCard card = (StandardCard) attackingCard;
-      card.setStatus(false);
+      StandardCard standardAttackingCard = (StandardCard) attackingCard;
+      standardAttackingCard.setStatus(false);
+      // Change the health of the attacking card and attacked card
+      StandardCard standardDefendingCard = (StandardCard) defendingCard;
+      standardAttackingCard.decreaseHealth(2);
+      standardDefendingCard.decreaseHealth(1);
+
       return Status.OK;
     }
   }

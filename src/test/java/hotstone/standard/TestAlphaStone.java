@@ -589,4 +589,38 @@ public class TestAlphaStone {
     assertThat(winner, is(nullValue()));
   }
 
+  @Test
+  public void UnoShouldHaveMinusOneHealthAfterAttackingDos(){
+    // Given a game, Findus plays Uno
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
+    // When Findus ends its turn and Peddersen plays dos
+    game.endTurn();
+    Card dos = game.getCardInHand(Player.PEDDERSEN, 2);
+    game.playCard(Player.PEDDERSEN, dos);
+    // When Findus attacks dos with uno in his turn
+    game.endTurn();
+    game.attackCard(Player.FINDUS, uno, dos);
+    // Then uno should have -1 health
+    int health = uno.getHealth();
+    assertThat(health, is(-1));
+  }
+
+  @Test
+  public void DosShouldHaveOneHealthAfterAttackFromUno(){
+    // Given a game, Findus plays Uno
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
+    // When Findus ends its turn and Peddersen plays dos
+    game.endTurn();
+    Card dos = game.getCardInHand(Player.PEDDERSEN, 2);
+    game.playCard(Player.PEDDERSEN, dos);
+    // When Findus attacks dos with uno in his turn
+    game.endTurn();
+    game.attackCard(Player.FINDUS, uno, dos);
+    // Then uno should have -1 health
+    int health = dos.getHealth();
+    assertThat(health, is(1));
+  }
+
 }
