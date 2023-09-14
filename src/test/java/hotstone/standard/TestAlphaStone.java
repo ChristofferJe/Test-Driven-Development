@@ -861,4 +861,23 @@ public class TestAlphaStone {
     // Then it is not allowed
     assertThat(status, is(Status.NOT_PLAYER_IN_TURN));
   }
+
+  @Test
+  public void PeddersenShouldNotBeAllowedToUsePowerWhenNotHisTurn(){
+    // Given game
+    // When Peddersen tries to use power
+    Status status = game.usePower(Player.PEDDERSEN);
+    // Then it is not allowed
+    assertThat(status, is(Status.NOT_PLAYER_IN_TURN));
+  }
+
+  @Test
+  public void FindusShouldNotBeAllowedToUsePowerWhenNotItsTurn(){
+    // Given game and it is Peddersen's turn
+    game.endTurn();
+    // When Findus tries to use power
+    Status status = game.usePower(Player.FINDUS);
+    // Then it is not allowed
+    assertThat(status, is(Status.NOT_PLAYER_IN_TURN));
+  }
 }
