@@ -63,10 +63,10 @@ public class StandardHotStoneGame implements Game {
   public StandardHotStoneGame() {
     turnNumber = 1;
     findusHero = new StandardHero();
-    findusDeck = createAlphaDeck();
+    findusDeck = createAlphaDeck(Player.FINDUS);
     findusHand = new ArrayList<>();
     peddersenHero = new StandardHero();
-    peddersenDeck = createAlphaDeck();
+    peddersenDeck = createAlphaDeck(Player.PEDDERSEN);
     peddersenHand = new ArrayList<>();
     findusField = new ArrayList<>();
     peddersenField = new ArrayList<>();
@@ -214,8 +214,11 @@ public class StandardHotStoneGame implements Game {
       standardAttackingCard.setStatus(false);
       // Change the health of the attacking card and attacked card
       StandardCard standardDefendingCard = (StandardCard) defendingCard;
-      standardAttackingCard.decreaseHealth(2);
-      standardDefendingCard.decreaseHealth(1);
+      standardAttackingCard.decreaseHealth(defendingCard.getAttack());
+      standardDefendingCard.decreaseHealth(attackingCard.getAttack());
+      // Check if card's health are below zero and set inactive
+      setInactiveAndRemoveIfDead(defendingCard, getOtherPlayer.get(playerAttacking));
+      setInactiveAndRemoveIfDead(attackingCard,playerAttacking);
 
       return Status.OK;
     }
@@ -225,8 +228,11 @@ public class StandardHotStoneGame implements Game {
   public Status attackHero(Player playerAttacking, Card attackingCard) {
     // Get player whose hero is being attacked
     Player playerAttacked = getOtherPlayer.get(playerAttacking);
+    if(!(attackingCard.getOwner() == playerAttacking)){
+      return Status.NOT_OWNER;
+    }
     // Check if card is active
-    if(!attackingCard.isActive()) {
+    else if(!attackingCard.isActive()) {
       // If inactive return appropriate status
       return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
     } else {
@@ -255,15 +261,15 @@ public class StandardHotStoneGame implements Game {
     }
     }
 
-    private ArrayList<Card> createAlphaDeck(){
+    private ArrayList<Card> createAlphaDeck(Player owner){
       ArrayList<Card> deck = new ArrayList<Card>();
-      Card uno = new StandardCard(GameConstants.UNO_CARD, 1, 1,1);
-      Card dos = new StandardCard(GameConstants.DOS_CARD, 2, 2,2);
-      Card tres = new StandardCard(GameConstants.TRES_CARD, 3, 3,3);
-      Card cuatro = new StandardCard(GameConstants.CUATRO_CARD, 2, 3,1);
-      Card cinco = new StandardCard(GameConstants.CINCO_CARD, 3, 5,1);
-      Card seis = new StandardCard(GameConstants.SEIS_CARD, 2, 1,3);
-      Card siete = new StandardCard(GameConstants.SIETE_CARD, 3, 2,4);
+      Card uno = new StandardCard(GameConstants.UNO_CARD, 1, 1,1, owner);
+      Card dos = new StandardCard(GameConstants.DOS_CARD, 2, 2,2, owner);
+      Card tres = new StandardCard(GameConstants.TRES_CARD, 3, 3,3, owner);
+      Card cuatro = new StandardCard(GameConstants.CUATRO_CARD, 2, 3,1, owner);
+      Card cinco = new StandardCard(GameConstants.CINCO_CARD, 3, 5,1, owner);
+      Card seis = new StandardCard(GameConstants.SEIS_CARD, 2, 1,3, owner);
+      Card siete = new StandardCard(GameConstants.SIETE_CARD, 3, 2,4, owner);
       deck.add(0,uno);
       deck.add(1,dos);
       deck.add(2,tres);
@@ -274,5 +280,12 @@ public class StandardHotStoneGame implements Game {
       return deck;
     }
 
+    private void setInactiveAndRemoveIfDead(Card card, Player owner){
+      if(card.getHealth()<1){
+        StandardCard standardCard = (StandardCard) card;
+        standardCard.setStatus(false);
+        fieldMap.get(owner).remove(card);
+      }
+    }
 
 }

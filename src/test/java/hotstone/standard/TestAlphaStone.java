@@ -494,16 +494,18 @@ public class TestAlphaStone {
   @Test
   public void UnoBecomesInactiveAfterAttack(){
     // Given a game, Findus plays Uno
-    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
     // When Findus ends its turn and Peddersen plays dos
     game.endTurn();
-    game.playCard(Player.PEDDERSEN, game.getCardInHand(Player.PEDDERSEN, 1));
+    Card dos = game.getCardInHand(Player.PEDDERSEN, 2);
+    game.playCard(Player.PEDDERSEN, dos);
     // When Findus attacks dos with uno in his turn
     game.endTurn();
-    Status status = game.attackCard(Player.FINDUS, game.getCardInField(Player.FINDUS,0), game.getCardInField(Player.PEDDERSEN,0));
+    Status status = game.attackCard(Player.FINDUS, uno, dos);
     assertThat(status, is(Status.OK));
     // Then uno becomes inactive
-    assertThat(game.getCardInField(Player.FINDUS,0).isActive(), is(false));
+    assertThat(uno.isActive(), is(false));
   }
 
   @Test
@@ -623,4 +625,104 @@ public class TestAlphaStone {
     assertThat(health, is(1));
   }
 
+  @Test
+  public void DosShouldHaveOneHealthAfterAttackingUno(){
+    // Given a game, Findus plays Dos
+    Card dos = game.getCardInHand(Player.FINDUS, 1);
+    game.playCard(Player.FINDUS, dos);
+    // When Findus ends its turn and Peddersen plays Uno
+    game.endTurn();
+    Card uno = game.getCardInHand(Player.PEDDERSEN, 3);
+    game.playCard(Player.PEDDERSEN, uno);
+    // When Findus attacks uno with dos in his turn
+    game.endTurn();
+    game.attackCard(Player.FINDUS, dos, uno);
+    // Then dos should have 1 health
+    int health = dos.getHealth();
+    assertThat(health, is(1));
+  }
+
+  @Test
+  public void UnoShouldHaveMinusOneHealthAfterAttackFromDos(){
+    // Given a game, Findus plays Dos
+    Card dos = game.getCardInHand(Player.FINDUS, 1);
+    game.playCard(Player.FINDUS, dos);
+    // When Findus ends its turn and Peddersen plays Uno
+    game.endTurn();
+    Card uno = game.getCardInHand(Player.PEDDERSEN, 3);
+    game.playCard(Player.PEDDERSEN, uno);
+    // When Findus attacks uno with dos in his turn
+    game.endTurn();
+    game.attackCard(Player.FINDUS, dos, uno);
+    // Then Uno should have 1 health
+    int health = uno.getHealth();
+    assertThat(health, is(-1));
+  }
+
+  @Test
+  public void UnoShouldBeInactiveWhenHealthIsBelowOne(){
+    // Given a game, Findus plays Dos
+    Card dos = game.getCardInHand(Player.FINDUS, 1);
+    game.playCard(Player.FINDUS, dos);
+    // When Findus ends its turn and Peddersen plays Uno
+    game.endTurn();
+    Card uno = game.getCardInHand(Player.PEDDERSEN, 3);
+    game.playCard(Player.PEDDERSEN, uno);
+    // When a round passes and uno is active
+    game.endTurn();
+    game.endTurn();
+    assertThat(uno.isActive(),is(true));
+    // When Findus attacks uno with dos in his turn
+    game.endTurn();
+    game.attackCard(Player.FINDUS, dos, uno);
+    // Then uno is inactive
+    assertThat(uno.isActive(),is(false));
+  }
+
+  @Test
+  public void UnoShouldBeRemovedFromFieldWhenAttackedAndHealthIsBelowOne(){
+    // Given a game, Findus plays Dos
+    Card dos = game.getCardInHand(Player.FINDUS, 1);
+    game.playCard(Player.FINDUS, dos);
+    // When Findus ends its turn and Peddersen plays Uno
+    game.endTurn();
+    Card uno = game.getCardInHand(Player.PEDDERSEN, 3);
+    game.playCard(Player.PEDDERSEN, uno);
+    // When Findus attacks uno with dos in his turn
+    game.endTurn();
+    game.attackCard(Player.FINDUS, dos, uno);
+    // Then uno is removed from field
+    ArrayList<Card> field = (ArrayList) game.getField(Player.PEDDERSEN);
+    boolean isUnoInField = field.contains(uno);
+    assertThat(isUnoInField,is(false));
+  }
+
+  @Test
+  public void UnoShouldBeRemovedFromFieldWhenAttackingAndHealthIsBelowOne(){
+    // Given a game, Findus plays Uno
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
+    // When Findus ends its turn and Peddersen plays dos
+    game.endTurn();
+    Card dos = game.getCardInHand(Player.PEDDERSEN, 2);
+    game.playCard(Player.PEDDERSEN, dos);
+    // When Findus attacks dos with uno in his turn
+    game.endTurn();
+    game.attackCard(Player.FINDUS, uno, dos);
+    // Then uno is removed from field
+    ArrayList<Card> field = (ArrayList) game.getField(Player.FINDUS);
+    boolean isUnoInField = field.contains(uno);
+    assertThat(isUnoInField,is(false));
+  }
+  @Test
+  public void PeddersenCannotAttackHeroWithUnoInFieldOwnedByFindus(){
+    // Given a game, Findus plays Uno
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
+    // When Findus ends its turn and Peddersen tries to attack Findus hero with Uno
+    game.endTurn();
+    Status status = game.attackHero(Player.PEDDERSEN, uno);
+    // Then it should not be allowed
+    assertThat(status, is(Status.NOT_OWNER));
+  }
 }

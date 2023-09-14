@@ -10,13 +10,15 @@ public class StandardCard implements Card {
     private final int cost;
     private final int attack;
     private int health;
+    private Player owner;
     private Boolean status;
 
-    public StandardCard(String name, int cost, int attack, int health){
+    public StandardCard(String name, int cost, int attack, int health, Player owner){
         this.name = name;
         this.cost = cost;
         this.attack =  attack;
         this.health = health;
+        this.owner = owner;
         status = false;
     }
     @Override
@@ -46,7 +48,7 @@ public class StandardCard implements Card {
 
     @Override
     public Player getOwner() {
-        return null;
+        return owner;
     }
 
     public void setStatus(Boolean status){
