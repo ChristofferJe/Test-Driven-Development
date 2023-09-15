@@ -195,6 +195,10 @@ public class StandardHotStoneGame implements Game {
     if(!(getPlayerInTurn() == who)){
       return Status.NOT_PLAYER_IN_TURN;
     }
+    // Check if playing card from own hand
+    else if(!(card.getOwner() == who)) {
+      return Status.NOT_OWNER;
+    }
     // Check if enough mana
     else if (getHero(who).getMana() < card.getManaCost()) {
       return Status.NOT_ENOUGH_MANA;

@@ -880,4 +880,24 @@ public class TestAlphaStone {
     // Then it is not allowed
     assertThat(status, is(Status.NOT_PLAYER_IN_TURN));
   }
+  @Test
+  public void PeddersenShouldNotBeAllowedToPlayACardFromFindusHand(){
+    //Given a game where it is Peddersens turn
+    game.endTurn();
+    // When Peddersen tries to play a card from Findus's hand
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    Status status = game.playCard(Player.PEDDERSEN, uno);
+    // Then it should not be allowed
+    assertThat(status, is(Status.NOT_OWNER));
+  }
+
+  public void FindusShouldNotBeAllowedToPlayACardFromPeddersenHand(){
+    //Given a game
+    // When Findus tries to play a card from Peddersen's hand
+    Card uno = game.getCardInHand(Player.PEDDERSEN, 2);
+    Status status = game.playCard(Player.FINDUS, uno);
+    // Then it should not be allowed
+    assertThat(status, is(Status.NOT_OWNER));
+  }
+
 }
