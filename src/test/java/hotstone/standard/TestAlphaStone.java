@@ -817,6 +817,7 @@ public class TestAlphaStone {
     // Then it is not allowed
     assertThat(status, is(Status.NOT_PLAYER_IN_TURN));
   }
+
   @Test
   public void FindusShouldNotBeAllowedToAttackOwnMinion(){
     // Given a game where Findus plays uno and dos

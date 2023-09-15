@@ -214,7 +214,7 @@ public class StandardHotStoneGame implements Game {
     // Check if card is active
     if(!attackingCard.isActive()) return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
     // Check if attacking own minion
-    if(attackingCard.getOwner() == defendingCard.getOwner()) return Status.ATTACK_NOT_ALLOWED_ON_OWN_MINION;
+    if(attackingCard.getOwner() ==  defendingCard.getOwner()) return Status.ATTACK_NOT_ALLOWED_ON_OWN_MINION;
     // Cast attacking and defending card to StandardCard class
     StandardCard stdAttackingCard = asStandardCard(attackingCard);
     StandardCard stdDefendingCard = asStandardCard(defendingCard);
