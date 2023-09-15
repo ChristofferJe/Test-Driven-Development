@@ -225,19 +225,20 @@ public class TestAlphaStone {
     int count = game.getHandSize(Player.FINDUS);
     assertThat(count, is(3));
     // And these are ordered Tres, Dos, Uno in slot 0,1,2
+    ArrayList<Card> hand = (ArrayList) game.getHand(Player.FINDUS);
 
     // When I pick card 0
-    Card card = game.getCardInHand(Player.FINDUS, 0);
+    Card card = hand.get(0);
     // Then is it Tres
     assertThat(card.getName(), is(GameConstants.TRES_CARD));
 
     // When I pick card 1
-    card = game.getCardInHand(Player.FINDUS, 1);
+    card = hand.get(1);
     // Then is it Dos
     assertThat(card.getName(), is(GameConstants.DOS_CARD));
 
     // When I pick card 2
-    card = game.getCardInHand(Player.FINDUS, 2);
+    card = hand.get(2);
     // Then is it Uno
     assertThat(card.getName(), is(GameConstants.UNO_CARD));
   }
