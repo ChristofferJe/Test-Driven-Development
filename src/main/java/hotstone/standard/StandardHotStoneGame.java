@@ -292,7 +292,7 @@ public class StandardHotStoneGame implements Game {
     }
 
     private ArrayList<Card> createAlphaDeck(Player owner){
-      ArrayList<Card> deck = new ArrayList<Card>();
+      ArrayList<Card> deck = new ArrayList<>();
       Card uno = new StandardCard(GameConstants.UNO_CARD, 1, 1,1, owner);
       Card dos = new StandardCard(GameConstants.DOS_CARD, 2, 2,2, owner);
       Card tres = new StandardCard(GameConstants.TRES_CARD, 3, 3,3, owner);
