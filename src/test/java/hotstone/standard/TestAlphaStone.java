@@ -339,9 +339,11 @@ public class TestAlphaStone {
   public void UnoInFindusFieldShouldBeInIndex0(){
     // Given game
     // When Findus plays Uno in first round
-    assertThat(game.getCardInHand(Player.FINDUS, 2).getName(), is(GameConstants.UNO_CARD));
-    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
-    // Then uno should be in field index 0
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    assertThat(uno.getName(), is(GameConstants.UNO_CARD));
+    Status status = game.playCard(Player.FINDUS, uno);
+    // Then it should be allowed and uno should be in field index 0
+    assertThat(status, is(Status.OK));
     assertThat(game.getCardInField(Player.FINDUS, 0).getName(), is(GameConstants.UNO_CARD));
   }
 
@@ -891,7 +893,7 @@ public class TestAlphaStone {
     // Then it should not be allowed
     assertThat(status, is(Status.NOT_OWNER));
   }
-
+  @Test
   public void FindusShouldNotBeAllowedToPlayACardFromPeddersenHand(){
     //Given a game
     // When Findus tries to play a card from Peddersen's hand
@@ -901,4 +903,26 @@ public class TestAlphaStone {
     assertThat(status, is(Status.NOT_OWNER));
   }
 
+  @Test
+  public void FindusShouldBeTheOwnerOfFindusesHero(){
+    // Given a game, then Findus should be the owner of its hero
+    Player owner = game.getHero(Player.FINDUS).getOwner();
+    assertThat(owner, is(Player.FINDUS));
+  }
+
+  @Test
+  public void PeddersenShouldBeTheOwnerOfPeddersensHero(){
+    // Given a game, then Findus should be the owner of its hero
+    Player owner = game.getHero(Player.PEDDERSEN).getOwner();
+    assertThat(owner, is(Player.PEDDERSEN));
+  }
+
+  @Test
+  public void PeddersenShoulHaveThreeCardsInHandAfterFindusPlayCard(){
+    // Given a game, where Findus plays uno
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
+    // Then Peddersen should have three cards in his hand
+    assertThat(game.getHandSize(Player.PEDDERSEN), is(3));
+  }
 }

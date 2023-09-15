@@ -9,11 +9,13 @@ public class StandardHero implements Hero {
     private boolean powerStatus;
     private int mana;
     private int health;
+    private Player owner;
 
-    public StandardHero(){
+    public StandardHero(Player owner){
         powerStatus = true;
         mana = 3;
         health = GameConstants.HERO_MAX_HEALTH;
+        this.owner = owner;
     }
     @Override
     public int getMana() {
@@ -36,9 +38,7 @@ public class StandardHero implements Hero {
     }
 
     @Override
-    public Player getOwner() {
-        return null;
-    }
+    public Player getOwner() { return owner; }
 
     public void setPowerStatus(boolean bool){
         powerStatus = bool;

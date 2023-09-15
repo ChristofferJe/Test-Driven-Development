@@ -62,10 +62,10 @@ public class StandardHotStoneGame implements Game {
 
   public StandardHotStoneGame() {
     turnNumber = 1;
-    findusHero = new StandardHero();
+    findusHero = new StandardHero(Player.FINDUS);
     findusDeck = createAlphaDeck(Player.FINDUS);
     findusHand = new ArrayList<>();
-    peddersenHero = new StandardHero();
+    peddersenHero = new StandardHero(Player.PEDDERSEN);
     peddersenDeck = createAlphaDeck(Player.PEDDERSEN);
     peddersenHand = new ArrayList<>();
     findusField = new ArrayList<>();
