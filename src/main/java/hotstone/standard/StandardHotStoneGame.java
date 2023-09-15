@@ -45,18 +45,18 @@ import java.util.*;
 
 public class StandardHotStoneGame implements Game {
   private int turnNumber;
-  private StandardHero findusHero;
-  private StandardHero peddersenHero;
+  private Hero findusHero;
+  private Hero peddersenHero;
   private ArrayList<Card> findusDeck;
   private ArrayList<Card> peddersenDeck;
   private ArrayList<Card> findusHand;
   private ArrayList<Card> peddersenHand;
 
-  private ArrayList<StandardCard> findusField;
-  private ArrayList<StandardCard> peddersenField;
+  private ArrayList<Card> findusField;
+  private ArrayList<Card> peddersenField;
   private HashMap<Player, ArrayList<Card>> handMap;
   private HashMap<Player, ArrayList<Card>> deckMap;
-  private HashMap<Player, ArrayList<StandardCard>> fieldMap;
+  private HashMap<Player, ArrayList<Card>> fieldMap;
   private HashMap<Player, Player> getOtherPlayer;
 
 
@@ -160,18 +160,19 @@ public class StandardHotStoneGame implements Game {
     Player player = getPlayerInTurn();
     Player otherPlayer = getOtherPlayer.get(player);
     // Set hero power to useable again
-    StandardHero hero = (StandardHero) getHero(player);
-    hero.setPowerStatus(true);
+    StandardHero stdHero = asStandardHero(getHero(player)) ;
+    stdHero.setPowerStatus(true);
 
     // Restore mana
-    hero.setMana(3);
+    stdHero.setMana(3);
 
     // Draw card and activate minions for the player who is now in turn
     drawCard(otherPlayer, 1);
     // Set active
 
-    for (StandardCard c : fieldMap.get(otherPlayer)) {
-      c.setStatus(true);
+    for (Card c : fieldMap.get(otherPlayer)) {
+      StandardCard stdCard = asStandardCard(c);
+      stdCard.setStatus(true);
     }
     turnNumber += 1;
   }
@@ -184,8 +185,8 @@ public class StandardHotStoneGame implements Game {
         handMap.get(who).add(0,card);
       }
     } else {
-      StandardHero hero = (StandardHero) getHero(who);
-      hero.decreaseHealth(2);
+      StandardHero stdHero = asStandardHero(getHero(who));
+      stdHero.decreaseHealth(2);
     }
   }
 
@@ -203,10 +204,10 @@ public class StandardHotStoneGame implements Game {
     else if (getHero(who).getMana() < card.getManaCost()) {
       return Status.NOT_ENOUGH_MANA;
     } else{
-      fieldMap.get(who).add(0, (StandardCard) card);
+      fieldMap.get(who).add(0, card);
       handMap.get(who).remove(card);
-      StandardHero hero = (StandardHero) getHero(who);
-      hero.decreaseMana(card.getManaCost());
+      StandardHero stdHero = asStandardHero(getHero(who));
+      stdHero.decreaseMana(card.getManaCost());
       return Status.OK;
     }
   }
@@ -230,16 +231,16 @@ public class StandardHotStoneGame implements Game {
       return Status.ATTACK_NOT_ALLOWED_ON_OWN_MINION;
     }else {
       // Cast attacking and defending card to StandardCard class
-      StandardCard standardAttackingCard = (StandardCard) attackingCard;
-      StandardCard standardDefendingCard = (StandardCard) defendingCard;
+      StandardCard stdAttackingCard = asStandardCard(attackingCard);
+      StandardCard stdDefendingCard = asStandardCard(defendingCard);
       // Change the health of the attacking card and attacked card
-      standardAttackingCard.decreaseHealth(defendingCard.getAttack());
-      standardDefendingCard.decreaseHealth(attackingCard.getAttack());
+      stdAttackingCard.decreaseHealth(defendingCard.getAttack());
+      stdDefendingCard.decreaseHealth(attackingCard.getAttack());
       // Check if card's health are below zero and set inactive
       setInactiveAndRemoveIfDead(defendingCard, getOtherPlayer.get(playerAttacking));
       setInactiveAndRemoveIfDead(attackingCard,playerAttacking);
       // Set inactive if still alive
-      standardAttackingCard.setStatus(false);
+      stdAttackingCard.setStatus(false);
 
       return Status.OK;
     }
@@ -262,12 +263,12 @@ public class StandardHotStoneGame implements Game {
       return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
     } else {
       // Cast attacking card to StandardCard class
-      StandardCard card = (StandardCard) attackingCard;
+      StandardCard stdCard = asStandardCard(attackingCard);
       // Reduce the attacked heroes health
-      StandardHero hero = (StandardHero) getHero(playerAttacked);
-      hero.decreaseHealth(card.getAttack());
+      StandardHero stdHero = asStandardHero(getHero(playerAttacked));
+      stdHero.decreaseHealth(stdCard.getAttack());
       // Set attacking card inactive
-      card.setStatus(false);
+      stdCard.setStatus(false);
       return Status.OK;
     }
   }
@@ -284,9 +285,9 @@ public class StandardHotStoneGame implements Game {
     }else if(getHero(who).getMana() < 2) {
       return Status.NOT_ENOUGH_MANA;
     } else {
-      StandardHero hero = (StandardHero) getHero(who);
-      hero.setPowerStatus(false);
-      hero.decreaseMana(2);
+      StandardHero stdHero = asStandardHero(getHero(who));
+      stdHero.setPowerStatus(false);
+      stdHero.decreaseMana(2);
       return Status.OK;
     }
     }
@@ -312,10 +313,17 @@ public class StandardHotStoneGame implements Game {
 
     private void setInactiveAndRemoveIfDead(Card card, Player owner){
       if(card.getHealth()<1){
-        StandardCard standardCard = (StandardCard) card;
-        standardCard.setStatus(false);
+        StandardCard stdCard = asStandardCard(card);
+        stdCard.setStatus(false);
         fieldMap.get(owner).remove(card);
       }
     }
+
+    private StandardCard asStandardCard(Card card){return (StandardCard) card;}
+
+    private StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
+
+
+
 
 }
