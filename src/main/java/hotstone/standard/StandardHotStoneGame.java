@@ -191,7 +191,12 @@ public class StandardHotStoneGame implements Game {
 
   @Override
   public Status playCard(Player who, Card card) {
-    if (getHero(who).getMana() < card.getManaCost()) {
+    // Check if player in turn
+    if(!(getPlayerInTurn() == who)){
+      return Status.NOT_PLAYER_IN_TURN;
+    }
+    // Check if enough mana
+    else if (getHero(who).getMana() < card.getManaCost()) {
       return Status.NOT_ENOUGH_MANA;
     } else{
       fieldMap.get(who).add(0, (StandardCard) card);
@@ -265,8 +270,12 @@ public class StandardHotStoneGame implements Game {
 
   @Override
   public Status usePower(Player who) {
-    // Control that the player can use its hero power
-    if (!getHero(who).canUsePower()){
+    // Check if player in turn
+    if(!(getPlayerInTurn() == who)){
+      return Status.NOT_PLAYER_IN_TURN;
+    }
+    // Check that the player can use its hero power
+    else if (!getHero(who).canUsePower()){
       return Status.POWER_USE_NOT_ALLOWED_TWICE_PR_ROUND;
     }else if(getHero(who).getMana() < 2) {
       return Status.NOT_ENOUGH_MANA;
