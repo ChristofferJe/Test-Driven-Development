@@ -121,14 +121,10 @@ public class StandardHotStoneGame implements Game {
   }
 
   @Override
-  public int getTurnNumber() {
-    return turnNumber;
-  }
+  public int getTurnNumber() {return turnNumber;}
 
   @Override
-  public int getDeckSize(Player who) {
-    return deckMap.get(who).size();
-  }
+  public int getDeckSize(Player who) {return deckMap.get(who).size();}
 
 
   @Override
@@ -193,57 +189,46 @@ public class StandardHotStoneGame implements Game {
   @Override
   public Status playCard(Player who, Card card) {
     // Check if player in turn
-    if(!(getPlayerInTurn() == who)){
-      return Status.NOT_PLAYER_IN_TURN;
-    }
+    if(!(getPlayerInTurn() == who)) return Status.NOT_PLAYER_IN_TURN;
     // Check if playing card from own hand
-    else if(!(card.getOwner() == who)) {
-      return Status.NOT_OWNER;
-    }
+    if(!(card.getOwner() == who)) return Status.NOT_OWNER;
     // Check if enough mana
-    else if (getHero(who).getMana() < card.getManaCost()) {
-      return Status.NOT_ENOUGH_MANA;
-    } else{
-      fieldMap.get(who).add(0, card);
-      handMap.get(who).remove(card);
-      StandardHero stdHero = asStandardHero(getHero(who));
-      stdHero.decreaseMana(card.getManaCost());
-      return Status.OK;
-    }
+    if (getHero(who).getMana() < card.getManaCost()) return Status.NOT_ENOUGH_MANA;
+    // Add card in field index 0 and remove from hand
+    fieldMap.get(who).add(0, card);
+    handMap.get(who).remove(card);
+    // Decrease mana
+    StandardHero stdHero = asStandardHero(getHero(who));
+    stdHero.decreaseMana(card.getManaCost());
+
+    return Status.OK;
+
   }
 
   @Override
   public Status attackCard(Player playerAttacking, Card attackingCard, Card defendingCard) {
     // Check if attacking player is in turn
-    if(!(getPlayerInTurn() == playerAttacking)){
-      return Status.NOT_PLAYER_IN_TURN;
-    }
+    if(!(getPlayerInTurn() == playerAttacking)) return Status.NOT_PLAYER_IN_TURN;
     // Check if attacking player is owner of attacking card
-    else if(!(attackingCard.getOwner() == playerAttacking)){
-      return Status.NOT_OWNER;
-    }
+    if(!(attackingCard.getOwner() == playerAttacking)) return Status.NOT_OWNER;
     // Check if card is active
-    else if(!attackingCard.isActive()) {
-      return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
-    }
+    if(!attackingCard.isActive()) return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
     // Check if attacking own minion
-    else if(attackingCard.getOwner() == defendingCard.getOwner()){
-      return Status.ATTACK_NOT_ALLOWED_ON_OWN_MINION;
-    }else {
-      // Cast attacking and defending card to StandardCard class
-      StandardCard stdAttackingCard = asStandardCard(attackingCard);
-      StandardCard stdDefendingCard = asStandardCard(defendingCard);
-      // Change the health of the attacking card and attacked card
-      stdAttackingCard.decreaseHealth(defendingCard.getAttack());
-      stdDefendingCard.decreaseHealth(attackingCard.getAttack());
-      // Check if card's health are below zero and set inactive
-      setInactiveAndRemoveIfDead(defendingCard, getOtherPlayer.get(playerAttacking));
-      setInactiveAndRemoveIfDead(attackingCard,playerAttacking);
-      // Set inactive if still alive
-      stdAttackingCard.setStatus(false);
+    if(attackingCard.getOwner() == defendingCard.getOwner()) return Status.ATTACK_NOT_ALLOWED_ON_OWN_MINION;
+    // Cast attacking and defending card to StandardCard class
+    StandardCard stdAttackingCard = asStandardCard(attackingCard);
+    StandardCard stdDefendingCard = asStandardCard(defendingCard);
+    // Change the health of the attacking card and attacked card
+    stdAttackingCard.decreaseHealth(defendingCard.getAttack());
+    stdDefendingCard.decreaseHealth(attackingCard.getAttack());
+    // Check if card's health are below zero and set inactive
+    setInactiveAndRemoveIfDead(defendingCard, getOtherPlayer.get(playerAttacking));
+    setInactiveAndRemoveIfDead(attackingCard,playerAttacking);
+    // Set inactive if still alive
+    stdAttackingCard.setStatus(false);
 
-      return Status.OK;
-    }
+    return Status.OK;
+
   }
 
   @Override
@@ -251,45 +236,33 @@ public class StandardHotStoneGame implements Game {
     // Get player whose hero is being attacked
     Player playerAttacked = getOtherPlayer.get(playerAttacking);
     // Check if attacking player is in turn
-    if(!(getPlayerInTurn() == playerAttacking)){
-      return Status.NOT_PLAYER_IN_TURN;
-    }
+    if(!(getPlayerInTurn() == playerAttacking)) return Status.NOT_PLAYER_IN_TURN;
     // Check if player attacking owns attacking card
-    else if(!(attackingCard.getOwner() == playerAttacking)){
-      return Status.NOT_OWNER;
-    }
+    if(!(attackingCard.getOwner() == playerAttacking)) return Status.NOT_OWNER;
     // Check if card is active
-    else if(!attackingCard.isActive()) {
-      return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
-    } else {
-      // Cast attacking card to StandardCard class
-      StandardCard stdCard = asStandardCard(attackingCard);
-      // Reduce the attacked heroes health
-      StandardHero stdHero = asStandardHero(getHero(playerAttacked));
-      stdHero.decreaseHealth(stdCard.getAttack());
-      // Set attacking card inactive
-      stdCard.setStatus(false);
-      return Status.OK;
-    }
+    if(!attackingCard.isActive()) return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
+    // Cast attacking card to StandardCard class
+    StandardCard stdCard = asStandardCard(attackingCard);
+    // Reduce the attacked heroes health
+    StandardHero stdHero = asStandardHero(getHero(playerAttacked));
+    stdHero.decreaseHealth(stdCard.getAttack());
+    // Set attacking card inactive
+    stdCard.setStatus(false);
+    return Status.OK;
   }
 
   @Override
   public Status usePower(Player who) {
     // Check if player in turn
-    if(!(getPlayerInTurn() == who)){
-      return Status.NOT_PLAYER_IN_TURN;
-    }
+    if(!(getPlayerInTurn() == who)) return Status.NOT_PLAYER_IN_TURN;
     // Check that the player can use its hero power
-    else if (!getHero(who).canUsePower()){
-      return Status.POWER_USE_NOT_ALLOWED_TWICE_PR_ROUND;
-    }else if(getHero(who).getMana() < 2) {
-      return Status.NOT_ENOUGH_MANA;
-    } else {
-      StandardHero stdHero = asStandardHero(getHero(who));
-      stdHero.setPowerStatus(false);
-      stdHero.decreaseMana(2);
-      return Status.OK;
-    }
+    if (!getHero(who).canUsePower()) return Status.POWER_USE_NOT_ALLOWED_TWICE_PR_ROUND;
+    // Check if enough mana
+    if (getHero(who).getMana() < 2) return Status.NOT_ENOUGH_MANA;
+    StandardHero stdHero = asStandardHero(getHero(who));
+    stdHero.setPowerStatus(false);
+    stdHero.decreaseMana(2);
+    return Status.OK;
     }
 
     private ArrayList<Card> createAlphaDeck(Player owner){

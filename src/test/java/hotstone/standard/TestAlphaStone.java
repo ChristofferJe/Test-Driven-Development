@@ -103,8 +103,8 @@ public class TestAlphaStone {
     // Given a game
     // Then Findus should have hero Babys
     Hero hero = game.getHero(Player.FINDUS);
-    String herotype = hero.getType();
-    assertThat(herotype, is("Baby"));
+    String heroType = hero.getType();
+    assertThat(heroType, is("Baby"));
   }
 
   @Test
@@ -112,8 +112,8 @@ public class TestAlphaStone {
     // Given a game
     // Then Findus should have hero Babys
     Hero hero = game.getHero(Player.PEDDERSEN);
-    String herotype = hero.getType();
-    assertThat(herotype, is("Baby"));
+    String heroType = hero.getType();
+    assertThat(heroType, is("Baby"));
   }
 
   @Test
@@ -166,15 +166,16 @@ public class TestAlphaStone {
 
   @Test
   public void manaShouldBeReducedByTwoWhenUsingHeroPower(){
-    //Given a game, Findus has a hero with an amount of mana
+    //Given a game, Findus has a hero with 3 mana
     Hero hero = game.getHero(Player.FINDUS);
-    int manabefore = hero.getMana();
+    int manaBefore = hero.getMana();
+    assertThat(manaBefore, is(3));
     // When Findus uses its hero power
     assertThat(hero.canUsePower(), is(true));
     game.usePower(Player.FINDUS);
-    // Then the hero has two mana less
-    int manaafter = hero.getMana();
-    assertThat(manaafter, is(manabefore - 2));
+    // Then the hero has 1 mana
+    int manaAfter = hero.getMana();
+    assertThat(manaAfter, is( 1));
   }
 
   @Test
@@ -206,19 +207,7 @@ public class TestAlphaStone {
     assertThat(game.getDeckSize(Player.FINDUS), is(4));
   }
 
-  // Example of a later, more complex, test case:
-  // Card handling
 
-  // The HotStone specs are quite insisting on how
-  // the cards, drawn from the deck, are organized
-  // in the hand. So when drawing the top three cards
-  // from the deck (uno, dos, tres) they have to
-  // be organized in the hand as
-  // index 0 = tres; index 1 = dos; index 2 = uno
-  // That is, a newly drawn card is 'at the top'
-  // of the hand - always entered at position 0
-  // and pushing the rest of the cards 1 position
-  // 'down'
   @Test
   public void shouldHaveUnoDosTresCardsInitially() {
     // Given a game, Findus has 3 cards in hand
@@ -226,17 +215,14 @@ public class TestAlphaStone {
     assertThat(count, is(3));
     // And these are ordered Tres, Dos, Uno in slot 0,1,2
     ArrayList<Card> hand = (ArrayList) game.getHand(Player.FINDUS);
-
     // When I pick card 0
     Card card = hand.get(0);
     // Then is it Tres
     assertThat(card.getName(), is(GameConstants.TRES_CARD));
-
     // When I pick card 1
     card = hand.get(1);
     // Then is it Dos
     assertThat(card.getName(), is(GameConstants.DOS_CARD));
-
     // When I pick card 2
     card = hand.get(2);
     // Then is it Uno
@@ -351,27 +337,30 @@ public class TestAlphaStone {
   public void UnoInFindusFieldShouldBeActiveAtTheStartOfTurn(){
     // Given game
     // When Findus plays Uno in first round
-    assertThat(game.getCardInHand(Player.FINDUS, 2).getName(), is(GameConstants.UNO_CARD));
-    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    assertThat(uno.getName(), is(GameConstants.UNO_CARD));
+    game.playCard(Player.FINDUS, uno);
     // and uno is at index 0 in field
-    assertThat(game.getCardInField(Player.FINDUS, 0).getName(), is(GameConstants.UNO_CARD));
+    uno = game.getCardInField(Player.FINDUS, 0);
+    assertThat(uno.getName(), is(GameConstants.UNO_CARD));
     // and its Findus turn again
     game.endTurn();
     game.endTurn();
     // Then uno should be active
-    assertThat(game.getCardInField(Player.FINDUS, 0).isActive(), is(true));
+    assertThat(uno.isActive(), is(true));
 }
 
   @Test
   public void findusManaShouldBeOneLessAfterPlayingUno(){
     // Given a game, Findus have 3 mana
-    int manabefore = game.getHero(Player.FINDUS).getMana();
-    assertThat(manabefore, is(3));
+    int manaBefore = game.getHero(Player.FINDUS).getMana();
+    assertThat(manaBefore, is(3));
     // When Findus play card uno
-    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
-    // Then Findus should have one less mana
-    int manaafter = game.getHero(Player.FINDUS).getMana();
-    assertThat(manaafter, is(manabefore - 1));
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
+    // Then Findus should have 2 mana
+    int manaAfter = game.getHero(Player.FINDUS).getMana();
+    assertThat(manaAfter, is(2));
 
   }
 
@@ -380,13 +369,14 @@ public class TestAlphaStone {
   @Test
   public void findusManaShouldBeTwoLessAfterPlayingDos(){
     // Given a game, Findus have 3 mana
-    int manabefore = game.getHero(Player.FINDUS).getMana();
-    assertThat(manabefore, is(3));
+    int manaBefore = game.getHero(Player.FINDUS).getMana();
+    assertThat(manaBefore, is(3));
     // When Findus play card dos
-    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 1));
-    // Then Findus should have two less mana
-    int manaafter = game.getHero(Player.FINDUS).getMana();
-    assertThat(manaafter, is(manabefore - 2));
+    Card dos = game.getCardInHand(Player.FINDUS, 1);
+    game.playCard(Player.FINDUS, dos);
+    // Then Findus should have 1 mana
+    int manaAfter = game.getHero(Player.FINDUS).getMana();
+    assertThat(manaAfter, is(1));
 
   }
 
@@ -395,11 +385,13 @@ public class TestAlphaStone {
   public void FindusCannotPlayTresIfNotEnoughMana(){
     // Given a game
     // Findus plays card uno
-    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
     // Then Findus mana is 2
     assertThat(game.getHero(Player.FINDUS).getMana(),is(2));
     // Then Findus should not be allowed to play card tres:
-    Status status = game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 0));
+    Card tres = game.getCardInHand(Player.FINDUS, 0);
+    Status status = game.playCard(Player.FINDUS, tres);
     assertThat(status, is(Status.NOT_ENOUGH_MANA));
   }
 
@@ -407,7 +399,8 @@ public class TestAlphaStone {
   public void FindusCanPlayTresIfEnoughMana(){
     // Given a game
     // When Findus plays card tres
-    Status status = game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 0));
+    Card tres = game.getCardInHand(Player.FINDUS, 0);
+    Status status = game.playCard(Player.FINDUS, tres);
     // Then it is allowed:
     assertThat(status, is(Status.OK));
   }
@@ -416,7 +409,8 @@ public class TestAlphaStone {
   public void CannotUseHeroPowerIfNotEnoughMana(){
     // Given a game
     // When Findus plays dos and uses 2 mana
-    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 1));
+    Card dos = game.getCardInHand(Player.FINDUS, 1);
+    game.playCard(Player.FINDUS, dos);
     // Then Findus should not be allowed to use hero power
     Status status = game.usePower(Player.FINDUS);
     assertThat(status, is(Status.NOT_ENOUGH_MANA));
@@ -432,6 +426,9 @@ public class TestAlphaStone {
 
   @Test
   public void FindusLosesTwoHealthWhenDrawWithEmptyDeck(){
+    // Given game, Findus has 21 health
+    int healthBefore = game.getHero(Player.FINDUS).getHealth();
+    assertThat(healthBefore, is(21));
     // When 4 rounds have passed
     game.endTurn();
     game.endTurn();
@@ -441,16 +438,15 @@ public class TestAlphaStone {
     game.endTurn();
     game.endTurn();
     game.endTurn();
-    // Then Findus's deck is empty
+    // And Findus's deck is empty
     int deckSize = game.getDeckSize(Player.FINDUS);
     assertThat(deckSize, is(0));
     // When another round passes and Findus draws another card
-    int healthBefore = game.getHero(Player.FINDUS).getHealth();
     game.endTurn();
     game.endTurn();
-    // Then Findus loses two health
+    // Then Findus has 19 health
     int healthAfter = game.getHero(Player.FINDUS).getHealth();
-    assertThat(healthBefore - healthAfter, is(2));
+    assertThat(healthAfter, is(19));
 
   }
 
@@ -460,7 +456,8 @@ public class TestAlphaStone {
     int fieldSize = game.getFieldSize(Player.FINDUS);
     assertThat(fieldSize, is(0));
     // When Findus play card Tres
-    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 0));
+    Card tres = game.getCardInHand(Player.FINDUS, 0);
+    game.playCard(Player.FINDUS, tres);
     // Then Findus's field size is one
     fieldSize = game.getFieldSize(Player.FINDUS);
     assertThat(fieldSize, is(1));
@@ -485,12 +482,14 @@ public class TestAlphaStone {
   @Test
   public void DosOwnedByPeddersenCannotAttackWhenInactive(){
     // Given a game, Findus plays Uno
-    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
     // When Findus ends its turn and Peddersen plays dos
     game.endTurn();
-    game.playCard(Player.PEDDERSEN, game.getCardInHand(Player.PEDDERSEN, 1));
+    Card dos = game.getCardInHand(Player.PEDDERSEN, 1);
+    game.playCard(Player.PEDDERSEN, dos);
     // Then Peddersen isn't allowed to attack with the inactive dos card
-    Status status = game.attackCard(Player.PEDDERSEN, game.getCardInField(Player.PEDDERSEN,0), game.getCardInField(Player.FINDUS,0));
+    Status status = game.attackCard(Player.PEDDERSEN, dos, uno);
     assertThat(status, is(Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION));
   }
 
@@ -514,23 +513,25 @@ public class TestAlphaStone {
   @Test
   public void UnoOwnedByFindusCanAttackPeddersenHero(){
     // Given a game, Findus plays Uno
-    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
     // When it is Findus' turn again
     game.endTurn();
     game.endTurn();
     //Then Uno can attack Peddersen's hero
-    Status status = game.attackHero(Player.FINDUS, game.getCardInField(Player.FINDUS, 0));
+    Status status = game.attackHero(Player.FINDUS, uno);
     assertThat(status, is(Status.OK));
   }
 
   @Test
   public void UnoOwnedByFindusCannotAttackPeddersenHeroWhenInactive(){
     // Given a game, Findus plays Uno
-    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
     // When Uno is inactive
-    assertThat(game.getCardInField(Player.FINDUS,0).isActive(), is(false));
+    assertThat(uno.isActive(), is(false));
     // Then Uno cannot attack Peddersen's hero
-    Status status = game.attackHero(Player.FINDUS, game.getCardInField(Player.FINDUS, 0));
+    Status status = game.attackHero(Player.FINDUS, uno);
     assertThat(status, is(Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION));
   }
 
@@ -540,11 +541,12 @@ public class TestAlphaStone {
   @Test
   public void PeddersenHeroShouldHave20HealtAfterAttackFromUno(){
     // Given a game, Findus plays Uno
-    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+    Card uno = game.getCardInHand(Player.FINDUS, 2);
+    game.playCard(Player.FINDUS, uno);
     // When it is Findus' turn again and Uno attacks Peddersen's hero
     game.endTurn();
     game.endTurn();
-    game.attackHero(Player.FINDUS, game.getCardInField(Player.FINDUS, 0));
+    game.attackHero(Player.FINDUS, uno);
     // Then Peddersen's hero should have 20 health
     assertThat(game.getHero(Player.PEDDERSEN).getHealth(), is(20));
   }
@@ -552,11 +554,12 @@ public class TestAlphaStone {
   @Test
   public void PeddersenHeroShouldHave19HealtAfterAttackFromDos(){
     // Given a game, Findus plays Dos
-    game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 1));
-    // When it is Findus' turn again and Uno attacks Peddersen's hero
+    Card dos = game.getCardInHand(Player.FINDUS, 1);
+    game.playCard(Player.FINDUS, dos);
+    // When it is Findus' turn again and Dos attacks Peddersen's hero
     game.endTurn();
     game.endTurn();
-    game.attackHero(Player.FINDUS, game.getCardInField(Player.FINDUS, 0));
+    game.attackHero(Player.FINDUS, dos);
     // Then Peddersen's hero should have 19 health
     assertThat(game.getHero(Player.PEDDERSEN).getHealth(), is(19));
   }
@@ -565,13 +568,13 @@ public class TestAlphaStone {
   public void FindusHeroShouldHave19HealtAfterAttackFromDos(){
     // Given a game, Peddersen plays Dos at index 2 after drawing a card
     game.endTurn();
-    Card card = game.getCardInHand(Player.PEDDERSEN, 2);
-    assertThat(card.getName(), is(GameConstants.DOS_CARD));
-    game.playCard(Player.PEDDERSEN, card);
+    Card dos = game.getCardInHand(Player.PEDDERSEN, 2);
+    assertThat(dos.getName(), is(GameConstants.DOS_CARD));
+    game.playCard(Player.PEDDERSEN, dos);
     // When it is Peddersen's turn again and Uno attacks Findus' hero
     game.endTurn();
     game.endTurn();
-    game.attackHero(Player.PEDDERSEN, game.getCardInField(Player.PEDDERSEN, 0));
+    game.attackHero(Player.PEDDERSEN, dos);
     // Then Findus' hero should have 19 health
     assertThat(game.getHero(Player.FINDUS).getHealth(), is(19));
   }
