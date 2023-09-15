@@ -834,9 +834,9 @@ public class TestAlphaStone {
     Card dos = game.getCardInHand(Player.PEDDERSEN, 2);
     game.playCard(Player.PEDDERSEN, uno);
     game.playCard(Player.PEDDERSEN, dos);
+    // When its Peddersens turn again and he tries to attack uno with dos
     game.endTurn();
     game.endTurn();
-    // When Peddersen tries to attack uno with dos
     Status status = game.attackCard(Player.PEDDERSEN, dos, uno);
     // Then this shouldn't be allowed
     assertThat(status, is(Status.ATTACK_NOT_ALLOWED_ON_OWN_MINION));
