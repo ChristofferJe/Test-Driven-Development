@@ -44,50 +44,76 @@ import java.util.*;
  */
 
 public class StandardHotStoneGame implements Game {
-  private int turnNumber = 1;
-  private StandardHero findusHero;
-  private StandardDeck findusDeck;
-  private StandardHand findusHand;
-  private StandardHero peddersenHero;
-  private StandardDeck peddersenDeck;
-  private StandardHand peddersenHand;
-  private StandardField findusField;
-  private StandardField peddersenField;
+  private int turnNumber;
+  private Hero findusHero;
+  private Hero peddersenHero;
+  private ArrayList<Card> findusDeck;
+  private ArrayList<Card> peddersenDeck;
+  private ArrayList<Card> findusHand;
+  private ArrayList<Card> peddersenHand;
 
-  public StandardHotStoneGame(){
-    findusHero = new StandardHero();
-    findusDeck = new StandardDeck();
-    findusHand = new StandardHand();
-    peddersenHero = new StandardHero();
-    peddersenDeck = new StandardDeck();
-    peddersenHand = new StandardHand();
-    findusField = new StandardField();
-    peddersenField = new StandardField();
+  private ArrayList<Card> findusField;
+  private ArrayList<Card> peddersenField;
+  private HashMap<Player, ArrayList<Card>> handMap;
+  private HashMap<Player, ArrayList<Card>> deckMap;
+  private HashMap<Player, ArrayList<Card>> fieldMap;
+  private HashMap<Player, Player> getOtherPlayer;
+
+
+  public StandardHotStoneGame() {
+    turnNumber = 1;
+    findusHero = new StandardHero(Player.FINDUS);
+    findusDeck = createAlphaDeck(Player.FINDUS);
+    findusHand = new ArrayList<>();
+    peddersenHero = new StandardHero(Player.PEDDERSEN);
+    peddersenDeck = createAlphaDeck(Player.PEDDERSEN);
+    peddersenHand = new ArrayList<>();
+    findusField = new ArrayList<>();
+    peddersenField = new ArrayList<>();
+
+
+    handMap = new HashMap<>();
+    handMap.put(Player.FINDUS,findusHand);
+    handMap.put(Player.PEDDERSEN,peddersenHand);
+
+    deckMap = new HashMap<>();
+    deckMap.put(Player.FINDUS,findusDeck);
+    deckMap.put(Player.PEDDERSEN,peddersenDeck);
+
+    fieldMap = new HashMap<>();
+    fieldMap.put(Player.FINDUS,findusField);
+    fieldMap.put(Player.PEDDERSEN,peddersenField);
+
+    getOtherPlayer = new HashMap<>();
+    getOtherPlayer.put(Player.FINDUS, Player.PEDDERSEN);
+    getOtherPlayer.put(Player.PEDDERSEN, Player.FINDUS);
+
     drawCard(Player.FINDUS, 3);
-    drawCard(Player.PEDDERSEN,3);
-
+    drawCard(Player.PEDDERSEN, 3);
   }
+
   @Override
   public Player getPlayerInTurn() {
-    if(turnNumber % 2 == 1){
+    if (turnNumber % 2 == 1) {
       return Player.FINDUS;
     } else {
-      return  Player.PEDDERSEN;
+      return Player.PEDDERSEN;
     }
   }
 
   @Override
   public Hero getHero(Player who) {
-    if(who == Player.FINDUS){
+    if (who == Player.FINDUS) {
       return findusHero;
-    }else{
+    } else {
       return peddersenHero;
     }
   }
 
+
   @Override
   public Player getWinner() {
-    if(getTurnNumber() > 8){
+    if (getTurnNumber() > 8) {
       return Player.FINDUS;
     } else {
       return null;
@@ -95,149 +121,182 @@ public class StandardHotStoneGame implements Game {
   }
 
   @Override
-  public int getTurnNumber() {
-    return turnNumber;
-  }
+  public int getTurnNumber() {return turnNumber;}
 
   @Override
-  public int getDeckSize(Player who) {
-    if(who == Player.FINDUS){
-      return findusDeck.getSize();
-    }else{
-      return peddersenDeck.getSize();
-    }
-  }
+  public int getDeckSize(Player who) {return deckMap.get(who).size();}
+
 
   @Override
   public Card getCardInHand(Player who, int indexInHand) {
-    ArrayList<Card> hand = (ArrayList<Card>) getHand(Player.FINDUS);
-    return hand.get(indexInHand);
+    return handMap.get(who).get(indexInHand);
   }
-
 
 
   @Override
-  public Iterable<? extends Card> getHand(Player who) {
-    if(who == Player.FINDUS){
-      return findusHand.getHand();
-    }else{
-      return peddersenHand.getHand();
-    }
-
-  }
+  public Iterable<? extends Card> getHand(Player who) {return handMap.get(who);}
 
   @Override
-  public int getHandSize(Player who) {
-    if(who == Player.FINDUS){
-      return findusHand.getSize();
-    }else{
-      return peddersenHand.getSize();
-    }
+  public int getHandSize(Player who) {return handMap.get(who).size();}
 
-  }
 
   @Override
   public Card getCardInField(Player who, int indexInField) {
-    ArrayList<Card> field = (ArrayList<Card>) getField(Player.FINDUS);
-    return field.get(indexInField);
+    return fieldMap.get(who).get(indexInField);
   }
 
   @Override
-  public Iterable<? extends Card> getField(Player who) {
-    if(who == Player.FINDUS){
-      return findusField.getField();
-    }else{
-      return peddersenField.getField();
-    }
-  }
+  public Iterable<? extends Card> getField(Player who) {return fieldMap.get(who);}
 
   @Override
-  public int getFieldSize(Player who) {
-    return 0;
-  }
+  public int getFieldSize(Player who) {return fieldMap.get(who).size();}
 
   @Override
   public void endTurn() {
     Player player = getPlayerInTurn();
+    Player otherPlayer = getOtherPlayer.get(player);
     // Set hero power to useable again
-    StandardHero hero = (StandardHero) getHero(player);
-    hero.setPowerStatus(true);
+    StandardHero stdHero = asStandardHero(getHero(player)) ;
+    stdHero.setPowerStatus(true);
 
     // Restore mana
-    hero.setMana(3);
+    stdHero.setMana(3);
 
     // Draw card and activate minions for the player who is now in turn
-    if (player == Player.FINDUS){
-      // Draw card
-      drawCard(Player.PEDDERSEN,1);
-      // Set active
-      ArrayList<StandardCard> field = (ArrayList<StandardCard>) getField(Player.PEDDERSEN);
-      for (StandardCard c : field) {
-        c.setStatus(true);
-      }
-    } else {
-      // Draw card
-      drawCard(Player.FINDUS, 1);
-      // Set active
-      ArrayList<StandardCard> field = (ArrayList<StandardCard>) getField(Player.FINDUS);
-      for (StandardCard c : field) {
-        c.setStatus(true);
-      }
+    drawCard(otherPlayer, 1);
+    // Set active
+
+    for (Card c : fieldMap.get(otherPlayer)) {
+      StandardCard stdCard = asStandardCard(c);
+      stdCard.setStatus(true);
     }
-    turnNumber +=1;
+    turnNumber += 1;
   }
 
-  private void drawCard(Player who,int amount) {
-    if(who == Player.FINDUS) {
-      for(int i=0; i < amount; i++){
-        Card card = findusDeck.draw();
-        findusHand.add(card);
+  private void drawCard(Player who, int amount) {
+    if(!deckMap.get(who).isEmpty()){
+      for (int i = 0; i < amount; i++) {
+        Card card = deckMap.get(who).get(0);
+        deckMap.get(who).remove(0);
+        handMap.get(who).add(0,card);
       }
-    } else{
-      for(int i=0; i < amount; i++){
-        Card card = peddersenDeck.draw();
-        peddersenHand.add(card);
-      }
+    } else {
+      StandardHero stdHero = asStandardHero(getHero(who));
+      stdHero.decreaseHealth(2);
     }
   }
 
   @Override
   public Status playCard(Player who, Card card) {
-    if (who == Player.FINDUS) {
-      findusField.add(card);
-      findusHand.remove(card);
-      findusHero.decreaseMana(card.getManaCost());
-      return Status.OK;
-    } else {
-      peddersenField.add(card);
-      peddersenHand.remove(card);
-      peddersenHero.decreaseMana(card.getManaCost());
-      return Status.OK;
-    }
+    // Check if player in turn
+    if(!(getPlayerInTurn() == who)) return Status.NOT_PLAYER_IN_TURN;
+    // Check if playing card from own hand
+    if(!(card.getOwner() == who)) return Status.NOT_OWNER;
+    // Check if enough mana
+    if (getHero(who).getMana() < card.getManaCost()) return Status.NOT_ENOUGH_MANA;
+    // Add card in field index 0 and remove from hand
+    fieldMap.get(who).add(0, card);
+    handMap.get(who).remove(card);
+    // Decrease mana
+    StandardHero stdHero = asStandardHero(getHero(who));
+    stdHero.decreaseMana(card.getManaCost());
+
+    return Status.OK;
+
   }
 
   @Override
   public Status attackCard(Player playerAttacking, Card attackingCard, Card defendingCard) {
-    return null;
+    // Check if attacking player is in turn
+    if(!(getPlayerInTurn() == playerAttacking)) return Status.NOT_PLAYER_IN_TURN;
+    // Check if attacking player is owner of attacking card
+    if(!(attackingCard.getOwner() == playerAttacking)) return Status.NOT_OWNER;
+    // Check if card is active
+    if(!attackingCard.isActive()) return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
+    // Check if attacking own minion
+    if(attackingCard.getOwner() ==  defendingCard.getOwner()) return Status.ATTACK_NOT_ALLOWED_ON_OWN_MINION;
+    // Cast attacking and defending card to StandardCard class
+    StandardCard stdAttackingCard = asStandardCard(attackingCard);
+    StandardCard stdDefendingCard = asStandardCard(defendingCard);
+    // Change the health of the attacking card and attacked card
+    stdAttackingCard.decreaseHealth(defendingCard.getAttack());
+    stdDefendingCard.decreaseHealth(attackingCard.getAttack());
+    // Check if card's health are below zero and set inactive
+    setInactiveAndRemoveIfDead(defendingCard, getOtherPlayer.get(playerAttacking));
+    setInactiveAndRemoveIfDead(attackingCard,playerAttacking);
+    // Set inactive if still alive
+    stdAttackingCard.setStatus(false);
+
+    return Status.OK;
+
   }
 
   @Override
   public Status attackHero(Player playerAttacking, Card attackingCard) {
-    return null;
+    // Get player whose hero is being attacked
+    Player playerAttacked = getOtherPlayer.get(playerAttacking);
+    // Check if attacking player is in turn
+    if(!(getPlayerInTurn() == playerAttacking)) return Status.NOT_PLAYER_IN_TURN;
+    // Check if player attacking owns attacking card
+    if(!(attackingCard.getOwner() == playerAttacking)) return Status.NOT_OWNER;
+    // Check if card is active
+    if(!attackingCard.isActive()) return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
+    // Cast attacking card to StandardCard class
+    StandardCard stdCard = asStandardCard(attackingCard);
+    // Reduce the attacked heroes health
+    StandardHero stdHero = asStandardHero(getHero(playerAttacked));
+    stdHero.decreaseHealth(stdCard.getAttack());
+    // Set attacking card inactive
+    stdCard.setStatus(false);
+    return Status.OK;
   }
 
   @Override
   public Status usePower(Player who) {
-    // Control that the player can use its hero power
-    if(getHero(who).canUsePower()){
-       StandardHero hero = (StandardHero) getHero(who);
-       hero.setPowerStatus(false);
-       hero.decreaseMana(2);
-       return Status.OK;
-    } else{
-       return null;
+    // Check if player in turn
+    if(!(getPlayerInTurn() == who)) return Status.NOT_PLAYER_IN_TURN;
+    // Check that the player can use its hero power
+    if (!getHero(who).canUsePower()) return Status.POWER_USE_NOT_ALLOWED_TWICE_PR_ROUND;
+    // Check if enough mana
+    if (getHero(who).getMana() < 2) return Status.NOT_ENOUGH_MANA;
+    StandardHero stdHero = asStandardHero(getHero(who));
+    stdHero.setPowerStatus(false);
+    stdHero.decreaseMana(2);
+    return Status.OK;
     }
 
+    private ArrayList<Card> createAlphaDeck(Player owner){
+      ArrayList<Card> deck = new ArrayList<>();
+      Card uno = new StandardCard(GameConstants.UNO_CARD, 1, 1,1, owner);
+      Card dos = new StandardCard(GameConstants.DOS_CARD, 2, 2,2, owner);
+      Card tres = new StandardCard(GameConstants.TRES_CARD, 3, 3,3, owner);
+      Card cuatro = new StandardCard(GameConstants.CUATRO_CARD, 2, 3,1, owner);
+      Card cinco = new StandardCard(GameConstants.CINCO_CARD, 3, 5,1, owner);
+      Card seis = new StandardCard(GameConstants.SEIS_CARD, 2, 1,3, owner);
+      Card siete = new StandardCard(GameConstants.SIETE_CARD, 3, 2,4, owner);
+      deck.add(0,uno);
+      deck.add(1,dos);
+      deck.add(2,tres);
+      deck.add(3,cuatro);
+      deck.add(4,cinco);
+      deck.add(5,seis);
+      deck.add(6,siete);
+      return deck;
+    }
 
-  }
+    private void setInactiveAndRemoveIfDead(Card card, Player owner){
+      if(card.getHealth()<1){
+        StandardCard stdCard = asStandardCard(card);
+        stdCard.setStatus(false);
+        fieldMap.get(owner).remove(card);
+      }
+    }
+
+    private StandardCard asStandardCard(Card card){return (StandardCard) card;}
+
+    private StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
+
+
+
+
 }
