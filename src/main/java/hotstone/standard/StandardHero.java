@@ -3,6 +3,7 @@ package hotstone.standard;
 import hotstone.framework.Game;
 import hotstone.framework.Hero;
 import hotstone.framework.Player;
+import hotstone.variants.ManaStrategy;
 
 public class StandardHero implements Hero {
 
@@ -13,7 +14,6 @@ public class StandardHero implements Hero {
 
     public StandardHero(Player owner){
         powerStatus = true;
-        mana = 3;
         health = GameConstants.HERO_MAX_HEALTH;
         this.owner = owner;
     }
