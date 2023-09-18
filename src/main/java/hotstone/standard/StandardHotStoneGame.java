@@ -18,9 +18,6 @@
 package hotstone.standard;
 
 import hotstone.framework.*;
-import hotstone.variants.AlphaManaStrategy;
-import hotstone.variants.BetaManaStrategy;
-import hotstone.variants.ManaStrategy;
 
 import java.util.*;
 
@@ -61,12 +58,9 @@ public class StandardHotStoneGame implements Game {
   private HashMap<Player, ArrayList<Card>> deckMap;
   private HashMap<Player, ArrayList<Card>> fieldMap;
   private HashMap<Player, Player> getOtherPlayer;
-  private ManaStrategy manaStrategy;
 
 
-  public StandardHotStoneGame(Version version) {
-    setupGame(version);
-
+  public StandardHotStoneGame() {
     turnNumber = 1;
     findusHero = new StandardHero(Player.FINDUS);
     findusDeck = createAlphaDeck(Player.FINDUS);
@@ -76,9 +70,6 @@ public class StandardHotStoneGame implements Game {
     peddersenHand = new ArrayList<>();
     findusField = new ArrayList<>();
     peddersenField = new ArrayList<>();
-
-    manaStrategy.restoreMana(findusHero,getTurnNumber());
-    manaStrategy.restoreMana(peddersenHero,getTurnNumber());
 
 
     handMap = new HashMap<>();
@@ -99,15 +90,6 @@ public class StandardHotStoneGame implements Game {
 
     drawCard(Player.FINDUS, 3);
     drawCard(Player.PEDDERSEN, 3);
-  }
-
-  private void setupGame(Version version) {
-    if(version == Version.ALPHA){
-      manaStrategy = new AlphaManaStrategy();
-    }
-    if(version == Version.BETA){
-      manaStrategy = new BetaManaStrategy();
-    }
   }
 
   @Override
@@ -177,7 +159,8 @@ public class StandardHotStoneGame implements Game {
     StandardHero stdHero = asStandardHero(getHero(player)) ;
     stdHero.setPowerStatus(true);
 
-
+    // Restore mana
+    stdHero.setMana(3);
 
     // Draw card and activate minions for the player who is now in turn
     drawCard(otherPlayer, 1);
@@ -188,9 +171,6 @@ public class StandardHotStoneGame implements Game {
       stdCard.setStatus(true);
     }
     turnNumber += 1;
-
-    // Restore mana for opponent player's hero
-    manaStrategy.restoreMana(getHero(otherPlayer), getTurnNumber());
   }
 
   private void drawCard(Player who, int amount) {

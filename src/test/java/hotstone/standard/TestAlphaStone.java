@@ -50,7 +50,7 @@ public class TestAlphaStone {
   /** Fixture for AlphaStone testing. */
   @BeforeEach
   public void setUp() {
-    game = new StandardHotStoneGame(Version.ALPHA);
+    game = new StandardHotStoneGame();
   }
 
   // Example of an early, simple test case:
