@@ -63,6 +63,7 @@ public class StandardHotStoneGame implements Game {
   private ManaStrategy manaStrategy;
   private WinnnerStrategy winnerStrategy;
   private HeroStrategy heroStrategy;
+  private DeckStrategy deckStrategy;
 
 
   public StandardHotStoneGame(Version version) {
@@ -70,10 +71,10 @@ public class StandardHotStoneGame implements Game {
 
     turnNumber = 1;
     findusHero = heroStrategy.assignHero(Player.FINDUS);
-    findusDeck = createAlphaDeck(Player.FINDUS);
+    findusDeck = deckStrategy.createDeck(Player.FINDUS);
     findusHand = new ArrayList<>();
     peddersenHero = heroStrategy.assignHero(Player.PEDDERSEN);
-    peddersenDeck = createAlphaDeck(Player.PEDDERSEN);
+    peddersenDeck = deckStrategy.createDeck(Player.PEDDERSEN);
     peddersenHand = new ArrayList<>();
     findusField = new ArrayList<>();
     peddersenField = new ArrayList<>();
@@ -110,21 +111,25 @@ public class StandardHotStoneGame implements Game {
       manaStrategy = new AlphaManaStrategy();
       winnerStrategy = new AlphaWinnerStrategy();
       heroStrategy = new BabyHeroStrategy();
+      deckStrategy = new SpanishDeckStrategy();
     }
     if(version == Version.BETA){
       manaStrategy = new BetaManaStrategy();
       winnerStrategy = new BetaWinnerStrategy();
       heroStrategy = new BabyHeroStrategy();
+      deckStrategy = new SpanishDeckStrategy();
     }
     if(version == Version.GAMMA){
       manaStrategy = new AlphaManaStrategy();
       winnerStrategy = new AlphaWinnerStrategy();
       heroStrategy = new GammaHeroStrategy();
+      deckStrategy = new SpanishDeckStrategy();
     }
     if(version == Version.DELTA){
       manaStrategy = new DeltaManaStrategy();
       winnerStrategy = new AlphaWinnerStrategy();
       heroStrategy = new BabyHeroStrategy();
+      deckStrategy = new DeltaDeckStrategy();
     }
   }
 
@@ -284,25 +289,6 @@ public class StandardHotStoneGame implements Game {
     stdHero.decreaseMana(2);
     heroStrategy.execPower(who, this);
     return Status.OK;
-    }
-
-    private ArrayList<Card> createAlphaDeck(Player owner){
-      ArrayList<Card> deck = new ArrayList<>();
-      Card uno = new StandardCard(GameConstants.UNO_CARD, 1, 1,1, owner);
-      Card dos = new StandardCard(GameConstants.DOS_CARD, 2, 2,2, owner);
-      Card tres = new StandardCard(GameConstants.TRES_CARD, 3, 3,3, owner);
-      Card cuatro = new StandardCard(GameConstants.CUATRO_CARD, 2, 3,1, owner);
-      Card cinco = new StandardCard(GameConstants.CINCO_CARD, 3, 5,1, owner);
-      Card seis = new StandardCard(GameConstants.SEIS_CARD, 2, 1,3, owner);
-      Card siete = new StandardCard(GameConstants.SIETE_CARD, 3, 2,4, owner);
-      deck.add(0,uno);
-      deck.add(1,dos);
-      deck.add(2,tres);
-      deck.add(3,cuatro);
-      deck.add(4,cinco);
-      deck.add(5,seis);
-      deck.add(6,siete);
-      return deck;
     }
 
     private void setInactiveAndRemoveIfDead(Card card, Player owner){
