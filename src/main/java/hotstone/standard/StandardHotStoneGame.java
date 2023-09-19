@@ -18,9 +18,7 @@
 package hotstone.standard;
 
 import hotstone.framework.*;
-import hotstone.variants.AlphaManaStrategy;
-import hotstone.variants.BetaManaStrategy;
-import hotstone.variants.ManaStrategy;
+import hotstone.variants.*;
 
 import java.util.*;
 
@@ -60,8 +58,10 @@ public class StandardHotStoneGame implements Game {
   private HashMap<Player, ArrayList<Card>> handMap;
   private HashMap<Player, ArrayList<Card>> deckMap;
   private HashMap<Player, ArrayList<Card>> fieldMap;
+  private  HashMap<Player, Hero> heroMap;
   private HashMap<Player, Player> getOtherPlayer;
   private ManaStrategy manaStrategy;
+  private WinnnerStrategy winnerStrategy;
 
 
   public StandardHotStoneGame(Version version) {
@@ -93,6 +93,10 @@ public class StandardHotStoneGame implements Game {
     fieldMap.put(Player.FINDUS,findusField);
     fieldMap.put(Player.PEDDERSEN,peddersenField);
 
+    heroMap = new HashMap<>();
+    heroMap.put(Player.FINDUS, findusHero);
+    heroMap.put(Player.PEDDERSEN, peddersenHero);
+
     getOtherPlayer = new HashMap<>();
     getOtherPlayer.put(Player.FINDUS, Player.PEDDERSEN);
     getOtherPlayer.put(Player.PEDDERSEN, Player.FINDUS);
@@ -104,6 +108,7 @@ public class StandardHotStoneGame implements Game {
   private void setupGame(Version version) {
     if(version == Version.ALPHA){
       manaStrategy = new AlphaManaStrategy();
+      winnerStrategy = new AlphaWinnerStrategy();
     }
     if(version == Version.BETA){
       manaStrategy = new BetaManaStrategy();
@@ -120,23 +125,10 @@ public class StandardHotStoneGame implements Game {
   }
 
   @Override
-  public Hero getHero(Player who) {
-    if (who == Player.FINDUS) {
-      return findusHero;
-    } else {
-      return peddersenHero;
-    }
-  }
-
+  public Hero getHero(Player who) { return heroMap.get(who); }
 
   @Override
-  public Player getWinner() {
-    if (getTurnNumber() > 8) {
-      return Player.FINDUS;
-    } else {
-      return null;
-    }
-  }
+  public Player getWinner() { return winnerStrategy.getWinner(heroMap, getTurnNumber()); }
 
   @Override
   public int getTurnNumber() {return turnNumber;}
@@ -176,8 +168,6 @@ public class StandardHotStoneGame implements Game {
     // Set hero power to useable again
     StandardHero stdHero = asStandardHero(getHero(player)) ;
     stdHero.setPowerStatus(true);
-
-
 
     // Draw card and activate minions for the player who is now in turn
     drawCard(otherPlayer, 1);
