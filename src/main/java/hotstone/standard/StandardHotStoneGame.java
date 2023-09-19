@@ -121,6 +121,11 @@ public class StandardHotStoneGame implements Game {
       winnerStrategy = new AlphaWinnerStrategy();
       heroStrategy = new GammaHeroStrategy();
     }
+    if(version == Version.DELTA){
+      manaStrategy = new DeltaManaStrategy();
+      winnerStrategy = new AlphaWinnerStrategy();
+      heroStrategy = new BabyHeroStrategy();
+    }
   }
 
   @Override
