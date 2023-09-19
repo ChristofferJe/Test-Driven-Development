@@ -1,14 +1,14 @@
 package hotstone.variants;
 
 import java.math.*;
-import hotstone.framework.Hero;
-import hotstone.standard.StandardHero;
+import hotstone.standard.*;
+import hotstone.framework.*;
 
 public class BetaManaStrategy implements ManaStrategy {
     @Override
-    public void restoreMana(Hero hero, int turnNumber) {
-        StandardHero stdHero = (StandardHero) hero;
-        stdHero.setMana(calculateMana(turnNumber));
+    public void restoreMana(Player who, Game game) {
+        StandardHero stdHero = (StandardHero) game.getHero(who);
+        stdHero.setMana(calculateMana(game.getTurnNumber()));
     }
 
     private int calculateMana(int turnNumber) {

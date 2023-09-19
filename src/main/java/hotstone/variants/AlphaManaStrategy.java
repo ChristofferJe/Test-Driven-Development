@@ -5,8 +5,8 @@ import hotstone.standard.*;
 
 public class AlphaManaStrategy implements ManaStrategy {
     @Override
-    public void restoreMana(Hero hero, int turnNumber) {
-        StandardHero stdHero = (StandardHero) hero;
+    public void restoreMana(Player who, Game game) {
+        StandardHero stdHero = (StandardHero) game.getHero(who);
         stdHero.setMana(3);
     }
 }

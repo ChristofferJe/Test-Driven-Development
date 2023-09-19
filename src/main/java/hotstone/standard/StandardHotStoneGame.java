@@ -77,10 +77,6 @@ public class StandardHotStoneGame implements Game {
     findusField = new ArrayList<>();
     peddersenField = new ArrayList<>();
 
-    manaStrategy.restoreMana(findusHero,getTurnNumber());
-    manaStrategy.restoreMana(peddersenHero,getTurnNumber());
-
-
     handMap = new HashMap<>();
     handMap.put(Player.FINDUS,findusHand);
     handMap.put(Player.PEDDERSEN,peddersenHand);
@@ -100,6 +96,9 @@ public class StandardHotStoneGame implements Game {
     getOtherPlayer = new HashMap<>();
     getOtherPlayer.put(Player.FINDUS, Player.PEDDERSEN);
     getOtherPlayer.put(Player.PEDDERSEN, Player.FINDUS);
+
+    manaStrategy.restoreMana(Player.FINDUS, this);
+    manaStrategy.restoreMana(Player.PEDDERSEN, this);
 
     drawCard(Player.FINDUS, 3);
     drawCard(Player.PEDDERSEN, 3);
@@ -130,25 +129,23 @@ public class StandardHotStoneGame implements Game {
 
   @Override
   public Player getWinner() { return winnerStrategy.getWinner(this); }
+
   @Override
   public int getTurnNumber() {return turnNumber;}
 
   @Override
   public int getDeckSize(Player who) {return deckMap.get(who).size();}
 
-
   @Override
   public Card getCardInHand(Player who, int indexInHand) {
     return handMap.get(who).get(indexInHand);
   }
-
 
   @Override
   public Iterable<? extends Card> getHand(Player who) {return handMap.get(who);}
 
   @Override
   public int getHandSize(Player who) {return handMap.get(who).size();}
-
 
   @Override
   public Card getCardInField(Player who, int indexInField) {
@@ -180,7 +177,7 @@ public class StandardHotStoneGame implements Game {
     turnNumber += 1;
 
     // Restore mana for opponent player's hero
-    manaStrategy.restoreMana(getHero(otherPlayer), getTurnNumber());
+    manaStrategy.restoreMana(otherPlayer, this);
   }
 
   private void drawCard(Player who, int amount) {
