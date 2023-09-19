@@ -277,6 +277,7 @@ public class StandardHotStoneGame implements Game {
     StandardHero stdHero = asStandardHero(getHero(who));
     stdHero.setPowerStatus(false);
     stdHero.decreaseMana(2);
+    heroStrategy.execPower(who, this);
     return Status.OK;
     }
 
