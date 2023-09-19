@@ -5,5 +5,5 @@ import hotstone.framework.*;
 
 public interface WinnnerStrategy {
 
-    public Player getWinner(HashMap heroes, int turnNumber);
+    public Player getWinner(Game game);
 }

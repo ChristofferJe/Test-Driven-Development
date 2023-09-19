@@ -112,6 +112,7 @@ public class StandardHotStoneGame implements Game {
     }
     if(version == Version.BETA){
       manaStrategy = new BetaManaStrategy();
+      winnerStrategy = new BetaWinnerStrategy();
     }
   }
 
@@ -128,8 +129,7 @@ public class StandardHotStoneGame implements Game {
   public Hero getHero(Player who) { return heroMap.get(who); }
 
   @Override
-  public Player getWinner() { return winnerStrategy.getWinner(heroMap, getTurnNumber()); }
-
+  public Player getWinner() { return winnerStrategy.getWinner(this); }
   @Override
   public int getTurnNumber() {return turnNumber;}
 
