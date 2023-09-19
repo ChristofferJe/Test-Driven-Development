@@ -62,16 +62,17 @@ public class StandardHotStoneGame implements Game {
   private HashMap<Player, Player> getOtherPlayer;
   private ManaStrategy manaStrategy;
   private WinnnerStrategy winnerStrategy;
+  private HeroStrategy heroStrategy;
 
 
   public StandardHotStoneGame(Version version) {
     setupGame(version);
 
     turnNumber = 1;
-    findusHero = new StandardHero(Player.FINDUS);
+    findusHero = heroStrategy.assignHero(Player.FINDUS);
     findusDeck = createAlphaDeck(Player.FINDUS);
     findusHand = new ArrayList<>();
-    peddersenHero = new StandardHero(Player.PEDDERSEN);
+    peddersenHero = heroStrategy.assignHero(Player.PEDDERSEN);
     peddersenDeck = createAlphaDeck(Player.PEDDERSEN);
     peddersenHand = new ArrayList<>();
     findusField = new ArrayList<>();
@@ -108,10 +109,17 @@ public class StandardHotStoneGame implements Game {
     if(version == Version.ALPHA){
       manaStrategy = new AlphaManaStrategy();
       winnerStrategy = new AlphaWinnerStrategy();
+      heroStrategy = new BabyHeroStrategy();
     }
     if(version == Version.BETA){
       manaStrategy = new BetaManaStrategy();
       winnerStrategy = new BetaWinnerStrategy();
+      heroStrategy = new BabyHeroStrategy();
+    }
+    if(version == Version.GAMMA){
+      manaStrategy = new AlphaManaStrategy();
+      winnerStrategy = new AlphaWinnerStrategy();
+      heroStrategy = new GammaHeroStrategy();
     }
   }
 

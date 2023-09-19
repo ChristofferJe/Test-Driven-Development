@@ -1,3 +1,3 @@
 package hotstone.framework;
 
-public enum Version {ALPHA, BETA, GAMMMA, DELTA}
+public enum Version {ALPHA, BETA, GAMMA, DELTA}

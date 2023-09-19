@@ -5,14 +5,18 @@ import hotstone.framework.Hero;
 import hotstone.framework.Player;
 import hotstone.variants.ManaStrategy;
 
+import java.lang.reflect.Type;
+
 public class StandardHero implements Hero {
 
+    private String type;
     private boolean powerStatus;
     private int mana;
     private int health;
     private Player owner;
 
-    public StandardHero(Player owner){
+    public StandardHero(Player owner, String type){
+        this.type = type;
         powerStatus = true;
         health = GameConstants.HERO_MAX_HEALTH;
         this.owner = owner;
@@ -34,11 +38,14 @@ public class StandardHero implements Hero {
 
     @Override
     public String getType() {
-        return GameConstants.BABY_HERO_TYPE;
+        return type;
     }
 
     @Override
     public Player getOwner() { return owner; }
+
+    @Override
+    public String getEffectDescription() { return "cute"; }
 
     public void setPowerStatus(boolean bool){
         powerStatus = bool;
