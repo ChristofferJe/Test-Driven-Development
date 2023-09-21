@@ -8,7 +8,7 @@ import hotstone.standard.StandardCard;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class DeltaDeckStrategy implements DeckStrategy {
+public class DishDeckStrategy implements DeckStrategy {
 
     @Override
     public ArrayList<Card> createDeck(Player owner) {
@@ -48,8 +48,8 @@ public class DeltaDeckStrategy implements DeckStrategy {
 
     private void swapCardsByIndex(ArrayList<Card> deck, int index1, int index2) {
         Card temp = deck.get(index1);
-        deck.add(index1, deck.get(index2));
-        deck.add(index2, temp);
+        deck.set(index1, deck.get(index2));
+        deck.set(index2, temp);
     }
 
     private void createNonShuffledDeck(ArrayList<Card> deck, Player owner) {

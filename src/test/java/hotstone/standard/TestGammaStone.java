@@ -14,7 +14,7 @@ public class TestGammaStone {
 
 
     /**
-     * Fixture for BetaStone testing.
+     * Fixture for GammaStone testing.
      */
     @BeforeEach
     public void setUp() {

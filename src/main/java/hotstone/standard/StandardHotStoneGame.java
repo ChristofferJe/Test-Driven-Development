@@ -46,20 +46,10 @@ import java.util.*;
 
 public class StandardHotStoneGame implements Game {
   private int turnNumber;
-  private Hero findusHero;
-  private Hero peddersenHero;
-  private ArrayList<Card> findusDeck;
-  private ArrayList<Card> peddersenDeck;
-  private ArrayList<Card> findusHand;
-  private ArrayList<Card> peddersenHand;
-
-  private ArrayList<Card> findusField;
-  private ArrayList<Card> peddersenField;
-  private HashMap<Player, ArrayList<Card>> handMap;
-  private HashMap<Player, ArrayList<Card>> deckMap;
-  private HashMap<Player, ArrayList<Card>> fieldMap;
-  private  HashMap<Player, Hero> heroMap;
-  private HashMap<Player, Player> getOtherPlayer;
+  private final HashMap<Player, ArrayList<Card>> hands;
+  private final HashMap<Player, ArrayList<Card>> decks;
+  private final HashMap<Player, ArrayList<Card>> fields;
+  private final HashMap<Player, Hero> heroes;
   private ManaStrategy manaStrategy;
   private WinnnerStrategy winnerStrategy;
   private HeroStrategy heroStrategy;
@@ -70,41 +60,37 @@ public class StandardHotStoneGame implements Game {
     setupGame(version);
 
     turnNumber = 1;
-    findusHero = heroStrategy.assignHero(Player.FINDUS);
-    findusDeck = deckStrategy.createDeck(Player.FINDUS);
-    findusHand = new ArrayList<>();
-    peddersenHero = heroStrategy.assignHero(Player.PEDDERSEN);
-    peddersenDeck = deckStrategy.createDeck(Player.PEDDERSEN);
-    peddersenHand = new ArrayList<>();
-    findusField = new ArrayList<>();
-    peddersenField = new ArrayList<>();
+    Hero findusHero = heroStrategy.assignHero(Player.FINDUS);
+    ArrayList<Card> findusDeck = deckStrategy.createDeck(Player.FINDUS);
+    ArrayList<Card> findusHand = new ArrayList<>();
+    Hero peddersenHero = heroStrategy.assignHero(Player.PEDDERSEN);
+    ArrayList<Card> peddersenDeck = deckStrategy.createDeck(Player.PEDDERSEN);
+    ArrayList<Card> peddersenHand = new ArrayList<>();
+    ArrayList<Card> findusField = new ArrayList<>();
+    ArrayList<Card> peddersenField = new ArrayList<>();
 
-    handMap = new HashMap<>();
-    handMap.put(Player.FINDUS,findusHand);
-    handMap.put(Player.PEDDERSEN,peddersenHand);
+    hands = new HashMap<>();
+    hands.put(Player.FINDUS, findusHand);
+    hands.put(Player.PEDDERSEN, peddersenHand);
 
-    deckMap = new HashMap<>();
-    deckMap.put(Player.FINDUS,findusDeck);
-    deckMap.put(Player.PEDDERSEN,peddersenDeck);
+    decks = new HashMap<>();
+    decks.put(Player.FINDUS, findusDeck);
+    decks.put(Player.PEDDERSEN, peddersenDeck);
 
-    fieldMap = new HashMap<>();
-    fieldMap.put(Player.FINDUS,findusField);
-    fieldMap.put(Player.PEDDERSEN,peddersenField);
+    fields = new HashMap<>();
+    fields.put(Player.FINDUS, findusField);
+    fields.put(Player.PEDDERSEN, peddersenField);
 
-    heroMap = new HashMap<>();
-    heroMap.put(Player.FINDUS, findusHero);
-    heroMap.put(Player.PEDDERSEN, peddersenHero);
-
-    getOtherPlayer = new HashMap<>();
-    getOtherPlayer.put(Player.FINDUS, Player.PEDDERSEN);
-    getOtherPlayer.put(Player.PEDDERSEN, Player.FINDUS);
+    heroes = new HashMap<>();
+    heroes.put(Player.FINDUS, findusHero);
+    heroes.put(Player.PEDDERSEN, peddersenHero);
 
     manaStrategy.restoreMana(Player.FINDUS, this);
     manaStrategy.restoreMana(Player.PEDDERSEN, this);
 
-    drawCard(Player.FINDUS, 3);
-    drawCard(Player.PEDDERSEN, 3);
+    initializeHands();
   }
+
 
   private void setupGame(Version version) {
     if(version == Version.ALPHA){
@@ -129,21 +115,27 @@ public class StandardHotStoneGame implements Game {
       manaStrategy = new DeltaManaStrategy();
       winnerStrategy = new AlphaWinnerStrategy();
       heroStrategy = new BabyHeroStrategy();
-      deckStrategy = new DeltaDeckStrategy();
+      deckStrategy = new DishDeckStrategy();
     }
+  }
+
+  private void initializeHands() {
+    // Each player draws three cards
+    for(int i=0; i<3; i++){drawCard(Player.FINDUS); drawCard(Player.PEDDERSEN);}
   }
 
   @Override
   public Player getPlayerInTurn() {
-    if (turnNumber % 2 == 1) {
-      return Player.FINDUS;
-    } else {
+    boolean turnNumberIsEven = turnNumber % 2 == 0;
+    if (turnNumberIsEven) {
       return Player.PEDDERSEN;
+    } else {
+      return Player.FINDUS;
     }
   }
 
   @Override
-  public Hero getHero(Player who) { return heroMap.get(who); }
+  public Hero getHero(Player who) { return heroes.get(who); }
 
   @Override
   public Player getWinner() { return winnerStrategy.getWinner(this); }
@@ -152,43 +144,43 @@ public class StandardHotStoneGame implements Game {
   public int getTurnNumber() {return turnNumber;}
 
   @Override
-  public int getDeckSize(Player who) {return deckMap.get(who).size();}
+  public int getDeckSize(Player who) {return decks.get(who).size();}
 
   @Override
   public Card getCardInHand(Player who, int indexInHand) {
-    return handMap.get(who).get(indexInHand);
+    return hands.get(who).get(indexInHand);
   }
 
   @Override
-  public Iterable<? extends Card> getHand(Player who) {return handMap.get(who);}
+  public Iterable<? extends Card> getHand(Player who) {return hands.get(who);}
 
   @Override
-  public int getHandSize(Player who) {return handMap.get(who).size();}
+  public int getHandSize(Player who) {return hands.get(who).size();}
 
   @Override
   public Card getCardInField(Player who, int indexInField) {
-    return fieldMap.get(who).get(indexInField);
+    return fields.get(who).get(indexInField);
   }
 
   @Override
-  public Iterable<? extends Card> getField(Player who) {return fieldMap.get(who);}
+  public Iterable<? extends Card> getField(Player who) {return fields.get(who);}
 
   @Override
-  public int getFieldSize(Player who) {return fieldMap.get(who).size();}
+  public int getFieldSize(Player who) {return fields.get(who).size();}
 
   @Override
   public void endTurn() {
     Player player = getPlayerInTurn();
-    Player otherPlayer = getOtherPlayer.get(player);
+    Player otherPlayer = Utility.computeOpponent(player);
     // Set hero power to useable again
     StandardHero stdHero = asStandardHero(getHero(player)) ;
     stdHero.setPowerStatus(true);
 
     // Draw card and activate minions for the player who is now in turn
-    drawCard(otherPlayer, 1);
+    drawCard(otherPlayer);
     // Set active
 
-    for (Card c : fieldMap.get(otherPlayer)) {
+    for (Card c : fields.get(otherPlayer)) {
       StandardCard stdCard = asStandardCard(c);
       stdCard.setStatus(true);
     }
@@ -198,13 +190,11 @@ public class StandardHotStoneGame implements Game {
     manaStrategy.restoreMana(otherPlayer, this);
   }
 
-  private void drawCard(Player who, int amount) {
-    if(!deckMap.get(who).isEmpty()){
-      for (int i = 0; i < amount; i++) {
-        Card card = deckMap.get(who).get(0);
-        deckMap.get(who).remove(0);
-        handMap.get(who).add(0,card);
-      }
+  private void drawCard(Player who) {
+    if(!decks.get(who).isEmpty()){
+        Card card = decks.get(who).get(0);
+        decks.get(who).remove(0);
+        hands.get(who).add(0,card);
     } else {
       StandardHero stdHero = asStandardHero(getHero(who));
       stdHero.decreaseHealth(2);
@@ -220,8 +210,8 @@ public class StandardHotStoneGame implements Game {
     // Check if enough mana
     if (getHero(who).getMana() < card.getManaCost()) return Status.NOT_ENOUGH_MANA;
     // Add card in field index 0 and remove from hand
-    fieldMap.get(who).add(0, card);
-    handMap.get(who).remove(card);
+    fields.get(who).add(0, card);
+    hands.get(who).remove(card);
     // Decrease mana
     StandardHero stdHero = asStandardHero(getHero(who));
     stdHero.decreaseMana(card.getManaCost());
@@ -247,7 +237,7 @@ public class StandardHotStoneGame implements Game {
     stdAttackingCard.decreaseHealth(defendingCard.getAttack());
     stdDefendingCard.decreaseHealth(attackingCard.getAttack());
     // Check if card's health are below zero and set inactive
-    setInactiveAndRemoveIfDead(defendingCard, getOtherPlayer.get(playerAttacking));
+    setInactiveAndRemoveIfDead(defendingCard, Utility.computeOpponent(playerAttacking));
     setInactiveAndRemoveIfDead(attackingCard,playerAttacking);
     // Set inactive if still alive
     stdAttackingCard.setStatus(false);
@@ -259,7 +249,7 @@ public class StandardHotStoneGame implements Game {
   @Override
   public Status attackHero(Player playerAttacking, Card attackingCard) {
     // Get player whose hero is being attacked
-    Player playerAttacked = getOtherPlayer.get(playerAttacking);
+    Player playerAttacked = Utility.computeOpponent(playerAttacking);
     // Check if attacking player is in turn
     if(!(getPlayerInTurn() == playerAttacking)) return Status.NOT_PLAYER_IN_TURN;
     // Check if player attacking owns attacking card
@@ -295,7 +285,7 @@ public class StandardHotStoneGame implements Game {
       if(card.getHealth()<1){
         StandardCard stdCard = asStandardCard(card);
         stdCard.setStatus(false);
-        fieldMap.get(owner).remove(card);
+        fields.get(owner).remove(card);
       }
     }
 
