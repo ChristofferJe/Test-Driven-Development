@@ -6,5 +6,5 @@ import hotstone.standard.*;
 
 public interface ManaStrategy {
 
-    void restoreMana(Player who, Game game);
+    int calculateMana(int turnNumber);
 }

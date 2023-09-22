@@ -6,12 +6,7 @@ import hotstone.framework.*;
 
 public class BetaManaStrategy implements ManaStrategy {
     @Override
-    public void restoreMana(Player who, Game game) {
-        StandardHero stdHero = (StandardHero) game.getHero(who);
-        stdHero.setMana(calculateMana(game.getTurnNumber()));
-    }
-
-    private int calculateMana(int turnNumber) {
+    public int calculateMana(int turnNumber) {
         if(turnNumber % 2 == 0){
             return Math.min(7, turnNumber / 2 );
 

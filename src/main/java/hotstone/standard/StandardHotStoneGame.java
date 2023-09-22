@@ -64,11 +64,12 @@ public class StandardHotStoneGame implements Game {
     Hero findusHero = heroStrategy.assignHero(Player.FINDUS);
     ArrayList<Card> findusDeck = deckStrategy.createDeck(Player.FINDUS);
     ArrayList<Card> findusHand = new ArrayList<>();
+    ArrayList<Card> findusField = new ArrayList<>();
+
 
     Hero peddersenHero = heroStrategy.assignHero(Player.PEDDERSEN);
     ArrayList<Card> peddersenDeck = deckStrategy.createDeck(Player.PEDDERSEN);
     ArrayList<Card> peddersenHand = new ArrayList<>();
-    ArrayList<Card> findusField = new ArrayList<>();
     ArrayList<Card> peddersenField = new ArrayList<>();
 
     hands = new HashMap<>();
@@ -87,8 +88,8 @@ public class StandardHotStoneGame implements Game {
     heroes.put(Player.FINDUS, findusHero);
     heroes.put(Player.PEDDERSEN, peddersenHero);
 
-    manaStrategy.restoreMana(Player.FINDUS, this);
-    manaStrategy.restoreMana(Player.PEDDERSEN, this);
+    restoreMana(Player.FINDUS);
+    restoreMana(Player.PEDDERSEN);
 
     initializeHands();
   }
@@ -189,7 +190,7 @@ public class StandardHotStoneGame implements Game {
     turnNumber += 1;
 
     // Restore mana for opponent player's hero
-    manaStrategy.restoreMana(otherPlayer, this);
+    restoreMana(otherPlayer);
   }
 
   private void drawCard(Player who) {
@@ -356,11 +357,14 @@ public class StandardHotStoneGame implements Game {
       }
     }
 
+    private void restoreMana(Player who){
+      StandardHero stdHero = asStandardHero(getHero(who));
+      int mana = manaStrategy.calculateMana(getTurnNumber());
+      stdHero.setMana(mana);
+    }
+
     private StandardCard asStandardCard(Card card){return (StandardCard) card;}
 
     private StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
-
-
-
 
 }
