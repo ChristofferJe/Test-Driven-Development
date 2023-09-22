@@ -6,7 +6,7 @@ import hotstone.variants.HeroStrategy;
 
 public class GammaHeroStrategy implements HeroStrategy {
     @Override
-    public Hero assignHero(Player who) {
+    public Hero createHero(Player who) {
 
         if(who == Player.FINDUS) {
             Hero hero = new StandardHero(who, GameConstants.THAI_CHEF_HERO_TYPE);

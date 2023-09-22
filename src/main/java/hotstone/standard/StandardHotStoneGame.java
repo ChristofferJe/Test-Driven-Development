@@ -61,13 +61,13 @@ public class StandardHotStoneGame implements Game {
 
     turnNumber = 1;
 
-    Hero findusHero = heroStrategy.assignHero(Player.FINDUS);
+    Hero findusHero = heroStrategy.createHero(Player.FINDUS);
     ArrayList<Card> findusDeck = deckStrategy.createDeck(Player.FINDUS);
     ArrayList<Card> findusHand = new ArrayList<>();
     ArrayList<Card> findusField = new ArrayList<>();
 
 
-    Hero peddersenHero = heroStrategy.assignHero(Player.PEDDERSEN);
+    Hero peddersenHero = heroStrategy.createHero(Player.PEDDERSEN);
     ArrayList<Card> peddersenDeck = deckStrategy.createDeck(Player.PEDDERSEN);
     ArrayList<Card> peddersenHand = new ArrayList<>();
     ArrayList<Card> peddersenField = new ArrayList<>();
