@@ -50,7 +50,7 @@ public class TestAlphaStone {
   /** Fixture for AlphaStone testing. */
   @BeforeEach
   public void setUp() {
-    game = new StandardHotStoneGame();
+    game = new StandardHotStoneGame(Version.ALPHA);
   }
 
   // Example of an early, simple test case:
@@ -928,5 +928,13 @@ public class TestAlphaStone {
     game.playCard(Player.FINDUS, uno);
     // Then Peddersen should have three cards in his hand
     assertThat(game.getHandSize(Player.PEDDERSEN), is(3));
+  }
+
+  @Test
+  public void FindusHeroShouldHaveHeroPowerCute(){
+    // Given game, Findus has a hero
+    Hero hero = game.getHero(Player.FINDUS);
+    // Then Findus' hero power's description should be "cute"
+    assertThat(hero.getEffectDescription(), is("cute"));
   }
 }

@@ -56,4 +56,10 @@ public interface Hero  {
    * @return the player having this hero
    */
   Player getOwner();
+
+  /** Get the text describing the hero's
+   * power
+   * @return short description of hero power/effect
+   */
+  String getEffectDescription();
 }

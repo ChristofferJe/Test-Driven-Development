@@ -18,6 +18,7 @@
 package hotstone.standard;
 
 import hotstone.framework.*;
+import hotstone.variants.*;
 
 import java.util.*;
 
@@ -45,141 +46,158 @@ import java.util.*;
 
 public class StandardHotStoneGame implements Game {
   private int turnNumber;
-  private Hero findusHero;
-  private Hero peddersenHero;
-  private ArrayList<Card> findusDeck;
-  private ArrayList<Card> peddersenDeck;
-  private ArrayList<Card> findusHand;
-  private ArrayList<Card> peddersenHand;
-
-  private ArrayList<Card> findusField;
-  private ArrayList<Card> peddersenField;
-  private HashMap<Player, ArrayList<Card>> handMap;
-  private HashMap<Player, ArrayList<Card>> deckMap;
-  private HashMap<Player, ArrayList<Card>> fieldMap;
-  private HashMap<Player, Player> getOtherPlayer;
+  private final HashMap<Player, ArrayList<Card>> hands;
+  private final HashMap<Player, ArrayList<Card>> decks;
+  private final HashMap<Player, ArrayList<Card>> fields;
+  private final HashMap<Player, Hero> heroes;
+  private ManaStrategy manaStrategy;
+  private WinnnerStrategy winnerStrategy;
+  private HeroStrategy heroStrategy;
+  private DeckStrategy deckStrategy;
 
 
-  public StandardHotStoneGame() {
+  public StandardHotStoneGame(Version version) {
+    setupGame(version);
+
     turnNumber = 1;
-    findusHero = new StandardHero(Player.FINDUS);
-    findusDeck = createAlphaDeck(Player.FINDUS);
-    findusHand = new ArrayList<>();
-    peddersenHero = new StandardHero(Player.PEDDERSEN);
-    peddersenDeck = createAlphaDeck(Player.PEDDERSEN);
-    peddersenHand = new ArrayList<>();
-    findusField = new ArrayList<>();
-    peddersenField = new ArrayList<>();
+
+    Hero findusHero = heroStrategy.createHero(Player.FINDUS);
+    ArrayList<Card> findusDeck = deckStrategy.createDeck(Player.FINDUS);
+    ArrayList<Card> findusHand = new ArrayList<>();
+    ArrayList<Card> findusField = new ArrayList<>();
 
 
-    handMap = new HashMap<>();
-    handMap.put(Player.FINDUS,findusHand);
-    handMap.put(Player.PEDDERSEN,peddersenHand);
+    Hero peddersenHero = heroStrategy.createHero(Player.PEDDERSEN);
+    ArrayList<Card> peddersenDeck = deckStrategy.createDeck(Player.PEDDERSEN);
+    ArrayList<Card> peddersenHand = new ArrayList<>();
+    ArrayList<Card> peddersenField = new ArrayList<>();
 
-    deckMap = new HashMap<>();
-    deckMap.put(Player.FINDUS,findusDeck);
-    deckMap.put(Player.PEDDERSEN,peddersenDeck);
+    hands = new HashMap<>();
+    hands.put(Player.FINDUS, findusHand);
+    hands.put(Player.PEDDERSEN, peddersenHand);
 
-    fieldMap = new HashMap<>();
-    fieldMap.put(Player.FINDUS,findusField);
-    fieldMap.put(Player.PEDDERSEN,peddersenField);
+    decks = new HashMap<>();
+    decks.put(Player.FINDUS, findusDeck);
+    decks.put(Player.PEDDERSEN, peddersenDeck);
 
-    getOtherPlayer = new HashMap<>();
-    getOtherPlayer.put(Player.FINDUS, Player.PEDDERSEN);
-    getOtherPlayer.put(Player.PEDDERSEN, Player.FINDUS);
+    fields = new HashMap<>();
+    fields.put(Player.FINDUS, findusField);
+    fields.put(Player.PEDDERSEN, peddersenField);
 
-    drawCard(Player.FINDUS, 3);
-    drawCard(Player.PEDDERSEN, 3);
+    heroes = new HashMap<>();
+    heroes.put(Player.FINDUS, findusHero);
+    heroes.put(Player.PEDDERSEN, peddersenHero);
+
+    restoreMana(Player.FINDUS);
+    restoreMana(Player.PEDDERSEN);
+
+    initializeHands();
+  }
+
+
+  private void setupGame(Version version) {
+    if(version == Version.ALPHA){
+      manaStrategy = new AlphaManaStrategy();
+      winnerStrategy = new AlphaWinnerStrategy();
+      heroStrategy = new BabyHeroStrategy();
+      deckStrategy = new SpanishDeckStrategy();
+    }
+    if(version == Version.BETA){
+      manaStrategy = new BetaManaStrategy();
+      winnerStrategy = new BetaWinnerStrategy();
+      heroStrategy = new BabyHeroStrategy();
+      deckStrategy = new SpanishDeckStrategy();
+    }
+    if(version == Version.GAMMA){
+      manaStrategy = new AlphaManaStrategy();
+      winnerStrategy = new AlphaWinnerStrategy();
+      heroStrategy = new GammaHeroStrategy();
+      deckStrategy = new SpanishDeckStrategy();
+    }
+    if(version == Version.DELTA){
+      manaStrategy = new DeltaManaStrategy();
+      winnerStrategy = new AlphaWinnerStrategy();
+      heroStrategy = new BabyHeroStrategy();
+      deckStrategy = new DishDeckStrategy();
+    }
+  }
+
+  private void initializeHands() {
+    // Each player draws three cards
+    for(int i=0; i<3; i++){drawCard(Player.FINDUS); drawCard(Player.PEDDERSEN);}
   }
 
   @Override
   public Player getPlayerInTurn() {
-    if (turnNumber % 2 == 1) {
-      return Player.FINDUS;
-    } else {
+    boolean turnNumberIsEven = turnNumber % 2 == 0;
+    if (turnNumberIsEven) {
       return Player.PEDDERSEN;
-    }
-  }
-
-  @Override
-  public Hero getHero(Player who) {
-    if (who == Player.FINDUS) {
-      return findusHero;
     } else {
-      return peddersenHero;
-    }
-  }
-
-
-  @Override
-  public Player getWinner() {
-    if (getTurnNumber() > 8) {
       return Player.FINDUS;
-    } else {
-      return null;
     }
   }
+
+  @Override
+  public Hero getHero(Player who) { return heroes.get(who); }
+
+  @Override
+  public Player getWinner() { return winnerStrategy.getWinner(this); }
 
   @Override
   public int getTurnNumber() {return turnNumber;}
 
   @Override
-  public int getDeckSize(Player who) {return deckMap.get(who).size();}
-
+  public int getDeckSize(Player who) {return decks.get(who).size();}
 
   @Override
   public Card getCardInHand(Player who, int indexInHand) {
-    return handMap.get(who).get(indexInHand);
+    return hands.get(who).get(indexInHand);
   }
 
+  @Override
+  public Iterable<? extends Card> getHand(Player who) {return hands.get(who);}
 
   @Override
-  public Iterable<? extends Card> getHand(Player who) {return handMap.get(who);}
-
-  @Override
-  public int getHandSize(Player who) {return handMap.get(who).size();}
-
+  public int getHandSize(Player who) {return hands.get(who).size();}
 
   @Override
   public Card getCardInField(Player who, int indexInField) {
-    return fieldMap.get(who).get(indexInField);
+    return fields.get(who).get(indexInField);
   }
 
   @Override
-  public Iterable<? extends Card> getField(Player who) {return fieldMap.get(who);}
+  public Iterable<? extends Card> getField(Player who) {return fields.get(who);}
 
   @Override
-  public int getFieldSize(Player who) {return fieldMap.get(who).size();}
+  public int getFieldSize(Player who) {return fields.get(who).size();}
 
   @Override
   public void endTurn() {
     Player player = getPlayerInTurn();
-    Player otherPlayer = getOtherPlayer.get(player);
+    Player otherPlayer = Utility.computeOpponent(player);
     // Set hero power to useable again
     StandardHero stdHero = asStandardHero(getHero(player)) ;
     stdHero.setPowerStatus(true);
 
-    // Restore mana
-    stdHero.setMana(3);
-
     // Draw card and activate minions for the player who is now in turn
-    drawCard(otherPlayer, 1);
+    drawCard(otherPlayer);
     // Set active
 
-    for (Card c : fieldMap.get(otherPlayer)) {
+    for (Card c : fields.get(otherPlayer)) {
       StandardCard stdCard = asStandardCard(c);
       stdCard.setStatus(true);
     }
     turnNumber += 1;
+
+    // Restore mana for opponent player's hero
+    restoreMana(otherPlayer);
   }
 
-  private void drawCard(Player who, int amount) {
-    if(!deckMap.get(who).isEmpty()){
-      for (int i = 0; i < amount; i++) {
-        Card card = deckMap.get(who).get(0);
-        deckMap.get(who).remove(0);
-        handMap.get(who).add(0,card);
-      }
+  private void drawCard(Player who) {
+    if(!decks.get(who).isEmpty()){
+        Card card = decks.get(who).get(0);
+        decks.get(who).remove(0);
+        hands.get(who).add(0,card);
     } else {
       StandardHero stdHero = asStandardHero(getHero(who));
       stdHero.decreaseHealth(2);
@@ -188,115 +206,165 @@ public class StandardHotStoneGame implements Game {
 
   @Override
   public Status playCard(Player who, Card card) {
-    // Check if player in turn
-    if(!(getPlayerInTurn() == who)) return Status.NOT_PLAYER_IN_TURN;
-    // Check if playing card from own hand
-    if(!(card.getOwner() == who)) return Status.NOT_OWNER;
-    // Check if enough mana
-    if (getHero(who).getMana() < card.getManaCost()) return Status.NOT_ENOUGH_MANA;
-    // Add card in field index 0 and remove from hand
-    fieldMap.get(who).add(0, card);
-    handMap.get(who).remove(card);
-    // Decrease mana
+    Status status = isPlayCardAllowed(who, card);
+    if (status != Status.OK) return status;
+    moveCardFromHandToField(who, card);
+    decreaseHeroMana(who, card.getManaCost());
+    return status;
+
+  }
+
+  private void decreaseHeroMana(Player who, int manaAmount) {
+    // Cast and decrease mana
     StandardHero stdHero = asStandardHero(getHero(who));
-    stdHero.decreaseMana(card.getManaCost());
+    stdHero.decreaseMana(manaAmount);
+  }
 
+  private void moveCardFromHandToField(Player who, Card card) {
+    // Add card in field index 0 and remove from hand
+    fields.get(who).add(0, card);
+    hands.get(who).remove(card);
+  }
+
+  private Status isPlayCardAllowed(Player who, Card card) {
+    // Check if player in turn
+    if(!isPlayerInTurn(who)) return Status.NOT_PLAYER_IN_TURN;
+    // Check if playing card from own hand
+    if(!isOwner(who,card)) return Status.NOT_OWNER;
+    // Check if enough mana
+    if (!hasEnoughMana(who, card.getManaCost())) return Status.NOT_ENOUGH_MANA;
     return Status.OK;
+  }
 
+  private boolean hasEnoughMana(Player who, int manaAmount) {
+      return getHero(who).getMana() >= manaAmount;
+  }
+
+  private static boolean isOwner(Player who, Card card) {
+      return card.getOwner() == who;
+  }
+
+  private boolean isPlayerInTurn(Player who) {
+      return getPlayerInTurn() == who;
   }
 
   @Override
   public Status attackCard(Player playerAttacking, Card attackingCard, Card defendingCard) {
+    Status status = isAttackCardAllowed(playerAttacking, attackingCard, defendingCard);
+    if (status != Status.OK) return status;
+    executeAttackCard(attackingCard, defendingCard);
+    return status;
+
+  }
+
+  private void executeAttackCard(Card attackingCard, Card defendingCard) {
+    // Change the health of the attacking card and attacked card
+    decreaseCardHealth(defendingCard, attackingCard.getAttack());
+    decreaseCardHealth(attackingCard, defendingCard.getAttack());
+    // Check if card's health are below zero and set inactive
+    setInactiveAndRemoveIfDead(defendingCard);
+    setInactiveAndRemoveIfDead(attackingCard);
+    // Set inactive if still alive
+    deactivateCard(attackingCard);
+  }
+
+  private void deactivateCard(Card card) {
+    StandardCard stdCard = asStandardCard(card);
+    stdCard.setStatus(false);
+  }
+
+  private void decreaseCardHealth(Card card, int amount) {
+    StandardCard stdCard = asStandardCard(card);
+    stdCard.decreaseHealth(amount);
+  }
+
+  private Status isAttackCardAllowed(Player playerAttacking, Card attackingCard, Card defendingCard) {
     // Check if attacking player is in turn
-    if(!(getPlayerInTurn() == playerAttacking)) return Status.NOT_PLAYER_IN_TURN;
+    if(!isPlayerInTurn(playerAttacking)) return Status.NOT_PLAYER_IN_TURN;
     // Check if attacking player is owner of attacking card
-    if(!(attackingCard.getOwner() == playerAttacking)) return Status.NOT_OWNER;
+    if(!isOwner(playerAttacking, attackingCard)) return Status.NOT_OWNER;
     // Check if card is active
-    if(!attackingCard.isActive()) return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
+    if(!isCardActive(attackingCard)) return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
     // Check if attacking own minion
     if(attackingCard.getOwner() ==  defendingCard.getOwner()) return Status.ATTACK_NOT_ALLOWED_ON_OWN_MINION;
-    // Cast attacking and defending card to StandardCard class
-    StandardCard stdAttackingCard = asStandardCard(attackingCard);
-    StandardCard stdDefendingCard = asStandardCard(defendingCard);
-    // Change the health of the attacking card and attacked card
-    stdAttackingCard.decreaseHealth(defendingCard.getAttack());
-    stdDefendingCard.decreaseHealth(attackingCard.getAttack());
-    // Check if card's health are below zero and set inactive
-    setInactiveAndRemoveIfDead(defendingCard, getOtherPlayer.get(playerAttacking));
-    setInactiveAndRemoveIfDead(attackingCard,playerAttacking);
-    // Set inactive if still alive
-    stdAttackingCard.setStatus(false);
-
     return Status.OK;
+  }
 
+  private static boolean isCardActive(Card attackingCard) {
+    return attackingCard.isActive();
   }
 
   @Override
   public Status attackHero(Player playerAttacking, Card attackingCard) {
-    // Get player whose hero is being attacked
-    Player playerAttacked = getOtherPlayer.get(playerAttacking);
-    // Check if attacking player is in turn
-    if(!(getPlayerInTurn() == playerAttacking)) return Status.NOT_PLAYER_IN_TURN;
-    // Check if player attacking owns attacking card
-    if(!(attackingCard.getOwner() == playerAttacking)) return Status.NOT_OWNER;
-    // Check if card is active
-    if(!attackingCard.isActive()) return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
-    // Cast attacking card to StandardCard class
-    StandardCard stdCard = asStandardCard(attackingCard);
+    Status status = isAttackHeroAllowed(playerAttacking, attackingCard);
+    if (status != Status.OK) return status;
+    executeAttackHero(attackingCard);
+    return status;
+  }
+
+  private void executeAttackHero(Card attackingCard) {
     // Reduce the attacked heroes health
-    StandardHero stdHero = asStandardHero(getHero(playerAttacked));
-    stdHero.decreaseHealth(stdCard.getAttack());
+    decreaseHeroHealth(Utility.computeOpponent(attackingCard.getOwner()), attackingCard.getAttack());
     // Set attacking card inactive
-    stdCard.setStatus(false);
+    deactivateCard(attackingCard);
+  }
+
+  private void decreaseHeroHealth(Player who, int amount) {
+    StandardHero stdHero = asStandardHero(getHero(who));
+    stdHero.decreaseHealth(amount);
+  }
+
+  private Status isAttackHeroAllowed(Player playerAttacking, Card attackingCard) {
+    // Check if attacking player is in turn
+    if(!isPlayerInTurn(playerAttacking)) return Status.NOT_PLAYER_IN_TURN;
+    // Check if player attacking owns attacking card
+    if(!isOwner(playerAttacking, attackingCard)) return Status.NOT_OWNER;
+    // Check if card is active
+    if(!isCardActive(attackingCard)) return Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION;
     return Status.OK;
   }
 
   @Override
   public Status usePower(Player who) {
-    // Check if player in turn
-    if(!(getPlayerInTurn() == who)) return Status.NOT_PLAYER_IN_TURN;
-    // Check that the player can use its hero power
-    if (!getHero(who).canUsePower()) return Status.POWER_USE_NOT_ALLOWED_TWICE_PR_ROUND;
-    // Check if enough mana
-    if (getHero(who).getMana() < 2) return Status.NOT_ENOUGH_MANA;
+    Status status = isPowerAllowed(who);
+    if (status != Status.OK) return status;
     StandardHero stdHero = asStandardHero(getHero(who));
     stdHero.setPowerStatus(false);
     stdHero.decreaseMana(2);
+    heroStrategy.execPower(who, this);
     return Status.OK;
     }
 
-    private ArrayList<Card> createAlphaDeck(Player owner){
-      ArrayList<Card> deck = new ArrayList<>();
-      Card uno = new StandardCard(GameConstants.UNO_CARD, 1, 1,1, owner);
-      Card dos = new StandardCard(GameConstants.DOS_CARD, 2, 2,2, owner);
-      Card tres = new StandardCard(GameConstants.TRES_CARD, 3, 3,3, owner);
-      Card cuatro = new StandardCard(GameConstants.CUATRO_CARD, 2, 3,1, owner);
-      Card cinco = new StandardCard(GameConstants.CINCO_CARD, 3, 5,1, owner);
-      Card seis = new StandardCard(GameConstants.SEIS_CARD, 2, 1,3, owner);
-      Card siete = new StandardCard(GameConstants.SIETE_CARD, 3, 2,4, owner);
-      deck.add(0,uno);
-      deck.add(1,dos);
-      deck.add(2,tres);
-      deck.add(3,cuatro);
-      deck.add(4,cinco);
-      deck.add(5,seis);
-      deck.add(6,siete);
-      return deck;
+  private Status isPowerAllowed(Player who) {
+    // Check if player in turn
+    if(!isPlayerInTurn(who)) return Status.NOT_PLAYER_IN_TURN;
+    // Check that the player can use its hero power
+    if (hasUsedPower(who)) return Status.POWER_USE_NOT_ALLOWED_TWICE_PR_ROUND;
+    // Check if enough mana
+    if (!hasEnoughMana(who, 2)) return Status.NOT_ENOUGH_MANA;
+    return Status.OK;
+  }
+
+  private boolean hasUsedPower(Player who) {
+    return !getHero(who).canUsePower();
+  }
+
+  private void setInactiveAndRemoveIfDead(Card card){
+      boolean isCardDead = card.getHealth() < 1;
+      if(isCardDead){
+        deactivateCard(card);
+        fields.get(card.getOwner()).remove(card);
+      }
     }
 
-    private void setInactiveAndRemoveIfDead(Card card, Player owner){
-      if(card.getHealth()<1){
-        StandardCard stdCard = asStandardCard(card);
-        stdCard.setStatus(false);
-        fieldMap.get(owner).remove(card);
-      }
+    private void restoreMana(Player who){
+      StandardHero stdHero = asStandardHero(getHero(who));
+      int mana = manaStrategy.calculateMana(getTurnNumber());
+      stdHero.setMana(mana);
     }
 
     private StandardCard asStandardCard(Card card){return (StandardCard) card;}
 
     private StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
-
-
-
 
 }

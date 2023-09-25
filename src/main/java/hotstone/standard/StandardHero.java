@@ -3,19 +3,32 @@ package hotstone.standard;
 import hotstone.framework.Game;
 import hotstone.framework.Hero;
 import hotstone.framework.Player;
+import hotstone.variants.ManaStrategy;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
 
 public class StandardHero implements Hero {
 
+    private String type;
     private boolean powerStatus;
     private int mana;
     private int health;
     private Player owner;
+    private HashMap<String, String> descriptionMap;
 
-    public StandardHero(Player owner){
-        powerStatus = true;
-        mana = 3;
-        health = GameConstants.HERO_MAX_HEALTH;
+    public StandardHero(Player owner, String type){
+        this.type = type;
         this.owner = owner;
+        powerStatus = true;
+        health = GameConstants.HERO_MAX_HEALTH;
+        descriptionMap = new HashMap<>();
+
+        descriptionMap.put(GameConstants.BABY_HERO_TYPE, "cute");
+        descriptionMap.put(GameConstants.THAI_CHEF_HERO_TYPE, "Opp H: (0,-2)");
+        descriptionMap.put(GameConstants.DANISH_CHEF_HERO_TYPE, "Field Sovs");
+
+
     }
     @Override
     public int getMana() {
@@ -34,11 +47,14 @@ public class StandardHero implements Hero {
 
     @Override
     public String getType() {
-        return GameConstants.BABY_HERO_TYPE;
+        return type;
     }
 
     @Override
     public Player getOwner() { return owner; }
+
+    @Override
+    public String getEffectDescription() { return descriptionMap.get(type); }
 
     public void setPowerStatus(boolean bool){
         powerStatus = bool;
