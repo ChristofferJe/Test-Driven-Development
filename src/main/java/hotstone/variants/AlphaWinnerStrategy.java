@@ -9,7 +9,8 @@ public class AlphaWinnerStrategy implements WinnnerStrategy {
 
     @Override
     public Player getWinner(Game game) {
-        if(game.getTurnNumber() > 8) return Player.FINDUS;
+        boolean hasFourRoundsPassed = game.getTurnNumber() > 8;
+        if(hasFourRoundsPassed) return Player.FINDUS;
         return null;
     }
 }
