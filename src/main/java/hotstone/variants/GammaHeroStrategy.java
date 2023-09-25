@@ -2,7 +2,6 @@ package hotstone.variants;
 
 import hotstone.framework.*;
 import hotstone.standard.*;
-import hotstone.variants.HeroStrategy;
 
 public class GammaHeroStrategy implements HeroStrategy {
     @Override

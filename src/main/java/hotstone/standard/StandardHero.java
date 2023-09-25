@@ -1,11 +1,8 @@
 package hotstone.standard;
 
-import hotstone.framework.Game;
 import hotstone.framework.Hero;
 import hotstone.framework.Player;
-import hotstone.variants.ManaStrategy;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 
 public class StandardHero implements Hero {

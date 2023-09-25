@@ -147,7 +147,7 @@ public class StandardHotStoneGame implements Game {
   public int getTurnNumber() {return turnNumber;}
 
   @Override
-  public int getDeckSize(Player who) {return decks.get(who).size();}
+  public int getDeckSize(Player who) {return getDeck(who).size();}
 
   @Override
   public Card getCardInHand(Player who, int indexInHand) {
@@ -176,32 +176,44 @@ public class StandardHotStoneGame implements Game {
     Player player = getPlayerInTurn();
     Player otherPlayer = Utility.computeOpponent(player);
     // Set hero power to useable again
-    StandardHero stdHero = asStandardHero(getHero(player)) ;
-    stdHero.setPowerStatus(true);
-
+    setHeroPowerStatus(player, true);
     // Draw card and activate minions for the player who is now in turn
     drawCard(otherPlayer);
     // Set active
-
-    for (Card c : fields.get(otherPlayer)) {
-      StandardCard stdCard = asStandardCard(c);
-      stdCard.setStatus(true);
-    }
-    turnNumber += 1;
-
+    activateMinionsInField(otherPlayer);
+    turnNumber++;
     // Restore mana for opponent player's hero
     restoreMana(otherPlayer);
   }
 
-  private void drawCard(Player who) {
-    if(!decks.get(who).isEmpty()){
-        Card card = decks.get(who).get(0);
-        decks.get(who).remove(0);
-        hands.get(who).add(0,card);
-    } else {
-      StandardHero stdHero = asStandardHero(getHero(who));
-      stdHero.decreaseHealth(2);
+  private void activateMinionsInField(Player who) {
+    for (Card c : getField(who)) {
+      setCardStatus(c, true);
     }
+  }
+
+  private void setHeroPowerStatus(Player player, boolean status) {
+    StandardHero stdHero = asStandardHero(getHero(player));
+    stdHero.setPowerStatus(status);
+  }
+
+  private void drawCard(Player who) {
+    boolean isDeckEmpty = getDeck(who).isEmpty();
+    if(!isDeckEmpty){
+      addCardToHandFromDeck(who);
+    } else {
+      decreaseHeroHealth(who, GameConstants.HERO_HEALTH_PENALTY_ON_EMPTY_DECK);
+    }
+  }
+
+  private void addCardToHandFromDeck(Player who) {
+    Card card = getDeck(who).get(0);
+    getDeck(who).remove(0);
+    hands.get(who).add(0,card);
+  }
+
+  private ArrayList<Card> getDeck(Player who) {
+    return decks.get(who);
   }
 
   @Override
@@ -215,7 +227,7 @@ public class StandardHotStoneGame implements Game {
   }
 
   private void decreaseHeroMana(Player who, int manaAmount) {
-    // Cast and decrease mana
+    // Cast and change mana
     StandardHero stdHero = asStandardHero(getHero(who));
     stdHero.decreaseMana(manaAmount);
   }
@@ -262,15 +274,15 @@ public class StandardHotStoneGame implements Game {
     decreaseCardHealth(defendingCard, attackingCard.getAttack());
     decreaseCardHealth(attackingCard, defendingCard.getAttack());
     // Check if card's health are below zero and set inactive
-    setInactiveAndRemoveIfDead(defendingCard);
-    setInactiveAndRemoveIfDead(attackingCard);
+    removeIfDead(defendingCard);
+    removeIfDead(attackingCard);
     // Set inactive if still alive
-    deactivateCard(attackingCard);
+    setCardStatus(attackingCard, false);
   }
 
-  private void deactivateCard(Card card) {
+  private void setCardStatus(Card card, boolean status) {
     StandardCard stdCard = asStandardCard(card);
-    stdCard.setStatus(false);
+    stdCard.setStatus(status);
   }
 
   private void decreaseCardHealth(Card card, int amount) {
@@ -304,9 +316,10 @@ public class StandardHotStoneGame implements Game {
 
   private void executeAttackHero(Card attackingCard) {
     // Reduce the attacked heroes health
-    decreaseHeroHealth(Utility.computeOpponent(attackingCard.getOwner()), attackingCard.getAttack());
+    Player defendingPlayer = Utility.computeOpponent(attackingCard.getOwner());
+    decreaseHeroHealth(defendingPlayer, attackingCard.getAttack());
     // Set attacking card inactive
-    deactivateCard(attackingCard);
+    setCardStatus(attackingCard, false);
   }
 
   private void decreaseHeroHealth(Player who, int amount) {
@@ -328,10 +341,9 @@ public class StandardHotStoneGame implements Game {
   public Status usePower(Player who) {
     Status status = isPowerAllowed(who);
     if (status != Status.OK) return status;
-    StandardHero stdHero = asStandardHero(getHero(who));
-    stdHero.setPowerStatus(false);
-    stdHero.decreaseMana(2);
+    decreaseHeroMana(who, GameConstants.HERO_POWER_COST);
     heroStrategy.execPower(who, this);
+    setHeroPowerStatus(who, false);
     return Status.OK;
     }
 
@@ -341,7 +353,7 @@ public class StandardHotStoneGame implements Game {
     // Check that the player can use its hero power
     if (hasUsedPower(who)) return Status.POWER_USE_NOT_ALLOWED_TWICE_PR_ROUND;
     // Check if enough mana
-    if (!hasEnoughMana(who, 2)) return Status.NOT_ENOUGH_MANA;
+    if (!hasEnoughMana(who, GameConstants.HERO_POWER_COST)) return Status.NOT_ENOUGH_MANA;
     return Status.OK;
   }
 
@@ -349,22 +361,31 @@ public class StandardHotStoneGame implements Game {
     return !getHero(who).canUsePower();
   }
 
-  private void setInactiveAndRemoveIfDead(Card card){
+  private void removeIfDead(Card card){
       boolean isCardDead = card.getHealth() < 1;
       if(isCardDead){
-        deactivateCard(card);
-        fields.get(card.getOwner()).remove(card);
+        setCardStatus(card, false);
+        removeFromField(card);
       }
     }
 
-    private void restoreMana(Player who){
-      StandardHero stdHero = asStandardHero(getHero(who));
-      int mana = manaStrategy.calculateMana(getTurnNumber());
-      stdHero.setMana(mana);
-    }
+  private void removeFromField(Card card) {
+    Player owner = card.getOwner();
+    fields.get(owner).remove(card);
+  }
 
-    private StandardCard asStandardCard(Card card){return (StandardCard) card;}
+  private void restoreMana(Player who){
+    int mana = manaStrategy.calculateMana(getTurnNumber());
+    setHeroMana(who, mana);
+  }
 
-    private StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
+  private void setHeroMana(Player who, int mana) {
+    StandardHero stdHero = asStandardHero(getHero(who));
+    stdHero.setMana(mana);
+  }
+
+  private StandardCard asStandardCard(Card card){return (StandardCard) card;}
+
+  private StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
 
 }

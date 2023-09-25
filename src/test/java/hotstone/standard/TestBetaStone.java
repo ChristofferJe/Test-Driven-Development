@@ -3,9 +3,6 @@ package hotstone.standard;
 import hotstone.framework.*;
 import org.junit.jupiter.api.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
