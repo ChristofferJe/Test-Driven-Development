@@ -8,22 +8,19 @@ import java.util.HashMap;
 public class StandardHero implements Hero {
 
     private final String type;
+    private final String description;
     private boolean powerStatus;
     private int mana;
     private int health;
     private final Player owner;
-    private final HashMap<String, String> descriptions;
 
-    public StandardHero(Player owner, String type){
+    public StandardHero(Player owner, String type, String description){
         this.type = type;
         this.owner = owner;
         powerStatus = true;
         health = GameConstants.HERO_MAX_HEALTH;
-        descriptions = new HashMap<>();
+        this.description = description;
 
-        descriptions.put(GameConstants.BABY_HERO_TYPE, "cute");
-        descriptions.put(GameConstants.THAI_CHEF_HERO_TYPE, "Opp H: (0,-2)");
-        descriptions.put(GameConstants.DANISH_CHEF_HERO_TYPE, "Field Sovs");
 
 
     }
@@ -51,7 +48,7 @@ public class StandardHero implements Hero {
     public Player getOwner() { return owner; }
 
     @Override
-    public String getEffectDescription() { return descriptions.get(type); }
+    public String getEffectDescription() { return description; }
 
     public void setPowerStatus(boolean bool){
         powerStatus = bool;

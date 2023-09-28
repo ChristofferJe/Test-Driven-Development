@@ -1,6 +1,7 @@
 package hotstone.variants;
 
 import hotstone.framework.Card;
+import hotstone.framework.DeckStrategy;
 import hotstone.framework.Player;
 import hotstone.standard.GameConstants;
 import hotstone.standard.StandardCard;

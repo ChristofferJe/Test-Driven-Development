@@ -1,4 +1,4 @@
-package hotstone.variants;
+package hotstone.framework;
 
 import hotstone.framework.*;
 

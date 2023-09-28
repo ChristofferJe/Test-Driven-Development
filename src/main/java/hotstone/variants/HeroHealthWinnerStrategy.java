@@ -2,8 +2,9 @@ package hotstone.variants;
 
 import hotstone.framework.Game;
 import hotstone.framework.Player;
+import hotstone.framework.WinnerStrategy;
 
-public class BetaWinnerStrategy implements WinnerStrategy {
+public class HeroHealthWinnerStrategy implements WinnerStrategy {
     @Override
     public Player getWinner(Game game){
         boolean isFindusDead = isPlayerDead(Player.FINDUS, game);

@@ -367,32 +367,32 @@ public class StandardHotStoneGame implements Game {
   private StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
 
   public static StandardHotStoneGame createAlphaGame(){
-    WinnerStrategy winnerStrategy = new AlphaWinnerStrategy();
-    ManaStrategy manaStrategy = new AlphaManaStrategy();
+    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
+    ManaStrategy manaStrategy = new ThreeManaStrategy();
     HeroStrategy heroStrategy = new BabyHeroStrategy();
     DeckStrategy deckStrategy = new SpanishDeckStrategy();
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
 
   public static StandardHotStoneGame createBetaGame(){
-    ManaStrategy manaStrategy = new BetaManaStrategy();
-    WinnerStrategy winnerStrategy = new BetaWinnerStrategy();
+    ManaStrategy manaStrategy = new ProgressiveManaStrategy();
+    WinnerStrategy winnerStrategy = new HeroHealthWinnerStrategy();
     HeroStrategy heroStrategy = new BabyHeroStrategy();
     DeckStrategy deckStrategy = new SpanishDeckStrategy();
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
 
   public static StandardHotStoneGame createGammaGame(){
-    ManaStrategy manaStrategy = new AlphaManaStrategy();
-    WinnerStrategy winnerStrategy = new AlphaWinnerStrategy();
-    HeroStrategy heroStrategy = new GammaHeroStrategy();
+    ManaStrategy manaStrategy = new ThreeManaStrategy();
+    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
+    HeroStrategy heroStrategy = new TwoHeroStrategy();
     DeckStrategy deckStrategy = new SpanishDeckStrategy();
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
 
   public static StandardHotStoneGame createDeltaGame(){
-    ManaStrategy manaStrategy = new DeltaManaStrategy();
-    WinnerStrategy winnerStrategy = new AlphaWinnerStrategy();
+    ManaStrategy manaStrategy = new SevenManaStrategy();
+    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
     HeroStrategy heroStrategy = new BabyHeroStrategy();
     DeckStrategy deckStrategy = new DishDeckStrategy();
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
