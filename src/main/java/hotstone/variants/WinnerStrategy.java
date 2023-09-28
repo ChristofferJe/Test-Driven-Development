@@ -1,9 +1,8 @@
 package hotstone.variants;
 
-import java.util.HashMap;
 import hotstone.framework.*;
 
-public interface WinnnerStrategy {
+public interface WinnerStrategy {
 
     public Player getWinner(Game game);
 }

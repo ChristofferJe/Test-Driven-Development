@@ -51,13 +51,17 @@ public class StandardHotStoneGame implements Game {
   private final HashMap<Player, ArrayList<Card>> fields;
   private final HashMap<Player, Hero> heroes;
   private ManaStrategy manaStrategy;
-  private WinnnerStrategy winnerStrategy;
+  private WinnerStrategy winnerStrategy;
   private HeroStrategy heroStrategy;
   private DeckStrategy deckStrategy;
 
 
-  public StandardHotStoneGame(Version version) {
-    setupGame(version);
+  public StandardHotStoneGame(WinnerStrategy winnerStrategy, ManaStrategy manaStrategy, HeroStrategy heroStrategy, DeckStrategy deckStrategy) {
+
+    this.winnerStrategy = winnerStrategy;
+    this.manaStrategy = manaStrategy;
+    this.heroStrategy = heroStrategy;
+    this.deckStrategy = deckStrategy;
 
     turnNumber = 1;
 
@@ -95,32 +99,6 @@ public class StandardHotStoneGame implements Game {
   }
 
 
-  private void setupGame(Version version) {
-    if(version == Version.ALPHA){
-      manaStrategy = new AlphaManaStrategy();
-      winnerStrategy = new AlphaWinnerStrategy();
-      heroStrategy = new BabyHeroStrategy();
-      deckStrategy = new SpanishDeckStrategy();
-    }
-    if(version == Version.BETA){
-      manaStrategy = new BetaManaStrategy();
-      winnerStrategy = new BetaWinnerStrategy();
-      heroStrategy = new BabyHeroStrategy();
-      deckStrategy = new SpanishDeckStrategy();
-    }
-    if(version == Version.GAMMA){
-      manaStrategy = new AlphaManaStrategy();
-      winnerStrategy = new AlphaWinnerStrategy();
-      heroStrategy = new GammaHeroStrategy();
-      deckStrategy = new SpanishDeckStrategy();
-    }
-    if(version == Version.DELTA){
-      manaStrategy = new DeltaManaStrategy();
-      winnerStrategy = new AlphaWinnerStrategy();
-      heroStrategy = new BabyHeroStrategy();
-      deckStrategy = new DishDeckStrategy();
-    }
-  }
 
   private void initializeHands() {
     // Each player draws three cards
@@ -387,5 +365,37 @@ public class StandardHotStoneGame implements Game {
   private StandardCard asStandardCard(Card card){return (StandardCard) card;}
 
   private StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
+
+  public static StandardHotStoneGame createAlphaGame(){
+    WinnerStrategy winnerStrategy = new AlphaWinnerStrategy();
+    ManaStrategy manaStrategy = new AlphaManaStrategy();
+    HeroStrategy heroStrategy = new BabyHeroStrategy();
+    DeckStrategy deckStrategy = new SpanishDeckStrategy();
+    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
+  }
+
+  public static StandardHotStoneGame createBetaGame(){
+    ManaStrategy manaStrategy = new BetaManaStrategy();
+    WinnerStrategy winnerStrategy = new BetaWinnerStrategy();
+    HeroStrategy heroStrategy = new BabyHeroStrategy();
+    DeckStrategy deckStrategy = new SpanishDeckStrategy();
+    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
+  }
+
+  public static StandardHotStoneGame createGammaGame(){
+    ManaStrategy manaStrategy = new AlphaManaStrategy();
+    WinnerStrategy winnerStrategy = new AlphaWinnerStrategy();
+    HeroStrategy heroStrategy = new GammaHeroStrategy();
+    DeckStrategy deckStrategy = new SpanishDeckStrategy();
+    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
+  }
+
+  public static StandardHotStoneGame createDeltaGame(){
+    ManaStrategy manaStrategy = new DeltaManaStrategy();
+    WinnerStrategy winnerStrategy = new AlphaWinnerStrategy();
+    HeroStrategy heroStrategy = new BabyHeroStrategy();
+    DeckStrategy deckStrategy = new DishDeckStrategy();
+    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
+  }
 
 }

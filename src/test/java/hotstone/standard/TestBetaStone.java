@@ -13,7 +13,7 @@ public class TestBetaStone {
     /** Fixture for BetaStone testing. */
     @BeforeEach
     public void setUp() {
-        game = new StandardHotStoneGame(Version.BETA);
+        game = StandardHotStoneGame.createBetaGame();
     }
 
     @Test

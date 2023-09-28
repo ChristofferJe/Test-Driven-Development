@@ -3,9 +3,7 @@ package hotstone.variants;
 import hotstone.framework.Game;
 import hotstone.framework.Player;
 
-import java.util.HashMap;
-
-public class AlphaWinnerStrategy implements WinnnerStrategy {
+public class AlphaWinnerStrategy implements WinnerStrategy {
 
     @Override
     public Player getWinner(Game game) {

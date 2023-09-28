@@ -17,8 +17,7 @@ public class TestGammaStone {
      * Fixture for GammaStone testing.
      */
     @BeforeEach
-    public void setUp() {
-        game = new StandardHotStoneGame(Version.GAMMA);
+    public void setUp(){game = StandardHotStoneGame.createGammaGame();
     }
 
     @Test

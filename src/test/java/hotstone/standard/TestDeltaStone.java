@@ -23,7 +23,7 @@ public class TestDeltaStone {
      */
     @BeforeEach
     public void setUp() {
-        game = new StandardHotStoneGame(Version.DELTA);
+        game = StandardHotStoneGame.createDeltaGame();
         deckStrategy = new DishDeckStrategy();
     }
 
