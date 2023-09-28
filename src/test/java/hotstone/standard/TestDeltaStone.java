@@ -63,6 +63,23 @@ public class TestDeltaStone {
         assertThat(card.getName(), anyOf(is(GameConstants.BROWN_RICE_CARD), is(GameConstants.FRENCH_FRIES_CARD)));
     }
 
+
+    @Test
+    public void cardAtIndex2InFindusHandShouldCost1Mana(){
+        // Given game
+        // Then the card at index 2 in FIndus hand should cost 1 mana
+        Card card = game.getCardInHand(Player.FINDUS, 2);
+        int cost = card.getManaCost();
+        assertThat(cost, is(1));
+    }
+    @Test
+    public void cardAtIndex1InFindusHandShouldCost2ManaOrLess(){
+        // Given game
+        // Then the card at index 1 in FIndus hand should cost 2 mana or less
+        Card card = game.getCardInHand(Player.FINDUS, 1);
+        int cost = card.getManaCost();
+        assertThat(cost, lessThanOrEqualTo(2));
+    }
     @Test
     public void cardAtIndex0InFindusHandShouldCost4ManaOrLess(){
         // Given game

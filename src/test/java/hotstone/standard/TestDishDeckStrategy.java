@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 
@@ -37,7 +36,7 @@ public class TestDishDeckStrategy {
         // When a DishDeck is initialized
         ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
         // Then it should contain 24 cards
-        assertThat(deck, hasSize(24));
+        assertThat(deck.size(), is(24));
     }
 
     @Test
