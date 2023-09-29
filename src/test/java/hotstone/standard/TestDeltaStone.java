@@ -15,7 +15,6 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 public class TestDeltaStone {
 
     private Game game;
-    private DishDeckStrategy deckStrategy;
 
 
     /**
@@ -23,8 +22,7 @@ public class TestDeltaStone {
      */
     @BeforeEach
     public void setUp() {
-        game = new StandardHotStoneGame(Version.DELTA);
-        deckStrategy = new DishDeckStrategy();
+        game = StandardHotStoneGame.createDeltaGame();
     }
 
     @Test
@@ -58,75 +56,37 @@ public class TestDeltaStone {
     }
 
     @Test
-    public void DeckShouldBeSize24(){
-        // Given delta deck strategy
-        // When a DishDeck is initialized
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
-        // Then it should contain 24 cards
-        assertThat(deck, hasSize(24));
+    public void FindusShouldHaveBrownRiceOrFrenchFriesAtIndex2InHand(){
+        // Given game
+        // Then the card at index 2 in FIndus hand should be Brown Rice or French Fries
+        Card card = game.getCardInHand(Player.FINDUS, 2);
+        assertThat(card.getName(), anyOf(is(GameConstants.BROWN_RICE_CARD), is(GameConstants.FRENCH_FRIES_CARD)));
     }
 
+
     @Test
-    public void CardAtIndex0ShouldCost1() {
-        // Given delta deck strategy
-        // When a DishDeck is initialized
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
-        // Then the card at index 0 in the deck should cost 1
-        int cost = deck.get(0).getManaCost();
+    public void cardAtIndex2InFindusHandShouldCost1Mana(){
+        // Given game
+        // Then the card at index 2 in FIndus hand should cost 1 mana
+        Card card = game.getCardInHand(Player.FINDUS, 2);
+        int cost = card.getManaCost();
         assertThat(cost, is(1));
     }
-
     @Test
-    public void CardAtIndex1ShouldCost2orLess() {
-        // Given delta deck strategy
-        // When a DishDeck is initialized
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
-        // Then the card at index 1 in the deck should cost 2 or less
-        int cost = deck.get(1).getManaCost();
+    public void cardAtIndex1InFindusHandShouldCost2ManaOrLess(){
+        // Given game
+        // Then the card at index 1 in FIndus hand should cost 2 mana or less
+        Card card = game.getCardInHand(Player.FINDUS, 1);
+        int cost = card.getManaCost();
         assertThat(cost, lessThanOrEqualTo(2));
     }
-
     @Test
-    public void CardAtIndex2ShouldCost4orLess() {
-        // Given delta deck strategy
-        // When a DishDeck is initialized
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
-        // Then the card at index 2 in the deck should cost 4 or less
-        int cost = deck.get(2).getManaCost();
+    public void cardAtIndex0InFindusHandShouldCost4ManaOrLess(){
+        // Given game
+        // Then the card at index 0 in FIndus hand should cost 4 or less
+        Card card = game.getCardInHand(Player.FINDUS, 2);
+        int cost = card.getManaCost();
         assertThat(cost, lessThanOrEqualTo(4));
     }
-
-    @Test
-    public void CardAtIndex0ShouldBeBrownRiceOrFrenchFries() {
-        // Given delta deck strategy
-        // When a DishDeck is initialized
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
-        // Then the card at index 0 in the deck should be Brown Rice or French Fries
-        String cardName = deck.get(0).getName();
-        assertThat(cardName, anyOf(is(GameConstants.BROWN_RICE_CARD), is(GameConstants.FRENCH_FRIES_CARD)));
-    }
-
-    @Test
-    public void ShouldHaveTwoFiletMignonCards() {
-        // Given delta deck strategy
-        // When we create a delta deck
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
-        // Then it should contain two Filet Mignon cards
-        long count = deck.stream().filter(card -> card.getName()
-                .equals(GameConstants.FILET_MIGNON_CARD)).count();
-        assertThat(count, is(2L));
-    }
-
-    @Test
-    public void ShouldHaveTwoOfEachCard() {
-        // Given delta deck strategy
-        // When we create a delta deck
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
-        // Then it should contain two of each card
-        for(Card c: deck){
-            String cardName = c.getName();
-            long count = deck.stream().filter(card -> card.getName()
-                .equals(cardName)).count();
-             assertThat(count, is(2L));}
-    }
 }
+

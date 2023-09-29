@@ -1,6 +1,7 @@
 package hotstone.variants;
 
 import hotstone.framework.Card;
+import hotstone.framework.DeckStrategy;
 import hotstone.framework.Player;
 import hotstone.standard.GameConstants;
 import hotstone.standard.StandardCard;
@@ -13,36 +14,29 @@ public class DishDeckStrategy implements DeckStrategy {
     @Override
     public ArrayList<Card> createDeck(Player owner) {
         ArrayList<Card> deck = new ArrayList<>();
-        createNonShuffledDeck(deck, owner);
-        Collections.shuffle(deck);
-        // Get card that costs one or less at index 0 of the deck
-        for(int i = 0; i < deck.size(); i++){
-            Card c = deck.get(i);
-            boolean isRightPrice = c.getManaCost() <= 1;
-            if(isRightPrice){
-                swapCardsByIndex(deck, 0,i);
-                break;
-            }
-        }
-        // Get card that costs two or less at index 1 of the deck
-        for(int i = 1; i < deck.size(); i++){
-            Card c = deck.get(i);
-            boolean isRightPrice = c.getManaCost() <= 2;
-            if(isRightPrice){
-                swapCardsByIndex(deck, 1,i);
-                break;
-            }
-        }
-        // Get card that costs four or less at index 2 of the deck
-        for(int i = 2; i < deck.size(); i++){
-            Card c = deck.get(i);
-            boolean isRightPrice = c.getManaCost() <= 4;
-            if(isRightPrice){
-                swapCardsByIndex(deck, 2,i);
-                break;
-            }
-        }
+        createShuffledDeck(deck, owner);
+        orderDeck(deck);
         return deck;
+    }
+
+    private void orderDeck(ArrayList<Card> deck) {
+        // Get card that costs one or less at index 0 of the deck
+        placeCardAtIndexWithRightManaCost(0, 1, deck);
+        // Get card that costs two or less at index 1 of the deck
+        placeCardAtIndexWithRightManaCost(1, 2, deck);
+        // Get card that costs four or less at index 2 of the deck
+        placeCardAtIndexWithRightManaCost(2, 4, deck);
+    }
+
+    private void placeCardAtIndexWithRightManaCost(int index,  int manaCost, ArrayList<Card> deck) {
+        for (int j = index; j < deck.size(); j++) {
+            Card c = deck.get(j);
+            boolean isRightPrice = c.getManaCost() <= manaCost;
+            if (isRightPrice) {
+                swapCardsByIndex(deck, index, j);
+                break;
+            }
+        }
     }
 
 
@@ -52,7 +46,7 @@ public class DishDeckStrategy implements DeckStrategy {
         deck.set(index2, temp);
     }
 
-    private void createNonShuffledDeck(ArrayList<Card> deck, Player owner) {
+    private void createShuffledDeck(ArrayList<Card> deck, Player owner) {
         Card BrownRice = new StandardCard(GameConstants.BROWN_RICE_CARD, 1,1,2, owner);
         Card FrenchFries = new StandardCard(GameConstants.FRENCH_FRIES_CARD,1,2,1, owner);
         Card GreenSalad = new StandardCard(GameConstants.GREEN_SALAD_CARD, 2, 2, 3, owner);
@@ -78,6 +72,8 @@ public class DishDeckStrategy implements DeckStrategy {
         addCardTwice(deck, ChickenCurry);
         addCardTwice(deck, BeefBurger);
         addCardTwice(deck, FiletMignon);
+
+        Collections.shuffle(deck);
     }
 
     private void addCardTwice(ArrayList<Card> deck, Card card) {
