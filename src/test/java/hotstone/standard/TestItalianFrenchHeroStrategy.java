@@ -1,26 +1,23 @@
 package hotstone.standard;
 
 import hotstone.framework.*;
-import hotstone.variants.DishDeckStrategy;
-import hotstone.variants.ItalianFrenchHeroStrategy;
-import hotstone.variants.TwoHeroStrategy;
+import hotstone.variants.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 public class TestItalianFrenchHeroStrategy {
     private HeroStrategy heroStrategy;
+    private FixedNumberStrategy pickNumberStrategy;
 
     @BeforeEach
     public void setUp() {
-        heroStrategy = new ItalianFrenchHeroStrategy();
+        pickNumberStrategy = new FixedNumberStrategy();
+        heroStrategy = new ItalianFrenchHeroStrategy(pickNumberStrategy);
     }
 
     @Test
@@ -57,5 +54,23 @@ public class TestItalianFrenchHeroStrategy {
         Hero hero = heroStrategy.createHero(Player.PEDDERSEN);
         String description = hero.getEffectDescription();
         assertThat(description, is("M: (+2,0)"));
+    }
+
+    @Test
+    public void NumberStrategyShouldReturn2WhenGiven2(){
+        // Given FixedNumberStrategy
+        // It should return the given integer
+        pickNumberStrategy.setNumber(2);
+        int number = pickNumberStrategy.getNumber(0);
+        assertThat(number, is(2));
+    }
+
+    @Test
+    public void NumberStrategyShouldReturn3WhenGiven3(){
+        // Given FixedNumberStrategy
+        // It should return the given integer
+        pickNumberStrategy.setNumber(3);
+        int number = pickNumberStrategy.getNumber(0);
+        assertThat(number, is(3));
     }
 }

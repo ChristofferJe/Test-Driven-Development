@@ -10,7 +10,7 @@ public class ItalianFrenchHeroStrategy implements HeroStrategy {
     private final HashMap<Player, String> descriptions;
 
 
-    public ItalianFrenchHeroStrategy(){
+    public ItalianFrenchHeroStrategy(PickNumberStrategy pickNumberStrategy){
         types = new HashMap<>();
         types.put(Player.FINDUS, GameConstants.FRENCH_CHEF_HERO_TYPE);
         types.put(Player.PEDDERSEN, GameConstants.ITALIAN_CHEF_HERO_TYPE);
