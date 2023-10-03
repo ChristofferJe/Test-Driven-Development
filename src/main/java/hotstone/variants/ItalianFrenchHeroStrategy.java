@@ -8,9 +8,12 @@ import java.util.HashMap;
 public class ItalianFrenchHeroStrategy implements HeroStrategy {
     private final HashMap<Player, String> types;
     private final HashMap<Player, String> descriptions;
+    private PickNumberStrategy pickNumberStrategy;
 
 
     public ItalianFrenchHeroStrategy(PickNumberStrategy pickNumberStrategy){
+        this.pickNumberStrategy = pickNumberStrategy;
+
         types = new HashMap<>();
         types.put(Player.FINDUS, GameConstants.FRENCH_CHEF_HERO_TYPE);
         types.put(Player.PEDDERSEN, GameConstants.ITALIAN_CHEF_HERO_TYPE);
@@ -28,20 +31,22 @@ public class ItalianFrenchHeroStrategy implements HeroStrategy {
 
     @Override
     public void execPower(Player who, StandardHotStoneGame game) {
-        boolean isThaiHero = GameConstants.THAI_CHEF_HERO_TYPE.equals(types.get(who));
-        if(isThaiHero){
-            execThaiPower(game);
+        boolean isFrenchHero = GameConstants.FRENCH_CHEF_HERO_TYPE.equals(types.get(who));
+        if(isFrenchHero){
+            execFrenchPower(game);
         }
-        execDanishPower(game);
+        execItalianPower(game);
     }
 
-    private static void execDanishPower(StandardHotStoneGame game) {
-        Card sovs = new StandardCard(GameConstants.SOVS_CARD, 0, 1, 1, Player.PEDDERSEN);
-        game.playCard(Player.PEDDERSEN, sovs);
+    private void execItalianPower(StandardHotStoneGame game) {
     }
 
-    private void execThaiPower(StandardHotStoneGame game) {
-        StandardHero stdHero = (StandardHero) game.getHero(Player.PEDDERSEN);
-        stdHero.decreaseHealth(2);
+    private void execFrenchPower(StandardHotStoneGame game) {
+        int index = pickNumberStrategy.getNumber(game.getFieldSize(Player.PEDDERSEN));
+        Card card = game.getCardInField(Player.PEDDERSEN, index);
+        StandardCard stdCard = game.asStandardCard(card);
+        stdCard.decreaseHealth(2);
     }
+
+
 }

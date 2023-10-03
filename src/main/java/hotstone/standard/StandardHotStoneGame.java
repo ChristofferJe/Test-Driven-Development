@@ -362,9 +362,9 @@ public class StandardHotStoneGame implements Game {
     stdHero.setMana(mana);
   }
 
-  private StandardCard asStandardCard(Card card){return (StandardCard) card;}
+  public StandardCard asStandardCard(Card card){return (StandardCard) card;}
 
-  private StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
+  public StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
 
   public static StandardHotStoneGame createAlphaGame(){
     WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
@@ -397,5 +397,6 @@ public class StandardHotStoneGame implements Game {
     DeckStrategy deckStrategy = new DishDeckStrategy();
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
+
 
 }
