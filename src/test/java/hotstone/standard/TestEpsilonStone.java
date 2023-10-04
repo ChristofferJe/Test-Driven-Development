@@ -21,7 +21,7 @@ public class TestEpsilonStone {
      */
     @BeforeEach
     public void setUp(){
-        WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
+        WinnerStrategy winnerStrategy = new MinionAttackWinnerStrategy();
         ManaStrategy manaStrategy = new ThreeManaStrategy();
         pickNumberStrategy = new FixedNumberStrategy();
         HeroStrategy heroStrategy = new ItalianFrenchHeroStrategy(pickNumberStrategy);
@@ -137,6 +137,33 @@ public class TestEpsilonStone {
         assertThat(attackAfter, is(3));
     }
 
+    @Test
+    public void FindusShouldWinWhenAttackSumIsMoreThanSeven(){
+        // Given game and its Peddersens turn
+        // Peddersen playes Uno and Dos
+        game.endTurn();
+        Card uno = game.getCardInHand(Player.PEDDERSEN, 3);
+        Card dos = game.getCardInHand(Player.PEDDERSEN, 2);
+        game.playCard(Player.PEDDERSEN, uno);
+        game.playCard(Player.PEDDERSEN, dos);
+        game.endTurn();
+        // When Findus turn, Findus playes Cuatro
+        Card cuatro = game.getCardInHand(Player.FINDUS, 0);
+        game.playCard(Player.FINDUS, cuatro);
+        game.endTurn();
+        game.endTurn();
+        // When Findus turn again, Findus playes Cinco and attacks uno with cuatro
+        Card cinco = game.getCardInHand(Player.FINDUS, 0);
+        game.playCard(Player.FINDUS, cinco);
+        game.attackCard(Player.FINDUS, cuatro, uno);
+        // When Findus turn again, Findus attack dos with cinco
+        game.endTurn();
+        game.endTurn();
+        game.attackCard(Player.FINDUS, cinco, dos);
+        // Then Findus should be the winner
+        Player winner = game.getWinner();
+        assertThat(winner, is(Player.FINDUS));
+    }
 
 
 

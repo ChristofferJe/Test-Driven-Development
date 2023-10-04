@@ -243,6 +243,7 @@ public class StandardHotStoneGame implements Game {
     Status status = isAttackCardAllowed(playerAttacking, attackingCard, defendingCard);
     if (status != Status.OK) return status;
     executeAttackCard(attackingCard, defendingCard);
+    winnerStrategy.increaseAttackSum(playerAttacking, attackingCard);
     return status;
 
   }
