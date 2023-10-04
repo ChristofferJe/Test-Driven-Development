@@ -243,7 +243,7 @@ public class StandardHotStoneGame implements Game {
     Status status = isAttackCardAllowed(playerAttacking, attackingCard, defendingCard);
     if (status != Status.OK) return status;
     executeAttackCard(attackingCard, defendingCard);
-    winnerStrategy.increaseAttackSum(playerAttacking, attackingCard);
+    winnerStrategy.increaseAttackSum(playerAttacking, attackingCard, turnNumber);
     return status;
 
   }
@@ -396,6 +396,15 @@ public class StandardHotStoneGame implements Game {
     WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
     HeroStrategy heroStrategy = new BabyHeroStrategy();
     DeckStrategy deckStrategy = new DishDeckStrategy();
+    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
+  }
+
+  public static StandardHotStoneGame createEpsilonGame(){
+    ManaStrategy manaStrategy = new ThreeManaStrategy();
+    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
+    PickNumberStrategy pickNumberStrategy = new RandomNumberStrategy();
+    HeroStrategy heroStrategy = new ItalianFrenchHeroStrategy(pickNumberStrategy);
+    DeckStrategy deckStrategy = new SpanishDeckStrategy();
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
 

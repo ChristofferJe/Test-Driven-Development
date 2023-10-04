@@ -33,7 +33,7 @@ public class MinionAttackWinnerStrategy implements WinnerStrategy {
     }
 
     @Override
-    public void increaseAttackSum(Player who, Card attackingCard){
+    public void increaseAttackSum(Player who, Card attackingCard, int turnNumber){
         Integer currentAttackSum = attackSums.get(who);
         Integer attackAmount = attackingCard.getAttack();
         attackSums.put(who, currentAttackSum + attackAmount);

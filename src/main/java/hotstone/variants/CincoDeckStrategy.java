@@ -12,13 +12,13 @@ public class CincoDeckStrategy implements DeckStrategy {
     @Override
     public ArrayList<Card> createDeck(Player owner) {
         ArrayList<Card> deck = new ArrayList<>();
-        Card cinco = new StandardCard(GameConstants.CINCO_CARD, 3, 5,1, owner);
-        addSeven(deck, cinco);
+        addSevenCinco(deck, owner);
         return deck;
     }
 
-    private static void addSeven(ArrayList<Card> deck, Card card) {
+    private static void addSevenCinco(ArrayList<Card> deck, Player owner) {
         for (int i=0; i < 7; i++){
+            Card card = new StandardCard(GameConstants.CINCO_CARD, 3, 5,1, owner);
             deck.add(i, card);
         }
     }

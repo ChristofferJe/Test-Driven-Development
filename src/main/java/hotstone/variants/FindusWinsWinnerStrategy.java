@@ -12,5 +12,5 @@ public class FindusWinsWinnerStrategy implements WinnerStrategy {
     }
 
     @Override
-    public void increaseAttackSum(Player who, Card attackinCard){};
+    public void increaseAttackSum(Player who, Card attackinCard, int turnNumber){};
 }

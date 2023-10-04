@@ -166,6 +166,18 @@ public class TestEpsilonStone {
     }
 
 
+    @Test
+    public void FindusHeroPowerShouldCost2ManaWhenPeddersensFieldIsEmpty(){
+        // Given game, Findus has 3 mana
+        int manaBefore = game.getHero(Player.FINDUS).getMana();
+        assertThat(manaBefore, is(3));
+        // When Peddersens field is empty and Findus uses hero power
+        game.usePower(Player.FINDUS);
+        // Then Findus has 1 mana
+        int manaAfter = game.getHero(Player.FINDUS).getMana();
+        assertThat(manaAfter, is(1));
+    }
+
 
     }
 
