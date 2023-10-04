@@ -263,7 +263,7 @@ public class StandardHotStoneGame implements Game {
     stdCard.setStatus(status);
   }
 
-  private void decreaseCardHealth(Card card, int amount) {
+  public void decreaseCardHealth(Card card, int amount) {
     StandardCard stdCard = asStandardCard(card);
     stdCard.decreaseHealth(amount);
   }
@@ -339,7 +339,7 @@ public class StandardHotStoneGame implements Game {
     return !getHero(who).canUsePower();
   }
 
-  private void removeIfDead(Card card){
+  public void removeIfDead(Card card){
       boolean isCardDead = card.getHealth() < 1;
       if(isCardDead){
         setCardStatus(card, false);

@@ -39,13 +39,26 @@ public class ItalianFrenchHeroStrategy implements HeroStrategy {
     }
 
     private void execItalianPower(StandardHotStoneGame game) {
+        int fieldSize = game.getFieldSize(Player.PEDDERSEN);
+        boolean isFieldEmpty = fieldSize == 0;
+        if (!isFieldEmpty) {
+            int index = pickNumberStrategy.getNumber(fieldSize);
+            Card card = game.getCardInField(Player.PEDDERSEN, index);
+            StandardCard stdCard = game.asStandardCard(card);
+            stdCard.increaseAttack(2);
+        }
     }
 
+
     private void execFrenchPower(StandardHotStoneGame game) {
-        int index = pickNumberStrategy.getNumber(game.getFieldSize(Player.PEDDERSEN));
-        Card card = game.getCardInField(Player.PEDDERSEN, index);
-        StandardCard stdCard = game.asStandardCard(card);
-        stdCard.decreaseHealth(2);
+        int fieldSize = game.getFieldSize(Player.PEDDERSEN);
+        boolean isFieldEmpty = fieldSize == 0;
+        if(!isFieldEmpty) {
+            int index = pickNumberStrategy.getNumber(fieldSize);
+            Card card = game.getCardInField(Player.PEDDERSEN, index);
+            game.decreaseCardHealth(card, 2);
+            game.removeIfDead(card);
+        }
     }
 
 

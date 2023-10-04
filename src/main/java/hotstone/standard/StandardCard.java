@@ -8,7 +8,7 @@ public class StandardCard implements Card {
 
     private final String name;
     private final int cost;
-    private final int attack;
+    private int attack;
     private int health;
     private Player owner;
     private Boolean status;
@@ -56,4 +56,6 @@ public class StandardCard implements Card {
     }
 
     public void decreaseHealth(int amount) { health -= amount; }
+
+    public void increaseAttack(int amount) { attack += amount; }
 }
