@@ -99,7 +99,6 @@ public class StandardHotStoneGame implements Game {
   }
 
 
-
   private void initializeHands() {
     // Each player draws three cards
     for(int i=0; i<3; i++){drawCard(Player.FINDUS); drawCard(Player.PEDDERSEN);}
@@ -405,6 +404,24 @@ public class StandardHotStoneGame implements Game {
     PickNumberStrategy pickNumberStrategy = new RandomNumberStrategy();
     HeroStrategy heroStrategy = new ItalianFrenchHeroStrategy(pickNumberStrategy);
     DeckStrategy deckStrategy = new SpanishDeckStrategy();
+    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
+  }
+
+  public static StandardHotStoneGame createZetaGame(){
+    WinnerStrategy heroHealthWinnerStrategy = new HeroHealthWinnerStrategy();
+    WinnerStrategy minionAttackWinnerStrategy = new MinionAttackWinnerStrategy();
+    WinnerStrategy winnerStrategy = new AlternatingWinnerStrategy(heroHealthWinnerStrategy, minionAttackWinnerStrategy);
+    ManaStrategy manaStrategy = new ThreeManaStrategy();
+    HeroStrategy heroStrategy = new BabyHeroStrategy();
+    DeckStrategy deckStrategy = new CincoDeckStrategy();
+    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
+  }
+
+  public static StandardHotStoneGame createEtaGame() {
+    ManaStrategy manaStrategy = new SevenManaStrategy();
+    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
+    HeroStrategy heroStrategy = new BabyHeroStrategy();
+    DeckStrategy deckStrategy = new DishEffectDeckStrategy();
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
 

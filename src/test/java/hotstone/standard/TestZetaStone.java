@@ -19,13 +19,7 @@ public class TestZetaStone {
      */
     @BeforeEach
     public void setUp(){
-        WinnerStrategy heroHealthWinnerStrategy = new HeroHealthWinnerStrategy();
-        WinnerStrategy minionAttackWinnerStrategy = new MinionAttackWinnerStrategy();
-        WinnerStrategy winnerStrategy = new AlternatingWinnerStrategy(heroHealthWinnerStrategy, minionAttackWinnerStrategy);
-        ManaStrategy manaStrategy = new ThreeManaStrategy();
-        HeroStrategy heroStrategy = new BabyHeroStrategy();
-        DeckStrategy deckStrategy = new CincoDeckStrategy();
-        game = new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
+        game = StandardHotStoneGame.createZetaGame();
     }
     @Test
     public void FindusWinsWhenPeddersenHeroHasLessThan1HealthBeforeRound6(){

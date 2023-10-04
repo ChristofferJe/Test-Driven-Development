@@ -22,4 +22,6 @@ public class CincoDeckStrategy implements DeckStrategy {
             deck.add(i, card);
         }
     }
+    @Override
+    public void execEffect(Card card) {}
 }

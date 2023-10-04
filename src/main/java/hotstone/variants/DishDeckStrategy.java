@@ -81,4 +81,8 @@ public class DishDeckStrategy implements DeckStrategy {
         deck.add(card);
     }
 
+    @Override
+    public void execEffect(Card card) {}
+
+
 }

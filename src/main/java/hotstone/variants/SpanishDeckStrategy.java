@@ -28,4 +28,9 @@ public class SpanishDeckStrategy implements DeckStrategy {
         deck.add(6,siete);
         return deck;
     }
+
+    @Override
+    public void execEffect(Card card) {
+
+    }
 }
