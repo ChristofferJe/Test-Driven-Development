@@ -20,7 +20,8 @@ public class TestCincoDeckStrategy {
 
     @BeforeEach
     public void setUp() {
-        deckStrategy = new CincoDeckStrategy();
+        CardsStrategy cardsStrategy = new CincoCardsStrategy();
+        deckStrategy = new CincoDeckStrategy(cardsStrategy);
     }
 
     @Test

@@ -370,7 +370,8 @@ public class StandardHotStoneGame implements Game {
     WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
     ManaStrategy manaStrategy = new ThreeManaStrategy();
     HeroStrategy heroStrategy = new BabyHeroStrategy();
-    DeckStrategy deckStrategy = new SpanishDeckStrategy();
+    CardsStrategy cardsStrategy = new SpanishCardsStrategy();
+    DeckStrategy deckStrategy = new SpanishDeckStrategy(cardsStrategy);
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
 
@@ -378,7 +379,8 @@ public class StandardHotStoneGame implements Game {
     ManaStrategy manaStrategy = new ProgressiveManaStrategy();
     WinnerStrategy winnerStrategy = new HeroHealthWinnerStrategy();
     HeroStrategy heroStrategy = new BabyHeroStrategy();
-    DeckStrategy deckStrategy = new SpanishDeckStrategy();
+    CardsStrategy cardsStrategy = new SpanishCardsStrategy();
+    DeckStrategy deckStrategy = new SpanishDeckStrategy(cardsStrategy);
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
 
@@ -386,7 +388,8 @@ public class StandardHotStoneGame implements Game {
     ManaStrategy manaStrategy = new ThreeManaStrategy();
     WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
     HeroStrategy heroStrategy = new TwoHeroStrategy();
-    DeckStrategy deckStrategy = new SpanishDeckStrategy();
+    CardsStrategy cardsStrategy = new SpanishCardsStrategy();
+    DeckStrategy deckStrategy = new SpanishDeckStrategy(cardsStrategy);
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
 
@@ -394,7 +397,8 @@ public class StandardHotStoneGame implements Game {
     ManaStrategy manaStrategy = new SevenManaStrategy();
     WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
     HeroStrategy heroStrategy = new BabyHeroStrategy();
-    DeckStrategy deckStrategy = new DishDeckStrategy();
+    CardsStrategy cardsStrategy = new DishCardsStrategy();
+    DeckStrategy deckStrategy = new DishDeckStrategy(cardsStrategy);
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
 
@@ -403,7 +407,8 @@ public class StandardHotStoneGame implements Game {
     WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
     PickNumberStrategy pickNumberStrategy = new RandomNumberStrategy();
     HeroStrategy heroStrategy = new ItalianFrenchHeroStrategy(pickNumberStrategy);
-    DeckStrategy deckStrategy = new SpanishDeckStrategy();
+    CardsStrategy cardsStrategy = new SpanishCardsStrategy();
+    DeckStrategy deckStrategy = new SpanishDeckStrategy(cardsStrategy);
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
 
@@ -413,7 +418,8 @@ public class StandardHotStoneGame implements Game {
     WinnerStrategy winnerStrategy = new AlternatingWinnerStrategy(heroHealthWinnerStrategy, minionAttackWinnerStrategy);
     ManaStrategy manaStrategy = new ThreeManaStrategy();
     HeroStrategy heroStrategy = new BabyHeroStrategy();
-    DeckStrategy deckStrategy = new CincoDeckStrategy();
+    CardsStrategy cardsStrategy = new CincoCardsStrategy();
+    DeckStrategy deckStrategy = new CincoDeckStrategy(cardsStrategy);
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
 

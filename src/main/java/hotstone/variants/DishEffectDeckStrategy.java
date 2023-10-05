@@ -10,8 +10,6 @@ import java.util.ArrayList;
 public class DishEffectDeckStrategy implements DeckStrategy {
     @Override
     public ArrayList<Card> createDeck(Player owner) {
-        DeckStrategy dishDeckStrategy = new DishDeckStrategy();
-        dishDeckStrategy.createDeck(owner);
         return null;
     }
 
