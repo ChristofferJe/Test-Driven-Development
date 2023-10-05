@@ -20,9 +20,4 @@ public class SpanishDeckStrategy implements DeckStrategy {
         ArrayList<Card> deck = cardsStrategy.generateCards(owner);
         return deck;
     }
-
-    @Override
-    public void execEffect(Card card) {
-
-    }
 }

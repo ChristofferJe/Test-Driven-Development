@@ -23,8 +23,4 @@ public class DishDeckStrategy implements DeckStrategy {
         return deck;
     }
 
-    @Override
-    public void execEffect(Card card) {}
-
-
 }

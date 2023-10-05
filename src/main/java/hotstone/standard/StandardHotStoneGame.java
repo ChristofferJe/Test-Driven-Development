@@ -300,7 +300,7 @@ public class StandardHotStoneGame implements Game {
     setCardStatus(attackingCard, false);
   }
 
-  private void decreaseHeroHealth(Player who, int amount) {
+  public void decreaseHeroHealth(Player who, int amount) {
     StandardHero stdHero = asStandardHero(getHero(who));
     stdHero.decreaseHealth(amount);
   }

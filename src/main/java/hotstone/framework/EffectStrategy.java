@@ -3,6 +3,6 @@ package hotstone.framework;
 import hotstone.standard.StandardHotStoneGame;
 
 public interface EffectStrategy {
-
-    public void execEffect(Card card, StandardHotStoneGame game);
+    void execEffect(StandardHotStoneGame game);
+    String getEffectDescription();
 }
