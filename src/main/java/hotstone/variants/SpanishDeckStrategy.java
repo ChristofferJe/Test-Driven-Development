@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class SpanishDeckStrategy implements DeckStrategy {
     private final CardsStrategy cardsStrategy;
 
-    public SpanishDeckStrategy(CardsStrategy cardsStrategy){
-        this.cardsStrategy = cardsStrategy;
+    public SpanishDeckStrategy(){
+        this.cardsStrategy = new SpanishCardsStrategy();
     }
     @Override
     public ArrayList<Card> createDeck(Player owner) {

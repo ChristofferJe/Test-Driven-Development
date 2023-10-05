@@ -25,8 +25,7 @@ public class TestEpsilonStone {
         ManaStrategy manaStrategy = new ThreeManaStrategy();
         pickNumberStrategy = new FixedNumberStrategy();
         HeroStrategy heroStrategy = new ItalianFrenchHeroStrategy(pickNumberStrategy);
-        CardsStrategy cardsStrategy = new SpanishCardsStrategy();
-        DeckStrategy deckStrategy = new SpanishDeckStrategy(cardsStrategy);
+        DeckStrategy deckStrategy = new SpanishDeckStrategy();
         game = new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
     }
 

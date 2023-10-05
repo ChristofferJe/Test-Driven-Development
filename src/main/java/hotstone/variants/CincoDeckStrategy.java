@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class CincoDeckStrategy implements DeckStrategy {
     private final CardsStrategy cardsStrategy;
 
-    public CincoDeckStrategy(CardsStrategy cardsStrategy){
-        this.cardsStrategy = cardsStrategy;
+    public CincoDeckStrategy(){
+        this.cardsStrategy = new CincoCardsStrategy();
     }
     @Override
     public ArrayList<Card> createDeck(Player owner) {

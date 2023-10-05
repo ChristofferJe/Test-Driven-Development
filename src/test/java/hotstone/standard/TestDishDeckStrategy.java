@@ -29,8 +29,7 @@ public class TestDishDeckStrategy {
      */
     @BeforeEach
     public void setUp() {
-        DishCardsStrategy cardsStrategy = new DishCardsStrategy();
-        deckStrategy = new DishDeckStrategy(cardsStrategy);
+        deckStrategy = new DishDeckStrategy();
     }
 
     @Test
