@@ -62,6 +62,9 @@ public class StandardCard implements Card {
 
     public void increaseAttack(int amount) { attack += amount; }
     public void useEffect(StandardHotStoneGame game){
-        effectStrategy.execEffect(game);
+        boolean hasEffect = effectStrategy != null;
+        if(hasEffect) {
+            effectStrategy.execEffect(game);
+        }
     }
 }

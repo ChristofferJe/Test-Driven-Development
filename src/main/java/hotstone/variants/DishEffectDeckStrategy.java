@@ -10,8 +10,8 @@ public class DishEffectDeckStrategy implements DeckStrategy {
     private final ShuffleStrategy shuffleStrategy;
 
 
-    public DishEffectDeckStrategy(){
-        cardsStrategy = new DishEffectCardsStrategy();
+    public DishEffectDeckStrategy(PickNumberStrategy pickNumberStrategy){
+        cardsStrategy = new DishEffectCardsStrategy(pickNumberStrategy);
         shuffleStrategy = new DishDeckShuffleStrategy();
     }
 

@@ -197,10 +197,16 @@ public class StandardHotStoneGame implements Game {
   public Status playCard(Player who, Card card) {
     Status status = isPlayCardAllowed(who, card);
     if (status != Status.OK) return status;
+    useCardEffect(card);
     moveCardFromHandToField(who, card);
     decreaseHeroMana(who, card.getManaCost());
     return status;
 
+  }
+
+  private void useCardEffect(Card card) {
+    StandardCard stdCard = asStandardCard(card);
+    stdCard.useEffect(this);
   }
 
   private void decreaseHeroMana(Player who, int manaAmount) {
@@ -421,7 +427,8 @@ public class StandardHotStoneGame implements Game {
     ManaStrategy manaStrategy = new SevenManaStrategy();
     WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
     HeroStrategy heroStrategy = new BabyHeroStrategy();
-    DeckStrategy deckStrategy = new DishEffectDeckStrategy();
+    PickNumberStrategy pickNumberStrategy = new RandomNumberStrategy();
+    DeckStrategy deckStrategy = new DishEffectDeckStrategy(pickNumberStrategy);
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
 
