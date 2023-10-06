@@ -21,6 +21,10 @@ import hotstone.framework.Card;
 import hotstone.framework.Game;
 import hotstone.framework.Hero;
 import hotstone.framework.Player;
+import hotstone.standard.GameConstants;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -85,5 +89,16 @@ public class TestHelper {
     game.endTurn();
     assertThat(game.getCardInField(Player.PEDDERSEN, 0).getName(),
             is("Dos"));
+  }
+
+  public static Card findCardInHand(Iterable<? extends Card> hand, String name){
+    Card card = null;
+    for (Card c : hand) {
+      boolean isRightCard = Objects.equals(c.getName(), name);
+      if (isRightCard) {
+        return c;
+      }
+    }
+    return null;
   }
 }

@@ -63,4 +63,6 @@ public class StandardHero implements Hero {
     }
 
     public void decreaseHealth(int amount) { health -= amount; }
+
+    public void increaseHealth(int amount) { health += amount; }
 }

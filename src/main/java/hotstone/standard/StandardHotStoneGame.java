@@ -174,7 +174,7 @@ public class StandardHotStoneGame implements Game {
     stdHero.setPowerStatus(status);
   }
 
-  private void drawCard(Player who) {
+  public void drawCard(Player who) {
     boolean isDeckEmpty = getDeck(who).isEmpty();
     if(!isDeckEmpty){
       addCardToHandFromDeck(who);
@@ -311,6 +311,11 @@ public class StandardHotStoneGame implements Game {
     stdHero.decreaseHealth(amount);
   }
 
+  public void increaseHeroHealth(Player who, int amount) {
+    StandardHero stdHero = asStandardHero(getHero(who));
+    stdHero.increaseHealth(amount);
+  }
+
   private Status isAttackHeroAllowed(Player playerAttacking, Card attackingCard) {
     // Check if attacking player is in turn
     if(!isPlayerInTurn(playerAttacking)) return Status.NOT_PLAYER_IN_TURN;
@@ -372,6 +377,11 @@ public class StandardHotStoneGame implements Game {
 
   public StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
 
+  public void killMinion(StandardCard stdCard) {
+    stdCard.decreaseHealth(stdCard.getHealth());
+    removeIfDead(stdCard);
+  }
+
   public static StandardHotStoneGame createAlphaGame(){
     WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
     ManaStrategy manaStrategy = new ThreeManaStrategy();
@@ -431,6 +441,7 @@ public class StandardHotStoneGame implements Game {
     DeckStrategy deckStrategy = new DishEffectDeckStrategy(pickNumberStrategy);
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
+
 
 
 }
