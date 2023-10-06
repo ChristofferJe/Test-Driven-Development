@@ -250,7 +250,6 @@ public class StandardHotStoneGame implements Game {
     executeAttackCard(attackingCard, defendingCard);
     winnerStrategy.increaseAttackSum(playerAttacking, attackingCard, turnNumber);
     return status;
-
   }
 
   private void executeAttackCard(Card attackingCard, Card defendingCard) {

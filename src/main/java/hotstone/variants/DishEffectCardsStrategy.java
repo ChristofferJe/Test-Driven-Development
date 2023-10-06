@@ -22,6 +22,7 @@ public class DishEffectCardsStrategy implements CardsStrategy {
             EffectStrategy pokeBowlEffectStrategy = new PokeBowlEffectStrategy();
             EffectStrategy noodleSoupEffectStrategy = new NoodleSoupEffectStrategy();
             EffectStrategy chickenCurryEffectStragey = new ChickenCurryEffectStrategy(pickNumberStrategy);
+            EffectStrategy beefBurgerEffectStrategy = new BeefBurgerEffectStrategy(pickNumberStrategy);
             Card BrownRice = new StandardCard(GameConstants.BROWN_RICE_CARD, 1,1,1, owner, brownRiceEffectStrategy);
             Card FrenchFries = new StandardCard(GameConstants.FRENCH_FRIES_CARD,1,2,1, owner, null);
             Card GreenSalad = new StandardCard(GameConstants.GREEN_SALAD_CARD, 2, 2, 3, owner, null);
@@ -32,7 +33,7 @@ public class DishEffectCardsStrategy implements CardsStrategy {
             Card SpringRolls = new StandardCard(GameConstants.SPRING_ROLLS_CARD, 5,3,7, owner, null);
             Card BakedSalmon = new StandardCard(GameConstants.BAKED_SALMON_CARD,5,8,2, owner, null);
             Card ChickenCurry = new StandardCard(GameConstants.CHICKEN_CURRY_CARD,6,4,4, owner, chickenCurryEffectStragey);
-            Card BeefBurger = new StandardCard(GameConstants.BEEF_BURGER_CARD,6,8,6, owner, null);
+            Card BeefBurger = new StandardCard(GameConstants.BEEF_BURGER_CARD,6,8,6, owner, beefBurgerEffectStrategy);
             Card FiletMignon = new StandardCard(GameConstants.FILET_MIGNON_CARD,7,9,5, owner, null);
             cards.add(BrownRice);
             cards.add(FrenchFries);

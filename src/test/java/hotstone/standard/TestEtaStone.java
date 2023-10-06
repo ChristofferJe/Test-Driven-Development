@@ -26,22 +26,13 @@ public class TestEtaStone {
         DeckStrategy deckStrategy = new DishEffectDeckStrategy(pickNumberStrategy);
         game = new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
     }
-
-
     @Test
     public void brownRiceDoesOneDamageToOpponentHero() {
         // Given game
         // When enough rounds has passed that all types of cards are in Findus Hand
         TestHelper.advanceGameNRounds(game, 20);
         // Find Brown Rice in hand
-        Card brownRice = null;
-        for (Card c : game.getHand(Player.FINDUS)) {
-            boolean isBrownRice = Objects.equals(c.getName(), GameConstants.BROWN_RICE_CARD);
-            if (isBrownRice) {
-                brownRice = c;
-                break;
-            }
-        }
+        Card brownRice = TestHelper.findCardInList(game.getHand(Player.FINDUS), GameConstants.BROWN_RICE_CARD);
         assertThat(brownRice.getName(), is(GameConstants.BROWN_RICE_CARD));
         // WHen Peddersen hero has 21 health and Findus plays Brown Rice
         int healthBefore = game.getHero(Player.PEDDERSEN).getHealth();
@@ -61,14 +52,7 @@ public class TestEtaStone {
         // When enough rounds has passed that all types of cards are in Findus Hand
         TestHelper.advanceGameNRounds(game, 20);
         // Find Tomato Salad in hand
-        Card tomatoSalad = null;
-        for (Card c : game.getHand(Player.FINDUS)) {
-            boolean isTomatoSalad = Objects.equals(c.getName(), GameConstants.TOMATO_SALAD_CARD);
-            if (isTomatoSalad) {
-                tomatoSalad = c;
-                break;
-            }
-        }
+        Card tomatoSalad = TestHelper.findCardInList(game.getHand(Player.FINDUS), GameConstants.TOMATO_SALAD_CARD);
         assertThat(tomatoSalad.getName(), is(GameConstants.TOMATO_SALAD_CARD));
         // When Findus plays Tomato Salad
         pickNumberStrategy.setNumber(0);
@@ -84,14 +68,7 @@ public class TestEtaStone {
         // When enough rounds has passed that all types of cards are in Findus Hand
         TestHelper.advanceGameNRounds(game, 20);
         // Find Tomato Salad in hand
-        Card tomatoSalad = null;
-        for (Card c : game.getHand(Player.FINDUS)) {
-            boolean isTomatoSalad = Objects.equals(c.getName(), GameConstants.TOMATO_SALAD_CARD);
-            if (isTomatoSalad) {
-                tomatoSalad = c;
-                break;
-            }
-        }
+        Card tomatoSalad = TestHelper.findCardInList(game.getHand(Player.FINDUS), GameConstants.TOMATO_SALAD_CARD);
         assertThat(tomatoSalad.getName(), is(GameConstants.TOMATO_SALAD_CARD));
         // When Findus plays Tomato Salad
         game.playCard(Player.FINDUS,tomatoSalad);
@@ -106,14 +83,7 @@ public class TestEtaStone {
         // When enough rounds has passed that all types of cards are in Findus Hand
         TestHelper.advanceGameNRounds(game, 20);
         // Find PokeBowl in hand
-        Card pokeBowl = null;
-        for (Card c : game.getHand(Player.FINDUS)) {
-            boolean isPokeBowl = Objects.equals(c.getName(), GameConstants.POKE_BOWL_CARD);
-            if (isPokeBowl) {
-                pokeBowl = c;
-                break;
-            }
-        }
+        Card pokeBowl = TestHelper.findCardInList(game.getHand(Player.FINDUS), GameConstants.POKE_BOWL_CARD);
         assertThat(pokeBowl.getName(), is(GameConstants.POKE_BOWL_CARD));
         // When Findus hero has 21 health and Findus plays Poke Bowl
         int healthBefore = game.getHero(Player.FINDUS).getHealth();
@@ -130,7 +100,7 @@ public class TestEtaStone {
         // When enough rounds has passed that all types of cards are in Findus Hand
         TestHelper.advanceGameNRounds(game, 20);
         // Find PokeBowl in hand
-        Card noodleSoup = TestHelper.findCardInHand(game.getHand(Player.FINDUS), GameConstants.NOODLE_SOUP_CARD);
+        Card noodleSoup = TestHelper.findCardInList(game.getHand(Player.FINDUS), GameConstants.NOODLE_SOUP_CARD);
         assertThat(noodleSoup.getName(), is(GameConstants.NOODLE_SOUP_CARD));
         // When Findus hero has hand size 23 and decksize 1
         assertThat(game.getHandSize(Player.FINDUS), is(23));
@@ -148,7 +118,7 @@ public class TestEtaStone {
         // When enough rounds has passed that all types of cards are in Findus Hand
         TestHelper.advanceGameNRounds(game, 21);
         // Find PokeBowl in hand
-        Card noodleSoup = TestHelper.findCardInHand(game.getHand(Player.FINDUS), GameConstants.NOODLE_SOUP_CARD);
+        Card noodleSoup = TestHelper.findCardInList(game.getHand(Player.FINDUS), GameConstants.NOODLE_SOUP_CARD);
         assertThat(noodleSoup.getName(), is(GameConstants.NOODLE_SOUP_CARD));
         // When Findus hero has hand size 24, decksize 0 and health 21
         assertThat(game.getHandSize(Player.FINDUS), is(24));
@@ -172,7 +142,7 @@ public class TestEtaStone {
         // When enough rounds has passed that all types of cards are in Findus Hand
         TestHelper.advanceGameNRounds(game, 19);
         // Find ChickenCurry in hand
-        Card chickenCurry = TestHelper.findCardInHand(game.getHand(Player.FINDUS), GameConstants.CHICKEN_CURRY_CARD);
+        Card chickenCurry = TestHelper.findCardInList(game.getHand(Player.FINDUS), GameConstants.CHICKEN_CURRY_CARD);
         assertThat(chickenCurry.getName(), is(GameConstants.CHICKEN_CURRY_CARD));
         // When Peddersen's field size is 1
         assertThat(game.getFieldSize(Player.PEDDERSEN), is(1));
@@ -185,5 +155,26 @@ public class TestEtaStone {
         assertThat(card.isActive(), is(false));
 
     }
+
+    @Test
+    public void beefBurgerAdds2AttackToOpponentMinion() {
+        // Given game and Peddersen plays a minion with an attack value in his first turn
+        game.endTurn();
+        Card card = game.getCardInHand(Player.PEDDERSEN, 2);
+        game.playCard(Player.PEDDERSEN, card);
+        int attackBefore = card.getAttack();
+        game.endTurn();
+        // When enough rounds has passed that all types of cards are in Findus Hand
+        TestHelper.advanceGameNRounds(game, 19);
+        // Find BeefBurger in hand
+        Card beefBurger = TestHelper.findCardInList(game.getHand(Player.FINDUS), GameConstants.BEEF_BURGER_CARD);
+        assertThat(beefBurger.getName(), is(GameConstants.BEEF_BURGER_CARD));
+        // When Findus plays BeefBurger
+        game.playCard(Player.FINDUS, beefBurger);
+        // Then the minion in Peddersen's field's attack is increased by 2
+        int attackAfter = card.getAttack();
+        assertThat(attackAfter, is(attackBefore+2));
+    }
+
 
 }

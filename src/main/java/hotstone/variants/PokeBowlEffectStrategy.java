@@ -14,6 +14,6 @@ public class PokeBowlEffectStrategy implements EffectStrategy {
 
     @Override
     public String getEffectDescription() {
-        return "“H: (0,+2)";
+        return "H: (0,+2)";
     }
 }

@@ -13,6 +13,6 @@ public class NoodleSoupEffectStrategy implements EffectStrategy {
 
     @Override
     public String getEffectDescription() {
-        return "“Draw Card";
+        return "Draw Card";
     }
 }

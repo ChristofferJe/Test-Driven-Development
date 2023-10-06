@@ -21,9 +21,7 @@ import hotstone.framework.Card;
 import hotstone.framework.Game;
 import hotstone.framework.Hero;
 import hotstone.framework.Player;
-import hotstone.standard.GameConstants;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -91,7 +89,7 @@ public class TestHelper {
             is("Dos"));
   }
 
-  public static Card findCardInHand(Iterable<? extends Card> hand, String name){
+  public static Card findCardInList(Iterable<? extends Card> hand, String name){
     Card card = null;
     for (Card c : hand) {
       boolean isRightCard = Objects.equals(c.getName(), name);

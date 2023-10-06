@@ -67,4 +67,11 @@ public class StandardCard implements Card {
             effectStrategy.execEffect(game);
         }
     }
+    public String getEffectDescription(){
+        boolean hasEffect = effectStrategy != null;
+        if(hasEffect) {
+            return effectStrategy.getEffectDescription();
+        }
+        return null;
+    }
 }

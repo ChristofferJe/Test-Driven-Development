@@ -4,10 +4,10 @@ import hotstone.framework.*;
 import hotstone.standard.StandardCard;
 import hotstone.standard.StandardHotStoneGame;
 
-public class ChickenCurryEffectStrategy implements EffectStrategy {
+public class BeefBurgerEffectStrategy implements EffectStrategy {
     private final PickNumberStrategy pickNumberStrategy;
 
-    public ChickenCurryEffectStrategy(PickNumberStrategy pickNumberStrategy) {
+    public BeefBurgerEffectStrategy(PickNumberStrategy pickNumberStrategy) {
         this.pickNumberStrategy = pickNumberStrategy;
     }
 
@@ -19,7 +19,7 @@ public class ChickenCurryEffectStrategy implements EffectStrategy {
         boolean isFieldEmpty = fieldSize == 0;
         if (!isFieldEmpty) {
             StandardCard stdCard = getCardFromField(game, opponent);
-            game.killMinion(stdCard);
+            stdCard.increaseAttack(2);
         }
     }
 
@@ -31,6 +31,7 @@ public class ChickenCurryEffectStrategy implements EffectStrategy {
     }
 
     @Override
-    public String getEffectDescription() {return "Kill opp M";
+    public String getEffectDescription() {
+        return "Opp M: (+2,0)";
     }
 }
