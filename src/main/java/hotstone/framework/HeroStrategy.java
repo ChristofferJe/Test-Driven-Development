@@ -1,10 +1,10 @@
 package hotstone.framework;
 
 import hotstone.framework.*;
-import hotstone.standard.StandardHotStoneGame;
+import hotstone.standard.*;
 
 public interface HeroStrategy {
-    Hero createHero(Player who);
+    StandardHero createHero(Player who);
 
     void execPower(Player who, StandardHotStoneGame game);
 }

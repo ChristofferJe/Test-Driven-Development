@@ -22,9 +22,9 @@ public class TwoHeroStrategy implements HeroStrategy {
 
     }
     @Override
-    public Hero createHero(Player who) {
-        Hero hero = new StandardHero(who, types.get(who), descriptions.get(who));
-        return hero;
+    public StandardHero createHero(Player who) {
+        StandardHero stdHero = new StandardHero(who, types.get(who), descriptions.get(who));
+        return stdHero;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class TwoHeroStrategy implements HeroStrategy {
     }
 
     private void execThaiPower(StandardHotStoneGame game) {
-        StandardHero stdHero = (StandardHero) game.getHero(Player.PEDDERSEN);
+        MutableHero stdHero = (MutableHero) game.getHero(Player.PEDDERSEN);
         stdHero.decreaseHealth(2);
     }
 }

@@ -10,9 +10,9 @@ import hotstone.standard.StandardHotStoneGame;
 public class BabyHeroStrategy implements HeroStrategy {
 
     @Override
-    public Hero createHero(Player who) {
-        Hero hero = new StandardHero(who, GameConstants.BABY_HERO_TYPE, "cute");
-        return hero;
+    public StandardHero createHero(Player who) {
+        StandardHero stdHero = new StandardHero(who, GameConstants.BABY_HERO_TYPE, "cute");
+        return stdHero;
     }
 
     @Override

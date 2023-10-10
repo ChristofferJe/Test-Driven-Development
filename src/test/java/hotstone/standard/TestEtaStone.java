@@ -50,7 +50,7 @@ public class TestEtaStone {
         int attackBefore = card.getAttack();
         game.playCard(Player.FINDUS, card);
         // When enough rounds has passed that all types of cards are in Findus Hand
-        TestHelper.advanceGameNRounds(game, 20);
+        TestHelper.advanceGameNRounds(game, 21);
         // Find Tomato Salad in hand
         Card tomatoSalad = TestHelper.findCardInList(game.getHand(Player.FINDUS), GameConstants.TOMATO_SALAD_CARD);
         assertThat(tomatoSalad.getName(), is(GameConstants.TOMATO_SALAD_CARD));

@@ -4,7 +4,7 @@ import hotstone.framework.Card;
 import hotstone.framework.EffectStrategy;
 import hotstone.framework.Player;
 
-public class StandardCard implements Card {
+public class StandardCard implements Card, hotstone.framework.MutableCard {
 
 
     private final String name;
@@ -53,20 +53,24 @@ public class StandardCard implements Card {
     public Player getOwner() {
         return owner;
     }
-
+    @Override
     public void setStatus(Boolean status){
         this.status = status;
     }
 
+    @Override
     public void decreaseHealth(int amount) { health -= amount; }
 
+    @Override
     public void increaseAttack(int amount) { attack += amount; }
+    @Override
     public void useEffect(StandardHotStoneGame game){
         boolean hasEffect = effectStrategy != null;
         if(hasEffect) {
             effectStrategy.execEffect(game);
         }
     }
+    @Override
     public String getEffectDescription(){
         boolean hasEffect = effectStrategy != null;
         if(hasEffect) {

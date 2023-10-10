@@ -49,7 +49,7 @@ public class StandardHotStoneGame implements Game {
   private final HashMap<Player, ArrayList<Card>> hands;
   private final HashMap<Player, ArrayList<Card>> decks;
   private final HashMap<Player, ArrayList<Card>> fields;
-  private final HashMap<Player, Hero> heroes;
+  private final HashMap<Player, StandardHero> heroes;
   private ManaStrategy manaStrategy;
   private WinnerStrategy winnerStrategy;
   private HeroStrategy heroStrategy;
@@ -65,13 +65,13 @@ public class StandardHotStoneGame implements Game {
 
     turnNumber = 1;
 
-    Hero findusHero = heroStrategy.createHero(Player.FINDUS);
+    StandardHero findusHero = heroStrategy.createHero(Player.FINDUS);
     ArrayList<Card> findusDeck = deckStrategy.createDeck(Player.FINDUS);
     ArrayList<Card> findusHand = new ArrayList<>();
     ArrayList<Card> findusField = new ArrayList<>();
 
 
-    Hero peddersenHero = heroStrategy.createHero(Player.PEDDERSEN);
+    StandardHero peddersenHero = heroStrategy.createHero(Player.PEDDERSEN);
     ArrayList<Card> peddersenDeck = deckStrategy.createDeck(Player.PEDDERSEN);
     ArrayList<Card> peddersenHand = new ArrayList<>();
     ArrayList<Card> peddersenField = new ArrayList<>();
@@ -163,6 +163,7 @@ public class StandardHotStoneGame implements Game {
     restoreMana(otherPlayer);
   }
 
+  public StandardHero getStdHero(Player who) { return heroes.get(who); }
   private void activateMinionsInField(Player who) {
     for (Card c : getField(who)) {
       setCardStatus(c, true);
@@ -170,7 +171,7 @@ public class StandardHotStoneGame implements Game {
   }
 
   private void setHeroPowerStatus(Player player, boolean status) {
-    StandardHero stdHero = asStandardHero(getHero(player));
+    StandardHero stdHero = getStdHero(player);
     stdHero.setPowerStatus(status);
   }
 
@@ -211,7 +212,7 @@ public class StandardHotStoneGame implements Game {
 
   private void decreaseHeroMana(Player who, int manaAmount) {
     // Cast and change mana
-    StandardHero stdHero = asStandardHero(getHero(who));
+    StandardHero stdHero = getStdHero(who);
     stdHero.decreaseMana(manaAmount);
   }
 
@@ -306,12 +307,12 @@ public class StandardHotStoneGame implements Game {
   }
 
   public void decreaseHeroHealth(Player who, int amount) {
-    StandardHero stdHero = asStandardHero(getHero(who));
+    StandardHero stdHero = getStdHero(who);
     stdHero.decreaseHealth(amount);
   }
 
   public void increaseHeroHealth(Player who, int amount) {
-    StandardHero stdHero = asStandardHero(getHero(who));
+    StandardHero stdHero = getStdHero(who);
     stdHero.increaseHealth(amount);
   }
 
@@ -368,13 +369,12 @@ public class StandardHotStoneGame implements Game {
   }
 
   private void setHeroMana(Player who, int mana) {
-    StandardHero stdHero = asStandardHero(getHero(who));
+    StandardHero stdHero = getStdHero(who);
     stdHero.setMana(mana);
   }
 
   public StandardCard asStandardCard(Card card){return (StandardCard) card;}
 
-  public StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
 
   public void killMinion(StandardCard stdCard) {
     stdCard.decreaseHealth(stdCard.getHealth());

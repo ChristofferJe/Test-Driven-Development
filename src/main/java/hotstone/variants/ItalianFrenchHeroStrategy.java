@@ -24,9 +24,9 @@ public class ItalianFrenchHeroStrategy implements HeroStrategy {
 
     }
     @Override
-    public Hero createHero(Player who) {
-        Hero hero = new StandardHero(who, types.get(who), descriptions.get(who));
-        return hero;
+    public StandardHero createHero(Player who) {
+        StandardHero stdHero = new StandardHero(who, types.get(who), descriptions.get(who));
+        return stdHero;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ItalianFrenchHeroStrategy implements HeroStrategy {
         if (!isFieldEmpty) {
             int index = pickNumberStrategy.getNumber(fieldSize);
             Card card = game.getCardInField(Player.PEDDERSEN, index);
-            StandardCard stdCard = game.asStandardCard(card);
+            MutableCard stdCard = game.asStandardCard(card);
             stdCard.increaseAttack(2);
         }
     }

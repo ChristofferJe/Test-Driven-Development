@@ -1,11 +1,9 @@
 package hotstone.standard;
 
-import hotstone.framework.Hero;
-import hotstone.framework.Player;
 
-import java.util.HashMap;
+import hotstone.framework.*;
 
-public class StandardHero implements Hero {
+public class StandardHero implements Hero, MutableHero {
 
     private final String type;
     private final String description;
@@ -49,20 +47,20 @@ public class StandardHero implements Hero {
 
     @Override
     public String getEffectDescription() { return description; }
-
+    @Override
     public void setPowerStatus(boolean bool){
         powerStatus = bool;
     }
-
+    @Override
     public void decreaseMana(int amount) {
         mana -= amount;
     }
-
+    @Override
     public void setMana(int amount) {
         mana = amount;
     }
-
+    @Override
     public void decreaseHealth(int amount) { health -= amount; }
-
+    @Override
     public void increaseHealth(int amount) { health += amount; }
 }
