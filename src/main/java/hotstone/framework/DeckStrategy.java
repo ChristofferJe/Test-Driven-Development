@@ -1,6 +1,5 @@
 package hotstone.framework;
 
-import hotstone.framework.*;
 import java.util.ArrayList;
 
 public interface DeckStrategy {

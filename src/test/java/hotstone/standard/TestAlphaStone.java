@@ -535,8 +535,7 @@ public class TestAlphaStone {
     assertThat(status, is(Status.ATTACK_NOT_ALLOWED_FOR_NON_ACTIVE_MINION));
   }
 
-  /** REMOVE ME. Not a test of HotStone, just an example of the
-   matchers that the hamcrest library has... */
+
 
   @Test
   public void PeddersenHeroShouldHave20HealtAfterAttackFromUno(){

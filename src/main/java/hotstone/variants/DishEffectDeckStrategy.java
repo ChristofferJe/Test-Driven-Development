@@ -1,19 +1,18 @@
 package hotstone.variants;
 
 import hotstone.framework.*;
-import hotstone.standard.GameConstants;
-import hotstone.standard.StandardCard;
+import hotstone.variants.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-public class DishDeckStrategy implements DeckStrategy {
+public class DishEffectDeckStrategy implements DeckStrategy {
     private final CardsStrategy cardsStrategy;
     private final ShuffleStrategy shuffleStrategy;
 
-    public DishDeckStrategy(){
-        this.cardsStrategy = new DishCardsStrategy();
-        this.shuffleStrategy = new DishDeckShuffleStrategy();
+
+    public DishEffectDeckStrategy(PickNumberStrategy pickNumberStrategy){
+        cardsStrategy = new DishEffectCardsStrategy(pickNumberStrategy);
+        shuffleStrategy = new DishDeckShuffleStrategy();
     }
 
     @Override
@@ -22,5 +21,4 @@ public class DishDeckStrategy implements DeckStrategy {
         shuffleStrategy.orderCards(deck);
         return deck;
     }
-
 }

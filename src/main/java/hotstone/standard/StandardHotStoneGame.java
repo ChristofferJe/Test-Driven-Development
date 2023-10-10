@@ -99,7 +99,6 @@ public class StandardHotStoneGame implements Game {
   }
 
 
-
   private void initializeHands() {
     // Each player draws three cards
     for(int i=0; i<3; i++){drawCard(Player.FINDUS); drawCard(Player.PEDDERSEN);}
@@ -175,7 +174,7 @@ public class StandardHotStoneGame implements Game {
     stdHero.setPowerStatus(status);
   }
 
-  private void drawCard(Player who) {
+  public void drawCard(Player who) {
     boolean isDeckEmpty = getDeck(who).isEmpty();
     if(!isDeckEmpty){
       addCardToHandFromDeck(who);
@@ -198,10 +197,16 @@ public class StandardHotStoneGame implements Game {
   public Status playCard(Player who, Card card) {
     Status status = isPlayCardAllowed(who, card);
     if (status != Status.OK) return status;
+    useCardEffect(card);
     moveCardFromHandToField(who, card);
     decreaseHeroMana(who, card.getManaCost());
     return status;
 
+  }
+
+  private void useCardEffect(Card card) {
+    StandardCard stdCard = asStandardCard(card);
+    stdCard.useEffect(this);
   }
 
   private void decreaseHeroMana(Player who, int manaAmount) {
@@ -243,8 +248,8 @@ public class StandardHotStoneGame implements Game {
     Status status = isAttackCardAllowed(playerAttacking, attackingCard, defendingCard);
     if (status != Status.OK) return status;
     executeAttackCard(attackingCard, defendingCard);
+    winnerStrategy.increaseAttackSum(playerAttacking, attackingCard, turnNumber);
     return status;
-
   }
 
   private void executeAttackCard(Card attackingCard, Card defendingCard) {
@@ -263,7 +268,7 @@ public class StandardHotStoneGame implements Game {
     stdCard.setStatus(status);
   }
 
-  private void decreaseCardHealth(Card card, int amount) {
+  public void decreaseCardHealth(Card card, int amount) {
     StandardCard stdCard = asStandardCard(card);
     stdCard.decreaseHealth(amount);
   }
@@ -300,9 +305,14 @@ public class StandardHotStoneGame implements Game {
     setCardStatus(attackingCard, false);
   }
 
-  private void decreaseHeroHealth(Player who, int amount) {
+  public void decreaseHeroHealth(Player who, int amount) {
     StandardHero stdHero = asStandardHero(getHero(who));
     stdHero.decreaseHealth(amount);
+  }
+
+  public void increaseHeroHealth(Player who, int amount) {
+    StandardHero stdHero = asStandardHero(getHero(who));
+    stdHero.increaseHealth(amount);
   }
 
   private Status isAttackHeroAllowed(Player playerAttacking, Card attackingCard) {
@@ -339,7 +349,7 @@ public class StandardHotStoneGame implements Game {
     return !getHero(who).canUsePower();
   }
 
-  private void removeIfDead(Card card){
+  public void removeIfDead(Card card){
       boolean isCardDead = card.getHealth() < 1;
       if(isCardDead){
         setCardStatus(card, false);
@@ -362,9 +372,14 @@ public class StandardHotStoneGame implements Game {
     stdHero.setMana(mana);
   }
 
-  private StandardCard asStandardCard(Card card){return (StandardCard) card;}
+  public StandardCard asStandardCard(Card card){return (StandardCard) card;}
 
-  private StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
+  public StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
+
+  public void killMinion(StandardCard stdCard) {
+    stdCard.decreaseHealth(stdCard.getHealth());
+    removeIfDead(stdCard);
+  }
 
   public static StandardHotStoneGame createAlphaGame(){
     WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
@@ -397,5 +412,35 @@ public class StandardHotStoneGame implements Game {
     DeckStrategy deckStrategy = new DishDeckStrategy();
     return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
   }
+
+  public static StandardHotStoneGame createEpsilonGame(){
+    ManaStrategy manaStrategy = new ThreeManaStrategy();
+    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
+    PickNumberStrategy pickNumberStrategy = new RandomNumberStrategy();
+    HeroStrategy heroStrategy = new ItalianFrenchHeroStrategy(pickNumberStrategy);
+    DeckStrategy deckStrategy = new SpanishDeckStrategy();
+    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
+  }
+
+  public static StandardHotStoneGame createZetaGame(){
+    WinnerStrategy heroHealthWinnerStrategy = new HeroHealthWinnerStrategy();
+    WinnerStrategy minionAttackWinnerStrategy = new MinionAttackWinnerStrategy();
+    WinnerStrategy winnerStrategy = new AlternatingWinnerStrategy(heroHealthWinnerStrategy, minionAttackWinnerStrategy);
+    ManaStrategy manaStrategy = new ThreeManaStrategy();
+    HeroStrategy heroStrategy = new BabyHeroStrategy();
+    DeckStrategy deckStrategy = new CincoDeckStrategy();
+    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
+  }
+
+  public static StandardHotStoneGame createEtaGame() {
+    ManaStrategy manaStrategy = new SevenManaStrategy();
+    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
+    HeroStrategy heroStrategy = new BabyHeroStrategy();
+    PickNumberStrategy pickNumberStrategy = new RandomNumberStrategy();
+    DeckStrategy deckStrategy = new DishEffectDeckStrategy(pickNumberStrategy);
+    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
+  }
+
+
 
 }

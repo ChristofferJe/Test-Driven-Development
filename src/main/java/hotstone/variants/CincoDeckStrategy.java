@@ -9,11 +9,11 @@ import hotstone.standard.StandardCard;
 
 import java.util.ArrayList;
 
-public class SpanishDeckStrategy implements DeckStrategy {
+public class CincoDeckStrategy implements DeckStrategy {
     private final CardsStrategy cardsStrategy;
 
-    public SpanishDeckStrategy(){
-        this.cardsStrategy = new SpanishCardsStrategy();
+    public CincoDeckStrategy(){
+        this.cardsStrategy = new CincoCardsStrategy();
     }
     @Override
     public ArrayList<Card> createDeck(Player owner) {

@@ -37,7 +37,7 @@ public class TwoHeroStrategy implements HeroStrategy {
     }
 
     private static void execDanishPower(StandardHotStoneGame game) {
-        Card sovs = new StandardCard(GameConstants.SOVS_CARD, 0, 1, 1, Player.PEDDERSEN);
+        Card sovs = new StandardCard(GameConstants.SOVS_CARD, 0, 1, 1, Player.PEDDERSEN, null);
         game.playCard(Player.PEDDERSEN, sovs);
     }
 

@@ -1,6 +1,7 @@
 package hotstone.standard;
 
 import hotstone.framework.Card;
+import hotstone.framework.EffectStrategy;
 import hotstone.framework.Player;
 
 public class StandardCard implements Card {
@@ -8,17 +9,19 @@ public class StandardCard implements Card {
 
     private final String name;
     private final int cost;
-    private final int attack;
+    private int attack;
     private int health;
     private Player owner;
     private Boolean status;
+    private EffectStrategy effectStrategy;
 
-    public StandardCard(String name, int cost, int attack, int health, Player owner){
+    public StandardCard(String name, int cost, int attack, int health, Player owner, EffectStrategy effectStrategy){
         this.name = name;
         this.cost = cost;
         this.attack =  attack;
         this.health = health;
         this.owner = owner;
+        this.effectStrategy = effectStrategy;
         status = false;
     }
     @Override
@@ -56,4 +59,19 @@ public class StandardCard implements Card {
     }
 
     public void decreaseHealth(int amount) { health -= amount; }
+
+    public void increaseAttack(int amount) { attack += amount; }
+    public void useEffect(StandardHotStoneGame game){
+        boolean hasEffect = effectStrategy != null;
+        if(hasEffect) {
+            effectStrategy.execEffect(game);
+        }
+    }
+    public String getEffectDescription(){
+        boolean hasEffect = effectStrategy != null;
+        if(hasEffect) {
+            return effectStrategy.getEffectDescription();
+        }
+        return null;
+    }
 }

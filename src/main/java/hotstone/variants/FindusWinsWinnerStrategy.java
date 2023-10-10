@@ -1,8 +1,6 @@
 package hotstone.variants;
 
-import hotstone.framework.Game;
-import hotstone.framework.Player;
-import hotstone.framework.WinnerStrategy;
+import hotstone.framework.*;
 
 public class FindusWinsWinnerStrategy implements WinnerStrategy {
 
@@ -12,4 +10,7 @@ public class FindusWinsWinnerStrategy implements WinnerStrategy {
         if(hasFourRoundsPassed) return Player.FINDUS;
         return null;
     }
+
+    @Override
+    public void increaseAttackSum(Player who, Card attackinCard, int turnNumber){};
 }
