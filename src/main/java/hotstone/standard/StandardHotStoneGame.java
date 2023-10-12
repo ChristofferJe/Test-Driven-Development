@@ -45,6 +45,7 @@ import java.util.*;
  */
 
 public class StandardHotStoneGame implements Game, MutableGame {
+  private final GameFactory factory;
   private int turnNumber;
   private final HashMap<Player, ArrayList<Card>> hands;
   private final HashMap<Player, ArrayList<Card>> decks;
@@ -56,12 +57,12 @@ public class StandardHotStoneGame implements Game, MutableGame {
   private DeckStrategy deckStrategy;
 
 
-  public StandardHotStoneGame(WinnerStrategy winnerStrategy, ManaStrategy manaStrategy, HeroStrategy heroStrategy, DeckStrategy deckStrategy) {
-
-    this.winnerStrategy = winnerStrategy;
-    this.manaStrategy = manaStrategy;
-    this.heroStrategy = heroStrategy;
-    this.deckStrategy = deckStrategy;
+  public StandardHotStoneGame(GameFactory factory) {
+    this.factory = factory;
+    this.winnerStrategy = factory.createWinnerStrategy();
+    this.manaStrategy = factory.createManaStrategy();
+    this.heroStrategy = factory.createHeroStrategy();
+    this.deckStrategy = factory.createDeckStrategy();
 
     turnNumber = 1;
 
@@ -414,67 +415,5 @@ public class StandardHotStoneGame implements Game, MutableGame {
   public boolean isCardActive(Card attackingCard) {
     return attackingCard.isActive();
   }
-
-  public static StandardHotStoneGame createAlphaGame(){
-    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
-    ManaStrategy manaStrategy = new ThreeManaStrategy();
-    HeroStrategy heroStrategy = new BabyHeroStrategy();
-    DeckStrategy deckStrategy = new SpanishDeckStrategy();
-    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
-  }
-
-  public static StandardHotStoneGame createBetaGame(){
-    ManaStrategy manaStrategy = new ProgressiveManaStrategy();
-    WinnerStrategy winnerStrategy = new HeroHealthWinnerStrategy();
-    HeroStrategy heroStrategy = new BabyHeroStrategy();
-    DeckStrategy deckStrategy = new SpanishDeckStrategy();
-    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
-  }
-
-  public static StandardHotStoneGame createGammaGame(){
-    ManaStrategy manaStrategy = new ThreeManaStrategy();
-    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
-    HeroStrategy heroStrategy = new TwoHeroStrategy();
-    DeckStrategy deckStrategy = new SpanishDeckStrategy();
-    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
-  }
-
-  public static StandardHotStoneGame createDeltaGame(){
-    ManaStrategy manaStrategy = new SevenManaStrategy();
-    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
-    HeroStrategy heroStrategy = new BabyHeroStrategy();
-    DeckStrategy deckStrategy = new DishDeckStrategy();
-    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
-  }
-
-  public static StandardHotStoneGame createEpsilonGame(){
-    ManaStrategy manaStrategy = new ThreeManaStrategy();
-    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
-    PickNumberStrategy pickNumberStrategy = new RandomNumberStrategy();
-    HeroStrategy heroStrategy = new ItalianFrenchHeroStrategy(pickNumberStrategy);
-    DeckStrategy deckStrategy = new SpanishDeckStrategy();
-    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
-  }
-
-  public static StandardHotStoneGame createZetaGame(){
-    WinnerStrategy heroHealthWinnerStrategy = new HeroHealthWinnerStrategy();
-    WinnerStrategy minionAttackWinnerStrategy = new MinionAttackWinnerStrategy();
-    WinnerStrategy winnerStrategy = new AlternatingWinnerStrategy(heroHealthWinnerStrategy, minionAttackWinnerStrategy);
-    ManaStrategy manaStrategy = new ThreeManaStrategy();
-    HeroStrategy heroStrategy = new BabyHeroStrategy();
-    DeckStrategy deckStrategy = new CincoDeckStrategy();
-    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
-  }
-
-  public static StandardHotStoneGame createEtaGame() {
-    ManaStrategy manaStrategy = new SevenManaStrategy();
-    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
-    HeroStrategy heroStrategy = new BabyHeroStrategy();
-    PickNumberStrategy pickNumberStrategy = new RandomNumberStrategy();
-    DeckStrategy deckStrategy = new DishEffectDeckStrategy(pickNumberStrategy);
-    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
-  }
-
-
 
 }

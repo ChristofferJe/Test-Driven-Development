@@ -9,7 +9,7 @@ public class FixedNumberStrategy implements PickNumberStrategy {
     public int getNumber(int fieldSize) {
         return number;
     }
-
+    @Override
     public void setNumber(int number){
         this.number = number;
     }

@@ -1,6 +1,7 @@
 package hotstone.standard;
 
 import hotstone.framework.*;
+import hotstone.variants.BetaGameFactory;
 import org.junit.jupiter.api.*;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -13,7 +14,7 @@ public class TestBetaStone {
     /** Fixture for BetaStone testing. */
     @BeforeEach
     public void setUp() {
-        game = StandardHotStoneGame.createBetaGame();
+        game = new StandardHotStoneGame(new BetaGameFactory());
     }
 
     @Test

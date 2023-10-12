@@ -1,6 +1,7 @@
 package hotstone.standard;
 
 import hotstone.framework.*;
+import hotstone.variants.GammaGameFactory;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class TestGammaStone {
      * Fixture for GammaStone testing.
      */
     @BeforeEach
-    public void setUp(){game = StandardHotStoneGame.createGammaGame();
+    public void setUp(){game = new StandardHotStoneGame(new GammaGameFactory());
     }
 
     @Test

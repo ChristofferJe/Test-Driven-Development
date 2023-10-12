@@ -12,5 +12,8 @@ public class RandomNumberStrategy implements PickNumberStrategy {
         return rand.nextInt(fieldSize);
     }
 
+    @Override
+    public void setNumber(int number) {}
+
 
 }
