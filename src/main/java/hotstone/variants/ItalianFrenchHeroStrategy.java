@@ -44,7 +44,7 @@ public class ItalianFrenchHeroStrategy implements HeroStrategy {
         if (!isFieldEmpty) {
             int index = pickNumberStrategy.getNumber(fieldSize);
             Card card = game.getCardInField(Player.PEDDERSEN, index);
-            MutableCard stdCard = game.asStandardCard(card);
+            MutableCard stdCard = game.asMutableCard(card);
             stdCard.increaseAttack(2);
         }
     }

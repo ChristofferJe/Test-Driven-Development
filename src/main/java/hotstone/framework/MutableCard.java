@@ -2,7 +2,7 @@ package hotstone.framework;
 
 import hotstone.standard.StandardHotStoneGame;
 
-public interface MutableCard {
+public interface MutableCard extends Card{
     void setStatus(Boolean status);
 
     void decreaseHealth(int amount);

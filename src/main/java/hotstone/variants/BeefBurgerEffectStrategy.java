@@ -26,7 +26,7 @@ public class BeefBurgerEffectStrategy implements EffectStrategy {
         int fieldSize = game.getFieldSize(who);
         int index = pickNumberStrategy.getNumber(fieldSize);
         Card card = game.getCardInField(who, index);
-        return game.asStandardCard(card);
+        return game.asMutableCard(card);
     }
 
     @Override
