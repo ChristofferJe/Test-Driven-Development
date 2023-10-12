@@ -349,7 +349,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
     Status status = isPowerAllowed(who);
     if (status != Status.OK) return status;
     decreaseHeroMana(who, GameConstants.HERO_POWER_COST);
-    heroStrategy.execPower(who, this);
+    asMutableHero(getHero(who)).execPower(this);
     setHeroPowerStatus(who, false);
     return Status.OK;
     }

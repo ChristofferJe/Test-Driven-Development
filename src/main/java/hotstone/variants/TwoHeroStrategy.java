@@ -28,10 +28,5 @@ public class TwoHeroStrategy implements HeroStrategy {
         return stdHero;
     }
 
-    @Override
-    public void execPower(Player who, StandardHotStoneGame game) {
-        powers.get(who).execPower(game);
-    }
-
 
 }

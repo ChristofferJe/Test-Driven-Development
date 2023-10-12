@@ -61,4 +61,7 @@ public class StandardHero implements Hero, MutableHero {
     public void decreaseHealth(int amount) { health -= amount; }
     @Override
     public void increaseHealth(int amount) { health += amount; }
+
+    @Override
+    public void execPower(MutableGame game) {powerStrategy.execPower(game);}
 }

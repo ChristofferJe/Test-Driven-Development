@@ -10,4 +10,6 @@ public interface MutableHero extends Hero {
     void decreaseHealth(int amount);
 
     void increaseHealth(int amount);
+
+    void execPower(MutableGame game);
 }

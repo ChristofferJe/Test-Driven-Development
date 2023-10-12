@@ -14,6 +14,4 @@ public class BabyHeroStrategy implements HeroStrategy {
         return stdHero;
     }
 
-    @Override
-    public void execPower(Player who, StandardHotStoneGame game) {}
 }

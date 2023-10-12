@@ -11,7 +11,7 @@ public class DanishChefPower implements hotstone.framework.PowerStrategy {
     @Override
     public void execPower(MutableGame game) {
         Player player = game.getPlayerInTurn();
-        Card sovs = new StandardCard(GameConstants.SOVS_CARD, 0, 1, 1, Player.PEDDERSEN, null);
+        Card sovs = new StandardCard(GameConstants.SOVS_CARD, 0, 1, 1, player, null);
         game.playCard(player, sovs);
     }
 
