@@ -2,7 +2,7 @@ package hotstone.framework;
 
 import java.util.ArrayList;
 
-public interface MutableGame {
+public interface MutableGame extends Game {
     boolean isOwner(Player who, Card card);
 
     boolean isCardActive(Card attackingCard);

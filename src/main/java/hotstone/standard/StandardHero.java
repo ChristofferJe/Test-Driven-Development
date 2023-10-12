@@ -6,19 +6,18 @@ import hotstone.framework.*;
 public class StandardHero implements Hero, MutableHero {
 
     private final String type;
-    private final String description;
+    private final PowerStrategy powerStrategy;
     private boolean powerStatus;
     private int mana;
     private int health;
     private final Player owner;
 
-    public StandardHero(Player owner, String type, String description){
+    public StandardHero(Player owner, String type, PowerStrategy powerStrategy){
         this.type = type;
         this.owner = owner;
+        this.powerStrategy = powerStrategy;
         powerStatus = true;
         health = GameConstants.HERO_MAX_HEALTH;
-        this.description = description;
-
 
 
     }
@@ -44,9 +43,8 @@ public class StandardHero implements Hero, MutableHero {
 
     @Override
     public Player getOwner() { return owner; }
-
     @Override
-    public String getEffectDescription() { return description; }
+    public String getEffectDescription() { return powerStrategy.getDescription(); }
     @Override
     public void setPowerStatus(boolean bool){
         powerStatus = bool;

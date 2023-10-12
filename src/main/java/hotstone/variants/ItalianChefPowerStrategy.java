@@ -1,0 +1,29 @@
+package hotstone.variants;
+
+import hotstone.framework.*;
+
+public class ItalianChefPowerStrategy implements PowerStrategy {
+    private final PickNumberStrategy pickNumberStrategy;
+
+    public ItalianChefPowerStrategy(PickNumberStrategy pickNumberStrategy) {
+        this.pickNumberStrategy = pickNumberStrategy;
+    }
+
+    @Override
+    public void execPower(MutableGame game) {
+        Player player = game.getPlayerInTurn();
+        int fieldSize = game.getFieldSize(player);
+        boolean isFieldEmpty = fieldSize == 0;
+        if (!isFieldEmpty) {
+            int index = pickNumberStrategy.getNumber(fieldSize);
+            Card card = game.getCardInField(player, index);
+            MutableCard stdCard = game.asMutableCard(card);
+            stdCard.increaseAttack(2);
+        }
+    }
+
+    @Override
+    public String getDescription() {
+        return "M: (+2,0)";
+    }
+}
