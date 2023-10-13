@@ -44,7 +44,8 @@ import java.util.*;
  * why it is not called 'AlphaGame'.
  */
 
-public class StandardHotStoneGame implements Game {
+public class StandardHotStoneGame implements Game, MutableGame {
+  private final GameFactory factory;
   private int turnNumber;
   private final HashMap<Player, ArrayList<Card>> hands;
   private final HashMap<Player, ArrayList<Card>> decks;
@@ -56,12 +57,12 @@ public class StandardHotStoneGame implements Game {
   private DeckStrategy deckStrategy;
 
 
-  public StandardHotStoneGame(WinnerStrategy winnerStrategy, ManaStrategy manaStrategy, HeroStrategy heroStrategy, DeckStrategy deckStrategy) {
-
-    this.winnerStrategy = winnerStrategy;
-    this.manaStrategy = manaStrategy;
-    this.heroStrategy = heroStrategy;
-    this.deckStrategy = deckStrategy;
+  public StandardHotStoneGame(GameFactory factory) {
+    this.factory = factory;
+    this.winnerStrategy = factory.createWinnerStrategy();
+    this.manaStrategy = factory.createManaStrategy();
+    this.heroStrategy = factory.createHeroStrategy();
+    this.deckStrategy = factory.createDeckStrategy();
 
     turnNumber = 1;
 
@@ -99,7 +100,8 @@ public class StandardHotStoneGame implements Game {
   }
 
 
-  private void initializeHands() {
+  @Override
+  public void initializeHands() {
     // Each player draws three cards
     for(int i=0; i<3; i++){drawCard(Player.FINDUS); drawCard(Player.PEDDERSEN);}
   }
@@ -163,17 +165,24 @@ public class StandardHotStoneGame implements Game {
     restoreMana(otherPlayer);
   }
 
-  private void activateMinionsInField(Player who) {
+  @Override
+  public MutableHero asMutableHero(Hero hero) { return (MutableHero) hero; }
+
+  @Override
+  public void activateMinionsInField(Player who) {
     for (Card c : getField(who)) {
       setCardStatus(c, true);
     }
   }
 
-  private void setHeroPowerStatus(Player player, boolean status) {
-    StandardHero stdHero = asStandardHero(getHero(player));
-    stdHero.setPowerStatus(status);
+  @Override
+  public void setHeroPowerStatus(Player who, boolean status) {
+    Hero hero = getHero(who);
+    MutableHero mutableHero = asMutableHero(hero);
+    mutableHero.setPowerStatus(status);
   }
 
+  @Override
   public void drawCard(Player who) {
     boolean isDeckEmpty = getDeck(who).isEmpty();
     if(!isDeckEmpty){
@@ -183,13 +192,15 @@ public class StandardHotStoneGame implements Game {
     }
   }
 
-  private void addCardToHandFromDeck(Player who) {
+  @Override
+  public void addCardToHandFromDeck(Player who) {
     Card card = getDeck(who).get(0);
     getDeck(who).remove(0);
     hands.get(who).add(0,card);
   }
 
-  private ArrayList<Card> getDeck(Player who) {
+  @Override
+  public ArrayList<Card> getDeck(Player who) {
     return decks.get(who);
   }
 
@@ -204,24 +215,29 @@ public class StandardHotStoneGame implements Game {
 
   }
 
-  private void useCardEffect(Card card) {
-    StandardCard stdCard = asStandardCard(card);
-    stdCard.useEffect(this);
+  @Override
+  public void useCardEffect(Card card) {
+    MutableCard mutableCard = asMutableCard(card);
+    mutableCard.useEffect(this);
   }
 
-  private void decreaseHeroMana(Player who, int manaAmount) {
+  @Override
+  public void decreaseHeroMana(Player who, int manaAmount) {
     // Cast and change mana
-    StandardHero stdHero = asStandardHero(getHero(who));
-    stdHero.decreaseMana(manaAmount);
+    Hero hero = getHero(who);
+    MutableHero mutableHero = asMutableHero(hero);
+    mutableHero.decreaseMana(manaAmount);
   }
 
-  private void moveCardFromHandToField(Player who, Card card) {
+  @Override
+  public void moveCardFromHandToField(Player who, Card card) {
     // Add card in field index 0 and remove from hand
     fields.get(who).add(0, card);
     hands.get(who).remove(card);
   }
 
-  private Status isPlayCardAllowed(Player who, Card card) {
+  @Override
+  public Status isPlayCardAllowed(Player who, Card card) {
     // Check if player in turn
     if(!isPlayerInTurn(who)) return Status.NOT_PLAYER_IN_TURN;
     // Check if playing card from own hand
@@ -231,15 +247,13 @@ public class StandardHotStoneGame implements Game {
     return Status.OK;
   }
 
-  private boolean hasEnoughMana(Player who, int manaAmount) {
+  @Override
+  public boolean hasEnoughMana(Player who, int manaAmount) {
       return getHero(who).getMana() >= manaAmount;
   }
 
-  private static boolean isOwner(Player who, Card card) {
-      return card.getOwner() == who;
-  }
-
-  private boolean isPlayerInTurn(Player who) {
+  @Override
+  public boolean isPlayerInTurn(Player who) {
       return getPlayerInTurn() == who;
   }
 
@@ -252,7 +266,8 @@ public class StandardHotStoneGame implements Game {
     return status;
   }
 
-  private void executeAttackCard(Card attackingCard, Card defendingCard) {
+  @Override
+  public void executeAttackCard(Card attackingCard, Card defendingCard) {
     // Change the health of the attacking card and attacked card
     decreaseCardHealth(defendingCard, attackingCard.getAttack());
     decreaseCardHealth(attackingCard, defendingCard.getAttack());
@@ -263,17 +278,20 @@ public class StandardHotStoneGame implements Game {
     setCardStatus(attackingCard, false);
   }
 
-  private void setCardStatus(Card card, boolean status) {
-    StandardCard stdCard = asStandardCard(card);
-    stdCard.setStatus(status);
+  @Override
+  public void setCardStatus(Card card, boolean status) {
+    MutableCard mutableCard = asMutableCard(card);
+    mutableCard.setStatus(status);
   }
 
+  @Override
   public void decreaseCardHealth(Card card, int amount) {
-    StandardCard stdCard = asStandardCard(card);
-    stdCard.decreaseHealth(amount);
+    MutableCard mutableCard = asMutableCard(card);
+    mutableCard.decreaseHealth(amount);
   }
 
-  private Status isAttackCardAllowed(Player playerAttacking, Card attackingCard, Card defendingCard) {
+  @Override
+  public Status isAttackCardAllowed(Player playerAttacking, Card attackingCard, Card defendingCard) {
     // Check if attacking player is in turn
     if(!isPlayerInTurn(playerAttacking)) return Status.NOT_PLAYER_IN_TURN;
     // Check if attacking player is owner of attacking card
@@ -285,10 +303,6 @@ public class StandardHotStoneGame implements Game {
     return Status.OK;
   }
 
-  private static boolean isCardActive(Card attackingCard) {
-    return attackingCard.isActive();
-  }
-
   @Override
   public Status attackHero(Player playerAttacking, Card attackingCard) {
     Status status = isAttackHeroAllowed(playerAttacking, attackingCard);
@@ -297,7 +311,8 @@ public class StandardHotStoneGame implements Game {
     return status;
   }
 
-  private void executeAttackHero(Card attackingCard) {
+  @Override
+  public void executeAttackHero(Card attackingCard) {
     // Reduce the attacked heroes health
     Player defendingPlayer = Utility.computeOpponent(attackingCard.getOwner());
     decreaseHeroHealth(defendingPlayer, attackingCard.getAttack());
@@ -305,17 +320,21 @@ public class StandardHotStoneGame implements Game {
     setCardStatus(attackingCard, false);
   }
 
+  @Override
   public void decreaseHeroHealth(Player who, int amount) {
-    StandardHero stdHero = asStandardHero(getHero(who));
-    stdHero.decreaseHealth(amount);
+    Hero hero = getHero(who);
+    MutableHero mutableHero = asMutableHero(hero);
+    mutableHero.decreaseHealth(amount);
   }
-
+  @Override
   public void increaseHeroHealth(Player who, int amount) {
-    StandardHero stdHero = asStandardHero(getHero(who));
-    stdHero.increaseHealth(amount);
+    Hero hero = getHero(who);
+    MutableHero mutableHero = asMutableHero(hero);
+    mutableHero.increaseHealth(amount);
   }
 
-  private Status isAttackHeroAllowed(Player playerAttacking, Card attackingCard) {
+  @Override
+  public Status isAttackHeroAllowed(Player playerAttacking, Card attackingCard) {
     // Check if attacking player is in turn
     if(!isPlayerInTurn(playerAttacking)) return Status.NOT_PLAYER_IN_TURN;
     // Check if player attacking owns attacking card
@@ -330,12 +349,13 @@ public class StandardHotStoneGame implements Game {
     Status status = isPowerAllowed(who);
     if (status != Status.OK) return status;
     decreaseHeroMana(who, GameConstants.HERO_POWER_COST);
-    heroStrategy.execPower(who, this);
+    asMutableHero(getHero(who)).execPower(this);
     setHeroPowerStatus(who, false);
     return Status.OK;
     }
 
-  private Status isPowerAllowed(Player who) {
+  @Override
+  public Status isPowerAllowed(Player who) {
     // Check if player in turn
     if(!isPlayerInTurn(who)) return Status.NOT_PLAYER_IN_TURN;
     // Check that the player can use its hero power
@@ -345,10 +365,12 @@ public class StandardHotStoneGame implements Game {
     return Status.OK;
   }
 
-  private boolean hasUsedPower(Player who) {
+  @Override
+  public boolean hasUsedPower(Player who) {
     return !getHero(who).canUsePower();
   }
 
+  @Override
   public void removeIfDead(Card card){
       boolean isCardDead = card.getHealth() < 1;
       if(isCardDead){
@@ -357,90 +379,41 @@ public class StandardHotStoneGame implements Game {
       }
     }
 
-  private void removeFromField(Card card) {
+  @Override
+  public void removeFromField(Card card) {
     Player owner = card.getOwner();
     fields.get(owner).remove(card);
   }
 
-  private void restoreMana(Player who){
+  @Override
+  public void restoreMana(Player who){
     int mana = manaStrategy.calculateMana(getTurnNumber());
     setHeroMana(who, mana);
   }
 
-  private void setHeroMana(Player who, int mana) {
-    StandardHero stdHero = asStandardHero(getHero(who));
-    stdHero.setMana(mana);
+  @Override
+  public void setHeroMana(Player who, int mana) {
+    Hero hero = getHero(who);
+    MutableHero mutableHero = asMutableHero(hero);
+    mutableHero.setMana(mana);
   }
 
-  public StandardCard asStandardCard(Card card){return (StandardCard) card;}
+  @Override
+  public MutableCard asMutableCard(Card card){return (MutableCard) card;}
 
-  public StandardHero asStandardHero(Hero hero){return (StandardHero) hero;}
 
-  public void killMinion(StandardCard stdCard) {
-    stdCard.decreaseHealth(stdCard.getHealth());
-    removeIfDead(stdCard);
+  @Override
+  public void killMinion(MutableCard mutableCard) {
+    mutableCard.decreaseHealth(mutableCard.getHealth());
+    removeIfDead(mutableCard);
   }
-
-  public static StandardHotStoneGame createAlphaGame(){
-    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
-    ManaStrategy manaStrategy = new ThreeManaStrategy();
-    HeroStrategy heroStrategy = new BabyHeroStrategy();
-    DeckStrategy deckStrategy = new SpanishDeckStrategy();
-    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
+  @Override
+  public boolean isOwner(Player who, Card card) {
+    return card.getOwner() == who;
   }
-
-  public static StandardHotStoneGame createBetaGame(){
-    ManaStrategy manaStrategy = new ProgressiveManaStrategy();
-    WinnerStrategy winnerStrategy = new HeroHealthWinnerStrategy();
-    HeroStrategy heroStrategy = new BabyHeroStrategy();
-    DeckStrategy deckStrategy = new SpanishDeckStrategy();
-    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
+  @Override
+  public boolean isCardActive(Card attackingCard) {
+    return attackingCard.isActive();
   }
-
-  public static StandardHotStoneGame createGammaGame(){
-    ManaStrategy manaStrategy = new ThreeManaStrategy();
-    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
-    HeroStrategy heroStrategy = new TwoHeroStrategy();
-    DeckStrategy deckStrategy = new SpanishDeckStrategy();
-    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
-  }
-
-  public static StandardHotStoneGame createDeltaGame(){
-    ManaStrategy manaStrategy = new SevenManaStrategy();
-    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
-    HeroStrategy heroStrategy = new BabyHeroStrategy();
-    DeckStrategy deckStrategy = new DishDeckStrategy();
-    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
-  }
-
-  public static StandardHotStoneGame createEpsilonGame(){
-    ManaStrategy manaStrategy = new ThreeManaStrategy();
-    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
-    PickNumberStrategy pickNumberStrategy = new RandomNumberStrategy();
-    HeroStrategy heroStrategy = new ItalianFrenchHeroStrategy(pickNumberStrategy);
-    DeckStrategy deckStrategy = new SpanishDeckStrategy();
-    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
-  }
-
-  public static StandardHotStoneGame createZetaGame(){
-    WinnerStrategy heroHealthWinnerStrategy = new HeroHealthWinnerStrategy();
-    WinnerStrategy minionAttackWinnerStrategy = new MinionAttackWinnerStrategy();
-    WinnerStrategy winnerStrategy = new AlternatingWinnerStrategy(heroHealthWinnerStrategy, minionAttackWinnerStrategy);
-    ManaStrategy manaStrategy = new ThreeManaStrategy();
-    HeroStrategy heroStrategy = new BabyHeroStrategy();
-    DeckStrategy deckStrategy = new CincoDeckStrategy();
-    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
-  }
-
-  public static StandardHotStoneGame createEtaGame() {
-    ManaStrategy manaStrategy = new SevenManaStrategy();
-    WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
-    HeroStrategy heroStrategy = new BabyHeroStrategy();
-    PickNumberStrategy pickNumberStrategy = new RandomNumberStrategy();
-    DeckStrategy deckStrategy = new DishEffectDeckStrategy(pickNumberStrategy);
-    return new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
-  }
-
-
 
 }

@@ -31,6 +31,7 @@ package hotstone.standard;
  */
 
 import hotstone.framework.*;
+import hotstone.variants.AlphaGameFactory;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class TestAlphaStone {
   /** Fixture for AlphaStone testing. */
   @BeforeEach
   public void setUp() {
-    game = StandardHotStoneGame.createAlphaGame();
+    game = new StandardHotStoneGame(new AlphaGameFactory());
   }
 
   // Example of an early, simple test case:

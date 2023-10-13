@@ -17,16 +17,16 @@ public class TomatoSaladEffectStrategy implements EffectStrategy {
         int fieldSize = game.getFieldSize(owner);
         boolean isFieldEmpty = fieldSize == 0;
         if (!isFieldEmpty) {
-            StandardCard stdCard = getCardFromField(game, owner);
+            MutableCard stdCard = getCardFromField(game, owner);
             stdCard.increaseAttack(1);
         }
     }
 
-    private StandardCard getCardFromField(StandardHotStoneGame game, Player owner) {
+    private MutableCard getCardFromField(StandardHotStoneGame game, Player owner) {
         int fieldSize = game.getFieldSize(owner);
         int index = pickNumberStrategy.getNumber(fieldSize);
         Card card = game.getCardInField(owner, index);
-        return game.asStandardCard(card);
+        return game.asMutableCard(card);
     }
 
     @Override

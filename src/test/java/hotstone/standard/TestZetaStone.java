@@ -19,7 +19,7 @@ public class TestZetaStone {
      */
     @BeforeEach
     public void setUp(){
-        game = StandardHotStoneGame.createZetaGame();
+        game = new StandardHotStoneGame(new ZetaGameFactory());
     }
     @Test
     public void FindusWinsWhenPeddersenHeroHasLessThan1HealthBeforeRound6(){

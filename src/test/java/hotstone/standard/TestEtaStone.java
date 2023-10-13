@@ -15,16 +15,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class TestEtaStone {
 
     private StandardHotStoneGame game;
-    private FixedNumberStrategy pickNumberStrategy;
+    private GameFactory factory;
 
     @BeforeEach
     public void setUp() {
-        ManaStrategy manaStrategy = new SevenManaStrategy();
-        WinnerStrategy winnerStrategy = new FindusWinsWinnerStrategy();
-        HeroStrategy heroStrategy = new BabyHeroStrategy();
-        pickNumberStrategy = new FixedNumberStrategy();
-        DeckStrategy deckStrategy = new DishEffectDeckStrategy(pickNumberStrategy);
-        game = new StandardHotStoneGame(winnerStrategy, manaStrategy, heroStrategy, deckStrategy);
+        factory = new EtaTestGameFactory();
+        game = new StandardHotStoneGame(factory);
     }
     @Test
     public void brownRiceDoesOneDamageToOpponentHero() {
@@ -50,12 +46,12 @@ public class TestEtaStone {
         int attackBefore = card.getAttack();
         game.playCard(Player.FINDUS, card);
         // When enough rounds has passed that all types of cards are in Findus Hand
-        TestHelper.advanceGameNRounds(game, 20);
+        TestHelper.advanceGameNRounds(game, 21);
         // Find Tomato Salad in hand
         Card tomatoSalad = TestHelper.findCardInList(game.getHand(Player.FINDUS), GameConstants.TOMATO_SALAD_CARD);
         assertThat(tomatoSalad.getName(), is(GameConstants.TOMATO_SALAD_CARD));
         // When Findus plays Tomato Salad
-        pickNumberStrategy.setNumber(0);
+        factory.getNumberStrategy().setNumber(0);
         game.playCard(Player.FINDUS,tomatoSalad);
         // Then the attack value of the card in field is increased by 1
         int attackAfter = card.getAttack();
@@ -147,7 +143,7 @@ public class TestEtaStone {
         // When Peddersen's field size is 1
         assertThat(game.getFieldSize(Player.PEDDERSEN), is(1));
         // When Findus plays ChickenCurry and FixedNumberStrategy is set to 0
-        pickNumberStrategy.setNumber(0);
+        factory.getNumberStrategy().setNumber(0);
         game.playCard(Player.FINDUS, chickenCurry);
         // Then Peddersens fielssize is 0
         assertThat(game.getFieldSize(Player.PEDDERSEN), is(0));

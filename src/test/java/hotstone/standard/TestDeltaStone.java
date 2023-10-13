@@ -4,8 +4,6 @@ import hotstone.framework.*;
 import hotstone.variants.*;
 import org.junit.jupiter.api.*;
 
-import java.util.ArrayList;
-
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -22,7 +20,7 @@ public class TestDeltaStone {
      */
     @BeforeEach
     public void setUp() {
-        game = StandardHotStoneGame.createDeltaGame();
+        game = new StandardHotStoneGame(new DeltaGameFactory());
     }
 
     @Test

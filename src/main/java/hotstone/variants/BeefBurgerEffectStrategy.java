@@ -1,7 +1,6 @@
 package hotstone.variants;
 
 import hotstone.framework.*;
-import hotstone.standard.StandardCard;
 import hotstone.standard.StandardHotStoneGame;
 
 public class BeefBurgerEffectStrategy implements EffectStrategy {
@@ -18,16 +17,16 @@ public class BeefBurgerEffectStrategy implements EffectStrategy {
         int fieldSize = game.getFieldSize(opponent);
         boolean isFieldEmpty = fieldSize == 0;
         if (!isFieldEmpty) {
-            StandardCard stdCard = getCardFromField(game, opponent);
+            MutableCard stdCard = getCardFromField(game, opponent);
             stdCard.increaseAttack(2);
         }
     }
 
-    private StandardCard getCardFromField(StandardHotStoneGame game, Player who) {
+    private MutableCard getCardFromField(StandardHotStoneGame game, Player who) {
         int fieldSize = game.getFieldSize(who);
         int index = pickNumberStrategy.getNumber(fieldSize);
         Card card = game.getCardInField(who, index);
-        return game.asStandardCard(card);
+        return game.asMutableCard(card);
     }
 
     @Override

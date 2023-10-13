@@ -1,6 +1,7 @@
 package hotstone.standard;
 
 import hotstone.framework.*;
+import hotstone.variants.BetaGameFactory;
 import org.junit.jupiter.api.*;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -13,7 +14,7 @@ public class TestBetaStone {
     /** Fixture for BetaStone testing. */
     @BeforeEach
     public void setUp() {
-        game = StandardHotStoneGame.createBetaGame();
+        game = new StandardHotStoneGame(new BetaGameFactory());
     }
 
     @Test
@@ -81,7 +82,7 @@ public class TestBetaStone {
     public void FindusShouldWinWhenPeddersenHealthBelowOne(){
         // Given a game
         // When Peddersens hero's health is below one
-        StandardHero stdHero = (StandardHero) game.getHero(Player.PEDDERSEN);
+        MutableHero stdHero = (MutableHero) game.getHero(Player.PEDDERSEN);
         stdHero.decreaseHealth(21);
         // Then Findus should be winner
         assertThat(game.getWinner(), is(Player.FINDUS));
@@ -91,7 +92,7 @@ public class TestBetaStone {
     public void PeddersenShouldWinWhenFindusHealthBelowOne(){
         // Given a game
         // When Findus hero's health is below one
-        StandardHero stdHero = (StandardHero) game.getHero(Player.FINDUS);
+        MutableHero stdHero = (MutableHero) game.getHero(Player.FINDUS);
         stdHero.decreaseHealth(21);
         // Then Peddersen should be winner
         assertThat(game.getWinner(), is(Player.PEDDERSEN));

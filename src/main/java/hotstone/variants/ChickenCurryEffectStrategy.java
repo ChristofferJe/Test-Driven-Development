@@ -1,7 +1,6 @@
 package hotstone.variants;
 
 import hotstone.framework.*;
-import hotstone.standard.StandardCard;
 import hotstone.standard.StandardHotStoneGame;
 
 public class ChickenCurryEffectStrategy implements EffectStrategy {
@@ -18,16 +17,16 @@ public class ChickenCurryEffectStrategy implements EffectStrategy {
         int fieldSize = game.getFieldSize(opponent);
         boolean isFieldEmpty = fieldSize == 0;
         if (!isFieldEmpty) {
-            StandardCard stdCard = getCardFromField(game, opponent);
+            MutableCard stdCard = getCardFromField(game, opponent);
             game.killMinion(stdCard);
         }
     }
 
-    private StandardCard getCardFromField(StandardHotStoneGame game, Player who) {
+    private MutableCard getCardFromField(StandardHotStoneGame game, Player who) {
         int fieldSize = game.getFieldSize(who);
         int index = pickNumberStrategy.getNumber(fieldSize);
         Card card = game.getCardInField(who, index);
-        return game.asStandardCard(card);
+        return game.asMutableCard(card);
     }
 
     @Override
