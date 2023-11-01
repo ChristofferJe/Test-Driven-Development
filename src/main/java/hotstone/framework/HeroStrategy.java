@@ -4,6 +4,6 @@ import hotstone.framework.*;
 import hotstone.standard.*;
 
 public interface HeroStrategy {
-    StandardHero createHero(Player who);
+    MutableHero createHero(Player who);
 
 }

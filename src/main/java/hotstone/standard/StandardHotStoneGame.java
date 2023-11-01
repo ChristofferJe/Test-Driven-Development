@@ -49,7 +49,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
   private final HashMap<Player, ArrayList<MutableCard>> hands;
   private final HashMap<Player, ArrayList<MutableCard>> decks;
   private final HashMap<Player, ArrayList<MutableCard>> fields;
-  private final HashMap<Player, Hero> heroes;
+  private final HashMap<Player, MutableHero> heroes;
   private ManaStrategy manaStrategy;
   private WinnerStrategy winnerStrategy;
   private HeroStrategy heroStrategy;
@@ -65,13 +65,13 @@ public class StandardHotStoneGame implements Game, MutableGame {
 
     turnNumber = 1;
 
-    Hero findusHero = heroStrategy.createHero(Player.FINDUS);
+    MutableHero findusHero = heroStrategy.createHero(Player.FINDUS);
     ArrayList<MutableCard> findusDeck = deckStrategy.createDeck(Player.FINDUS);
     ArrayList<MutableCard> findusHand = new ArrayList<>();
     ArrayList<MutableCard> findusField = new ArrayList<>();
 
 
-    Hero peddersenHero = heroStrategy.createHero(Player.PEDDERSEN);
+    MutableHero peddersenHero = heroStrategy.createHero(Player.PEDDERSEN);
     ArrayList<MutableCard> peddersenDeck = deckStrategy.createDeck(Player.PEDDERSEN);
     ArrayList<MutableCard> peddersenHand = new ArrayList<>();
     ArrayList<MutableCard> peddersenField = new ArrayList<>();
@@ -176,8 +176,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
 
   @Override
   public void setHeroPowerStatus(Player who, boolean status) {
-    Hero hero = getHero(who);
-    MutableHero mutableHero = asMutableHero(hero);
+    MutableHero mutableHero = heroes.get(who);
     mutableHero.setPowerStatus(status);
   }
 
@@ -223,8 +222,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
   @Override
   public void decreaseHeroMana(Player who, int manaAmount) {
     // Cast and change mana
-    Hero hero = getHero(who);
-    MutableHero mutableHero = asMutableHero(hero);
+    MutableHero mutableHero = heroes.get(who);
     mutableHero.decreaseMana(manaAmount);
   }
 
@@ -322,14 +320,12 @@ public class StandardHotStoneGame implements Game, MutableGame {
 
   @Override
   public void decreaseHeroHealth(Player who, int amount) {
-    Hero hero = getHero(who);
-    MutableHero mutableHero = asMutableHero(hero);
+    MutableHero mutableHero = heroes.get(who);
     mutableHero.decreaseHealth(amount);
   }
   @Override
   public void increaseHeroHealth(Player who, int amount) {
-    Hero hero = getHero(who);
-    MutableHero mutableHero = asMutableHero(hero);
+    MutableHero mutableHero = heroes.get(who);
     mutableHero.increaseHealth(amount);
   }
 
@@ -349,7 +345,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
     Status status = isPowerAllowed(who);
     if (status != Status.OK) return status;
     decreaseHeroMana(who, GameConstants.HERO_POWER_COST);
-    asMutableHero(getHero(who)).execPower(this);
+    heroes.get(who).execPower(this);
     setHeroPowerStatus(who, false);
     return Status.OK;
     }
@@ -393,8 +389,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
 
   @Override
   public void setHeroMana(Player who, int mana) {
-    Hero hero = getHero(who);
-    MutableHero mutableHero = asMutableHero(hero);
+    MutableHero mutableHero = heroes.get(who);
     mutableHero.setMana(mana);
   }
 

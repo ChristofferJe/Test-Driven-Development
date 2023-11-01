@@ -15,7 +15,7 @@ public class GammaGameFactory implements GameFactory {
 
     @Override
     public HeroStrategy createHeroStrategy() {
-        return new TwoHeroStrategy();
+        return new ThaiDanishHeroStrategy();
     }
 
     @Override
