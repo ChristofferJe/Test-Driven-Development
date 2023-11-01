@@ -35,7 +35,7 @@ public interface MutableGame extends Game {
 
     void executeAttackCard(Card attackingCard, Card defendingCard);
 
-    void setCardStatus(Card card, boolean status);
+    void setCardStatus(MutableCard card, boolean status);
 
     void decreaseCardHealth(Card card, int amount);
 

@@ -8,19 +8,69 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class DishDeckStrategy implements DeckStrategy {
-    private final CardsStrategy cardsStrategy;
-    private final ShuffleStrategy shuffleStrategy;
-
-    public DishDeckStrategy(){
-        this.cardsStrategy = new DishCardsStrategy();
-        this.shuffleStrategy = new DishDeckShuffleStrategy();
-    }
 
     @Override
     public ArrayList<Card> createDeck(Player owner) {
-        ArrayList<Card> deck = cardsStrategy.generateCards(owner);
-        shuffleStrategy.orderCards(deck);
+        ArrayList<Card> deck = generateCards(owner);
+        orderCards(deck);
         return deck;
     }
+    public ArrayList<Card> generateCards(Player owner) {
+        ArrayList<Card> cards = new ArrayList<>();
+        for(int i=0; i<2; i++){
+            Card BrownRice = new StandardCard(GameConstants.BROWN_RICE_CARD, 1,1,2, owner, null);
+            Card FrenchFries = new StandardCard(GameConstants.FRENCH_FRIES_CARD,1,2,1, owner, null);
+            Card GreenSalad = new StandardCard(GameConstants.GREEN_SALAD_CARD, 2, 2, 3, owner, null);
+            Card TomatoSalad = new StandardCard(GameConstants.TOMATO_SALAD_CARD, 2, 3, 2, owner, null);
+            Card PokeBowl = new StandardCard(GameConstants.POKE_BOWL_CARD, 3, 2, 4, owner, null);
+            Card PumpkinSoup = new StandardCard(GameConstants.PUMPKIN_SOUP_CARD, 4, 2, 7, owner, null);
+            Card NoodleSoup = new StandardCard(GameConstants.NOODLE_SOUP_CARD, 4, 5, 3, owner, null);
+            Card SpringRolls = new StandardCard(GameConstants.SPRING_ROLLS_CARD, 5,3,7, owner, null);
+            Card BakedSalmon = new StandardCard(GameConstants.BAKED_SALMON_CARD,5,8,2, owner, null);
+            Card ChickenCurry = new StandardCard(GameConstants.CHICKEN_CURRY_CARD,6,8,4, owner, null);
+            Card BeefBurger = new StandardCard(GameConstants.BEEF_BURGER_CARD,6,5,6, owner, null);
+            Card FiletMignon = new StandardCard(GameConstants.FILET_MIGNON_CARD,7,9,5, owner, null);
+            cards.add(BrownRice);
+            cards.add(FrenchFries);
+            cards.add(GreenSalad);
+            cards.add(TomatoSalad);
+            cards.add(PokeBowl);
+            cards.add(PumpkinSoup);
+            cards.add(NoodleSoup);
+            cards.add(SpringRolls);
+            cards.add(BakedSalmon);
+            cards.add(ChickenCurry);
+            cards.add(BeefBurger);
+            cards.add(FiletMignon);
+        }
+        return cards;
+    }
 
+    public void orderCards(ArrayList<Card> deck) {
+        Collections.shuffle(deck);
+        orderDeck(deck);
+    }
+    private void orderDeck(ArrayList<Card> deck) {
+        // Get card that costs one or less at index 0 of the deck
+        placeCardAtIndexWithRightManaCost(0, 1, deck);
+        // Get card that costs two or less at index 1 of the deck
+        placeCardAtIndexWithRightManaCost(1, 2, deck);
+        // Get card that costs four or less at index 2 of the deck
+        placeCardAtIndexWithRightManaCost(2, 4, deck);
+    }
+    private void placeCardAtIndexWithRightManaCost(int index,  int manaCost, ArrayList<Card> deck) {
+        for (int j = index; j < deck.size(); j++) {
+            Card c = deck.get(j);
+            boolean isRightPrice = c.getManaCost() <= manaCost;
+            if (isRightPrice) {
+                swapCardsByIndex(deck, index, j);
+                break;
+            }
+        }
+    }
+    private void swapCardsByIndex(ArrayList<Card> deck, int index1, int index2) {
+        Card temp = deck.get(index1);
+        deck.set(index1, deck.get(index2));
+        deck.set(index2, temp);
+    }
 }

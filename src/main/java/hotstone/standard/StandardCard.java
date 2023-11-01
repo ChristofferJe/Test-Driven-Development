@@ -1,10 +1,8 @@
 package hotstone.standard;
 
-import hotstone.framework.Card;
-import hotstone.framework.EffectStrategy;
-import hotstone.framework.Player;
+import hotstone.framework.*;
 
-public class StandardCard implements Card, hotstone.framework.MutableCard {
+public class StandardCard implements Card, MutableCard {
 
 
     private final String name;

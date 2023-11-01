@@ -1,10 +1,7 @@
 package hotstone.standard;
 
 import hotstone.framework.Card;
-import hotstone.framework.CardsStrategy;
-import hotstone.framework.Game;
 import hotstone.framework.Player;
-import hotstone.variants.DishCardsStrategy;
 import hotstone.variants.DishDeckStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

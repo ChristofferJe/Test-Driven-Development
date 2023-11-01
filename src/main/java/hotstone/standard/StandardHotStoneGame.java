@@ -171,7 +171,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
   @Override
   public void activateMinionsInField(Player who) {
     for (Card c : getField(who)) {
-      setCardStatus(c, true);
+      setCardStatus(asMutableCard(c), true);
     }
   }
 
@@ -275,13 +275,12 @@ public class StandardHotStoneGame implements Game, MutableGame {
     removeIfDead(defendingCard);
     removeIfDead(attackingCard);
     // Set inactive if still alive
-    setCardStatus(attackingCard, false);
+    setCardStatus(asMutableCard(attackingCard), false);
   }
 
   @Override
-  public void setCardStatus(Card card, boolean status) {
-    MutableCard mutableCard = asMutableCard(card);
-    mutableCard.setStatus(status);
+  public void setCardStatus(MutableCard card, boolean status) {
+    card.setStatus(status);
   }
 
   @Override
@@ -317,7 +316,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
     Player defendingPlayer = Utility.computeOpponent(attackingCard.getOwner());
     decreaseHeroHealth(defendingPlayer, attackingCard.getAttack());
     // Set attacking card inactive
-    setCardStatus(attackingCard, false);
+    setCardStatus(asMutableCard(attackingCard), false);
   }
 
   @Override
@@ -374,7 +373,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
   public void removeIfDead(Card card){
       boolean isCardDead = card.getHealth() < 1;
       if(isCardDead){
-        setCardStatus(card, false);
+        setCardStatus(asMutableCard(card), false);
         removeFromField(card);
       }
     }
