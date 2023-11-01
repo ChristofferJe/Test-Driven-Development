@@ -12,17 +12,17 @@ public class TomatoSaladEffectStrategy implements EffectStrategy {
     }
 
     @Override
-    public void execEffect(StandardHotStoneGame game) {
+    public void execEffect(MutableGame game) {
         Player owner = game.getPlayerInTurn();
         int fieldSize = game.getFieldSize(owner);
         boolean isFieldEmpty = fieldSize == 0;
         if (!isFieldEmpty) {
-            MutableCard stdCard = getCardFromField(game, owner);
-            stdCard.increaseAttack(1);
+            MutableCard mutableCard = getCardFromField(game, owner);
+            mutableCard.increaseAttack(1);
         }
     }
 
-    private MutableCard getCardFromField(StandardHotStoneGame game, Player owner) {
+    private MutableCard getCardFromField(MutableGame game, Player owner) {
         int fieldSize = game.getFieldSize(owner);
         int index = pickNumberStrategy.getNumber(fieldSize);
         Card card = game.getCardInField(owner, index);

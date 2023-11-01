@@ -1,11 +1,11 @@
 package hotstone.variants;
 
 import hotstone.framework.EffectStrategy;
-import hotstone.standard.StandardHotStoneGame;
+import hotstone.framework.MutableGame;
 
 public class DoNothingEffectStrategy implements EffectStrategy {
     @Override
-    public void execEffect(StandardHotStoneGame game) {
+    public void execEffect(MutableGame game) {
 
     }
 

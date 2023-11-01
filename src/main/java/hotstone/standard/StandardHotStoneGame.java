@@ -44,7 +44,6 @@ import java.util.*;
  */
 
 public class StandardHotStoneGame implements Game, MutableGame {
-  private final GameFactory factory;
   private int turnNumber;
   private final HashMap<Player, ArrayList<MutableCard>> hands;
   private final HashMap<Player, ArrayList<MutableCard>> decks;
@@ -57,7 +56,6 @@ public class StandardHotStoneGame implements Game, MutableGame {
 
 
   public StandardHotStoneGame(GameFactory factory) {
-    this.factory = factory;
     this.winnerStrategy = factory.createWinnerStrategy();
     this.manaStrategy = factory.createManaStrategy();
     this.heroStrategy = factory.createHeroStrategy();
