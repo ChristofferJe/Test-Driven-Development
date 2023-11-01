@@ -1,7 +1,7 @@
 package hotstone.standard;
 
 import hotstone.framework.*;
-import hotstone.variants.SemiGameFactory;
+import hotstone.variants.*;
 import org.junit.jupiter.api.*;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -163,4 +163,25 @@ public class TestSemiStone {
         assertThat(attackAfter, is(attackBefore + 2));
     }
 
+
+    @Test
+    public void shouldHaveHeroHealthWinnerStrategy(){
+        WinnerStrategy winnerStrategy = factory.createWinnerStrategy();
+        assertThat(winnerStrategy, instanceOf(HeroHealthWinnerStrategy.class));
+    }
+    @Test
+    public void shouldHaveProgressiveManaStrategy(){
+        ManaStrategy manaStrategy = factory.createManaStrategy();
+        assertThat(manaStrategy, instanceOf(ProgressiveManaStrategy.class));
+    }
+    @Test
+    public void shouldHaveFourHeroStrategy(){
+        HeroStrategy heroStrategy = factory.createHeroStrategy();
+        assertThat(heroStrategy, instanceOf(FourHeroStrategy.class));
+    }
+    @Test
+    public void shouldHaveDishEffectDeckStrategyStrategy(){
+        DeckStrategy deckStrategy = factory.createDeckStrategy();
+        assertThat(deckStrategy, instanceOf(DishEffectDeckStrategy.class));
+    }
 }
