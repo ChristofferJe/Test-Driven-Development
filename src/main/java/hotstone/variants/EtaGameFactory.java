@@ -4,6 +4,16 @@ import hotstone.framework.*;
 
 public class EtaGameFactory implements GameFactory {
 
+    public final PickNumberStrategy pickNumberStrategy;
+
+    public EtaGameFactory(TestMode mode){
+        if (mode == TestMode.IsTest){
+            pickNumberStrategy = new FixedNumberStrategy();
+        } else {
+            pickNumberStrategy = new RandomNumberStrategy();
+        }
+    }
+
     @Override
     public WinnerStrategy createWinnerStrategy() {
         return new FindusWinsWinnerStrategy();
@@ -21,13 +31,8 @@ public class EtaGameFactory implements GameFactory {
 
     @Override
     public DeckStrategy createDeckStrategy() {
-        PickNumberStrategy pickNumberStrategy = new RandomNumberStrategy();
         return new DishEffectDeckStrategy(pickNumberStrategy);
     }
 
-    @Override
-    public PickNumberStrategy getNumberStrategy() {
-        return null;
-    }
 
 }

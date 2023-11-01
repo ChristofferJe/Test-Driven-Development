@@ -23,9 +23,4 @@ public class GammaGameFactory implements GameFactory {
         return new DishDeckStrategy();
     }
 
-    @Override
-    public PickNumberStrategy getNumberStrategy() {
-        return null;
-    }
-
 }

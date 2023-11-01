@@ -15,11 +15,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class TestEtaStone {
 
     private StandardHotStoneGame game;
-    private GameFactory factory;
+    private EtaGameFactory factory;
 
     @BeforeEach
     public void setUp() {
-        factory = new EtaTestGameFactory();
+        factory = new EtaGameFactory(TestMode.IsTest);
         game = new StandardHotStoneGame(factory);
     }
     @Test
@@ -51,7 +51,7 @@ public class TestEtaStone {
         Card tomatoSalad = TestHelper.findCardInList(game.getHand(Player.FINDUS), GameConstants.TOMATO_SALAD_CARD);
         assertThat(tomatoSalad.getName(), is(GameConstants.TOMATO_SALAD_CARD));
         // When Findus plays Tomato Salad
-        factory.getNumberStrategy().setNumber(0);
+        factory.pickNumberStrategy.setNumber(0);
         game.playCard(Player.FINDUS,tomatoSalad);
         // Then the attack value of the card in field is increased by 1
         int attackAfter = card.getAttack();
@@ -143,7 +143,7 @@ public class TestEtaStone {
         // When Peddersen's field size is 1
         assertThat(game.getFieldSize(Player.PEDDERSEN), is(1));
         // When Findus plays ChickenCurry and FixedNumberStrategy is set to 0
-        factory.getNumberStrategy().setNumber(0);
+        factory.pickNumberStrategy.setNumber(0);
         game.playCard(Player.FINDUS, chickenCurry);
         // Then Peddersens fielssize is 0
         assertThat(game.getFieldSize(Player.PEDDERSEN), is(0));
