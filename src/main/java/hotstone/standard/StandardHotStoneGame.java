@@ -18,7 +18,6 @@
 package hotstone.standard;
 
 import hotstone.framework.*;
-import hotstone.variants.*;
 
 import java.util.*;
 
@@ -47,9 +46,9 @@ import java.util.*;
 public class StandardHotStoneGame implements Game, MutableGame {
   private final GameFactory factory;
   private int turnNumber;
-  private final HashMap<Player, ArrayList<Card>> hands;
-  private final HashMap<Player, ArrayList<Card>> decks;
-  private final HashMap<Player, ArrayList<Card>> fields;
+  private final HashMap<Player, ArrayList<MutableCard>> hands;
+  private final HashMap<Player, ArrayList<MutableCard>> decks;
+  private final HashMap<Player, ArrayList<MutableCard>> fields;
   private final HashMap<Player, Hero> heroes;
   private ManaStrategy manaStrategy;
   private WinnerStrategy winnerStrategy;
@@ -67,25 +66,25 @@ public class StandardHotStoneGame implements Game, MutableGame {
     turnNumber = 1;
 
     Hero findusHero = heroStrategy.createHero(Player.FINDUS);
-    ArrayList<Card> findusDeck = deckStrategy.createDeck(Player.FINDUS);
-    ArrayList<Card> findusHand = new ArrayList<>();
-    ArrayList<Card> findusField = new ArrayList<>();
+    ArrayList<MutableCard> findusDeck = deckStrategy.createDeck(Player.FINDUS);
+    ArrayList<MutableCard> findusHand = new ArrayList<>();
+    ArrayList<MutableCard> findusField = new ArrayList<>();
 
 
     Hero peddersenHero = heroStrategy.createHero(Player.PEDDERSEN);
-    ArrayList<Card> peddersenDeck = deckStrategy.createDeck(Player.PEDDERSEN);
-    ArrayList<Card> peddersenHand = new ArrayList<>();
-    ArrayList<Card> peddersenField = new ArrayList<>();
+    ArrayList<MutableCard> peddersenDeck = deckStrategy.createDeck(Player.PEDDERSEN);
+    ArrayList<MutableCard> peddersenHand = new ArrayList<>();
+    ArrayList<MutableCard> peddersenField = new ArrayList<>();
 
-    hands = new HashMap<>();
+    hands = new HashMap<Player, ArrayList<MutableCard>>();
     hands.put(Player.FINDUS, findusHand);
     hands.put(Player.PEDDERSEN, peddersenHand);
 
-    decks = new HashMap<>();
+    decks = new HashMap<Player, ArrayList<MutableCard>>();
     decks.put(Player.FINDUS, findusDeck);
     decks.put(Player.PEDDERSEN, peddersenDeck);
 
-    fields = new HashMap<>();
+    fields = new HashMap<Player, ArrayList<MutableCard>>();
     fields.put(Player.FINDUS, findusField);
     fields.put(Player.PEDDERSEN, peddersenField);
 
@@ -141,7 +140,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
 
   @Override
   public Card getCardInField(Player who, int indexInField) {
-    return fields.get(who).get(indexInField);
+      return fields.get(who).get(indexInField);
   }
 
   @Override
@@ -170,8 +169,8 @@ public class StandardHotStoneGame implements Game, MutableGame {
 
   @Override
   public void activateMinionsInField(Player who) {
-    for (Card c : getField(who)) {
-      setCardStatus(asMutableCard(c), true);
+    for (MutableCard c : fields.get(who)) {
+      setCardStatus(c, true);
     }
   }
 
@@ -194,13 +193,13 @@ public class StandardHotStoneGame implements Game, MutableGame {
 
   @Override
   public void addCardToHandFromDeck(Player who) {
-    Card card = getDeck(who).get(0);
+    MutableCard card = getDeck(who).get(0);
     getDeck(who).remove(0);
     hands.get(who).add(0,card);
   }
 
   @Override
-  public ArrayList<Card> getDeck(Player who) {
+  public ArrayList<MutableCard> getDeck(Player who) {
     return decks.get(who);
   }
 
@@ -208,17 +207,17 @@ public class StandardHotStoneGame implements Game, MutableGame {
   public Status playCard(Player who, Card card) {
     Status status = isPlayCardAllowed(who, card);
     if (status != Status.OK) return status;
-    useCardEffect(card);
-    moveCardFromHandToField(who, card);
+    MutableCard mutableCard = asMutableCard(card);
+    useCardEffect(mutableCard);
+    moveCardFromHandToField(who, mutableCard);
     decreaseHeroMana(who, card.getManaCost());
     return status;
 
   }
 
   @Override
-  public void useCardEffect(Card card) {
-    MutableCard mutableCard = asMutableCard(card);
-    mutableCard.useEffect(this);
+  public void useCardEffect(MutableCard card) {
+    card.useEffect(this);
   }
 
   @Override
@@ -230,7 +229,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
   }
 
   @Override
-  public void moveCardFromHandToField(Player who, Card card) {
+  public void moveCardFromHandToField(Player who, MutableCard card) {
     // Add card in field index 0 and remove from hand
     fields.get(who).add(0, card);
     hands.get(who).remove(card);
@@ -261,13 +260,15 @@ public class StandardHotStoneGame implements Game, MutableGame {
   public Status attackCard(Player playerAttacking, Card attackingCard, Card defendingCard) {
     Status status = isAttackCardAllowed(playerAttacking, attackingCard, defendingCard);
     if (status != Status.OK) return status;
-    executeAttackCard(attackingCard, defendingCard);
+    MutableCard attackingMutableCard = asMutableCard(attackingCard);
+    MutableCard defendingMutableCard = asMutableCard(defendingCard);
+    executeAttackCard(attackingMutableCard, defendingMutableCard);
     winnerStrategy.increaseAttackSum(playerAttacking, attackingCard, turnNumber);
     return status;
   }
 
   @Override
-  public void executeAttackCard(Card attackingCard, Card defendingCard) {
+  public void executeAttackCard(MutableCard attackingCard, MutableCard defendingCard) {
     // Change the health of the attacking card and attacked card
     decreaseCardHealth(defendingCard, attackingCard.getAttack());
     decreaseCardHealth(attackingCard, defendingCard.getAttack());
@@ -275,7 +276,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
     removeIfDead(defendingCard);
     removeIfDead(attackingCard);
     // Set inactive if still alive
-    setCardStatus(asMutableCard(attackingCard), false);
+    setCardStatus(attackingCard, false);
   }
 
   @Override
@@ -284,9 +285,8 @@ public class StandardHotStoneGame implements Game, MutableGame {
   }
 
   @Override
-  public void decreaseCardHealth(Card card, int amount) {
-    MutableCard mutableCard = asMutableCard(card);
-    mutableCard.decreaseHealth(amount);
+  public void decreaseCardHealth(MutableCard card, int amount) {
+    card.decreaseHealth(amount);
   }
 
   @Override
@@ -306,17 +306,18 @@ public class StandardHotStoneGame implements Game, MutableGame {
   public Status attackHero(Player playerAttacking, Card attackingCard) {
     Status status = isAttackHeroAllowed(playerAttacking, attackingCard);
     if (status != Status.OK) return status;
-    executeAttackHero(attackingCard);
+    MutableCard mutableAttackingCard = asMutableCard(attackingCard);
+    executeAttackHero(mutableAttackingCard);
     return status;
   }
 
   @Override
-  public void executeAttackHero(Card attackingCard) {
+  public void executeAttackHero(MutableCard attackingCard) {
     // Reduce the attacked heroes health
     Player defendingPlayer = Utility.computeOpponent(attackingCard.getOwner());
     decreaseHeroHealth(defendingPlayer, attackingCard.getAttack());
     // Set attacking card inactive
-    setCardStatus(asMutableCard(attackingCard), false);
+    setCardStatus(attackingCard, false);
   }
 
   @Override
@@ -370,10 +371,10 @@ public class StandardHotStoneGame implements Game, MutableGame {
   }
 
   @Override
-  public void removeIfDead(Card card){
+  public void removeIfDead(MutableCard card){
       boolean isCardDead = card.getHealth() < 1;
       if(isCardDead){
-        setCardStatus(asMutableCard(card), false);
+        setCardStatus(card, false);
         removeFromField(card);
       }
     }

@@ -26,7 +26,7 @@ public class TestCincoDeckStrategy {
     @Test
     public void cincoDeckShouldHaveSizeSeven(){
         // Given Cinco deck
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
+        ArrayList<MutableCard> deck = deckStrategy.createDeck(Player.FINDUS);
         // Then it should have size 7
         int size = deck.size();
         assertThat(size, is(7));
@@ -35,7 +35,7 @@ public class TestCincoDeckStrategy {
     @Test
     public void allCardsInCincoDeckShouldBeCinco(){
         // Given Cinco deck
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
+        ArrayList<MutableCard> deck = deckStrategy.createDeck(Player.FINDUS);
         for (Card c : deck){
             assertThat(c.getName(), is(GameConstants.CINCO_CARD));
         }

@@ -19,13 +19,13 @@ public interface MutableGame extends Game {
 
     void addCardToHandFromDeck(Player who);
 
-    ArrayList<Card> getDeck(Player who);
+    ArrayList<MutableCard> getDeck(Player who);
 
-    void useCardEffect(Card card);
+    void useCardEffect(MutableCard card);
 
     void decreaseHeroMana(Player who, int manaAmount);
 
-    void moveCardFromHandToField(Player who, Card card);
+    void moveCardFromHandToField(Player who, MutableCard card);
 
     Status isPlayCardAllowed(Player who, Card card);
 
@@ -33,15 +33,15 @@ public interface MutableGame extends Game {
 
     boolean isPlayerInTurn(Player who);
 
-    void executeAttackCard(Card attackingCard, Card defendingCard);
+    void executeAttackCard(MutableCard attackingCard, MutableCard defendingCard);
 
     void setCardStatus(MutableCard card, boolean status);
 
-    void decreaseCardHealth(Card card, int amount);
+    void decreaseCardHealth(MutableCard card, int amount);
 
     Status isAttackCardAllowed(Player playerAttacking, Card attackingCard, Card defendingCard);
 
-    void executeAttackHero(Card attackingCard);
+    void executeAttackHero(MutableCard attackingCard);
 
     void decreaseHeroHealth(Player who, int amount);
 
@@ -53,7 +53,7 @@ public interface MutableGame extends Game {
 
     boolean hasUsedPower(Player who);
 
-    void removeIfDead(Card card);
+    void removeIfDead(MutableCard card);
 
     void removeFromField(Card card);
 

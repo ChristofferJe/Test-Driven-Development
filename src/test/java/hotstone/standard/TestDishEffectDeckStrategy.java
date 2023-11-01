@@ -16,7 +16,7 @@ public class TestDishEffectDeckStrategy {
 
     private DeckStrategy deckStrategy;
     private PickNumberStrategy pickNumberStrategy;
-    private ArrayList<Card> deck;
+    private ArrayList<MutableCard> deck;
 
     @BeforeEach
     public void setUp() {
