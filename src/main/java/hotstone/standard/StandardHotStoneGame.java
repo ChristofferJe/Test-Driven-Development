@@ -166,6 +166,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
     turnNumber++;
     // Restore mana for opponent player's hero
     restoreMana(otherPlayer);
+    observerHandler.notifyTurnChangeTo(player);
   }
 
   @Override
@@ -263,6 +264,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
   public Status attackCard(Player playerAttacking, Card attackingCard, Card defendingCard) {
     Status status = isAttackCardAllowed(playerAttacking, attackingCard, defendingCard);
     if (status != Status.OK) return status;
+    observerHandler.notifyAttackCard(playerAttacking, attackingCard, defendingCard);
     MutableCard attackingMutableCard = asMutableCard(attackingCard);
     MutableCard defendingMutableCard = asMutableCard(defendingCard);
     executeAttackCard(attackingMutableCard, defendingMutableCard);
@@ -290,6 +292,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
   @Override
   public void decreaseCardHealth(MutableCard card, int amount) {
     card.decreaseHealth(amount);
+    observerHandler.notifyCardUpdate(card);
   }
 
   @Override

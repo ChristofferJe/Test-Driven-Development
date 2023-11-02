@@ -3,61 +3,61 @@ package hotstone.observer;
 import hotstone.framework.Card;
 import hotstone.framework.Player;
 
-public class GameObserverSpy implements GameObserver {
-    private String lastCall;
+import java.util.ArrayList;
 
-    public GameObserverSpy(){
-        lastCall = "none";
-    }
+public class GameObserverSpy implements GameObserver {
+    private ArrayList<String> calls = new ArrayList<>();
+
+    public GameObserverSpy(){ calls.add("none"); }
 
     @Override
-    public void onCardPlay(Player who, Card card) {
-        lastCall = "onCardPlay";
-    }
+    public void onCardPlay(Player who, Card card) {calls.add("onCardPlay"); }
 
     @Override
     public void onTurnChangeTo(Player playerBecomingActive) {
-        lastCall = "onTurnChangeTo";
+        calls.add("onTurnChangeTo");
     }
 
     @Override
     public void onAttackCard(Player playerAttacking, Card attackingCard, Card defendingCard) {
-        lastCall = "onAttackCard";
+        calls.add("onAttackCard");
     }
 
     @Override
     public void onAttackHero(Player playerAttacking, Card attackingCard) {
-        lastCall = "onAttackHero";
+        calls.add("onAttackHero");
     }
 
     @Override
     public void onUsePower(Player who) {
-        lastCall = "onUsePower";
+        calls.add("onUsePower");
     }
 
     @Override
     public void onCardDraw(Player who, Card drawnCard) {
-        lastCall = "onCardDraw";
+        calls.add("onCardDraw");
     }
 
     @Override
     public void onCardUpdate(Card card) {
-        lastCall = "onCardUpdate";
+        calls.add("onCardUpdate");
     }
 
     @Override
     public void onCardRemove(Player who, Card card) {
-        lastCall = "onCardRemove";
+        calls.add("onCardRemove");
     }
 
     @Override
     public void onHeroUpdate(Player who) {
-        lastCall = "onHeroUpdate";
+        calls.add("onHeroUpdate");
     }
 
     @Override
     public void onGameWon(Player playerWinning) {
-        lastCall = "onGameWon";
+        calls.add("onGameWon");
     }
-    public String getLastCall(){return lastCall;}
+    public String getLastCall(){return calls.get(calls.size() - 1);}
+
+    public String getXToLastCall(int index){return calls.get(calls.size() - index); }
 }
