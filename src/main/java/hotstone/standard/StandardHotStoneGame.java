@@ -18,6 +18,8 @@
 package hotstone.standard;
 
 import hotstone.framework.*;
+import hotstone.observer.GameObserver;
+import hotstone.observer.ObserverHandler;
 
 import java.util.*;
 
@@ -53,6 +55,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
   private WinnerStrategy winnerStrategy;
   private HeroStrategy heroStrategy;
   private DeckStrategy deckStrategy;
+  private ObserverHandler observerHandler;
 
 
   public StandardHotStoneGame(GameFactory factory) {
@@ -60,6 +63,9 @@ public class StandardHotStoneGame implements Game, MutableGame {
     this.manaStrategy = factory.createManaStrategy();
     this.heroStrategy = factory.createHeroStrategy();
     this.deckStrategy = factory.createDeckStrategy();
+
+    observerHandler = new ObserverHandler();
+
 
     turnNumber = 1;
 
@@ -208,6 +214,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
     useCardEffect(mutableCard);
     moveCardFromHandToField(who, mutableCard);
     decreaseHeroMana(who, card.getManaCost());
+    observerHandler.notifyPlayCard(who, card);
     return status;
 
   }
@@ -409,4 +416,8 @@ public class StandardHotStoneGame implements Game, MutableGame {
     return attackingCard.isActive();
   }
 
+  @Override
+  public void addObserver(GameObserver observer) {
+    observerHandler.addObserver(observer);
+  }
 }
