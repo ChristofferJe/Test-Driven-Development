@@ -230,6 +230,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
     // Cast and change mana
     MutableHero mutableHero = heroes.get(who);
     mutableHero.decreaseMana(manaAmount);
+    observerHandler.notifyHeroUpdate(who);
   }
 
   @Override
@@ -312,6 +313,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
   public Status attackHero(Player playerAttacking, Card attackingCard) {
     Status status = isAttackHeroAllowed(playerAttacking, attackingCard);
     if (status != Status.OK) return status;
+    observerHandler.notifyAttackHero(playerAttacking, attackingCard);
     MutableCard mutableAttackingCard = asMutableCard(attackingCard);
     executeAttackHero(mutableAttackingCard);
     return status;
@@ -330,11 +332,13 @@ public class StandardHotStoneGame implements Game, MutableGame {
   public void decreaseHeroHealth(Player who, int amount) {
     MutableHero mutableHero = heroes.get(who);
     mutableHero.decreaseHealth(amount);
+    observerHandler.notifyHeroUpdate(who);
   }
   @Override
   public void increaseHeroHealth(Player who, int amount) {
     MutableHero mutableHero = heroes.get(who);
     mutableHero.increaseHealth(amount);
+    observerHandler.notifyHeroUpdate(who);
   }
 
   @Override
@@ -380,6 +384,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
       if(isCardDead){
         setCardStatus(card, false);
         removeFromField(card);
+        observerHandler.notifyCardRemove(card.getOwner(), card);
       }
     }
 
@@ -399,6 +404,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
   public void setHeroMana(Player who, int mana) {
     MutableHero mutableHero = heroes.get(who);
     mutableHero.setMana(mana);
+    observerHandler.notifyHeroUpdate(who);
   }
 
   @Override

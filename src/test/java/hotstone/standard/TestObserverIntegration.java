@@ -6,6 +6,7 @@ import hotstone.framework.Status;
 import hotstone.framework.TestMode;
 import hotstone.observer.GameObserver;
 import hotstone.observer.GameObserverSpy;
+import hotstone.variants.AlphaGameFactory;
 import hotstone.variants.ProgressiveManaStrategy;
 import hotstone.variants.SemiGameFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +22,7 @@ public class TestObserverIntegration {
 
     @BeforeEach
     public void setUp() {
-         game = new StandardHotStoneGame(new SemiGameFactory(TestMode.IsTest));
+         game = new StandardHotStoneGame(new AlphaGameFactory());
          gameObserver = new GameObserverSpy();
          game.addObserver(gameObserver);
     }
@@ -59,22 +60,24 @@ public class TestObserverIntegration {
         assertThat(gameObserver.getLastCall(), is("none"));
     }
     @Test
-    public void shouldHaveRightCallsWhenAttackingCard(){
+    public void shouldHaveRightCallsWhenAttackingCardAndDefendingCardDies(){
         // Given game
         // When Findus attack on of Peddersens Minions with his own
-        Card cardFindus = game.getCardInHand(Player.FINDUS,2);
+        Card cardFindus = game.getCardInHand(Player.FINDUS,0);
         game.playCard(Player.FINDUS, cardFindus);
         game.endTurn();
-        Card cardPeddersen = game.getCardInHand(Player.PEDDERSEN, 3);
+        Card cardPeddersen = game.getCardInHand(Player.PEDDERSEN, 2);
         game.playCard(Player.PEDDERSEN, cardPeddersen);
         game.endTurn();
         game.attackCard(Player.FINDUS, cardFindus, cardPeddersen);
-        // Then the last called mehtod is onCardUpdate
-        assertThat(gameObserver.getLastCall(), is("onCardUpdate"));
+        // Then the last called method is onCardRemove
+        assertThat(gameObserver.getLastCall(), is("onCardRemove"));
         // Then the second to last called mehtod is onCardUpdate
         assertThat(gameObserver.getXToLastCall(2), is("onCardUpdate"));
-        // Then the third to last called method is onAttackCard
-        assertThat(gameObserver.getXToLastCall(3), is("onAttackCard"));
+        // Then the third to last called mehtod is onCardUpdate
+        assertThat(gameObserver.getXToLastCall(3), is("onCardUpdate"));
+        // Then the fourth to last called method is onAttackCard
+        assertThat(gameObserver.getXToLastCall(4), is("onAttackCard"));
 
     }
     @Test
@@ -84,13 +87,62 @@ public class TestObserverIntegration {
         Card cardFindus = game.getCardInHand(Player.FINDUS,2);
         game.playCard(Player.FINDUS, cardFindus);
         game.endTurn();
-        Card cardPeddersen = game.getCardInHand(Player.PEDDERSEN, 3);
+        Card cardPeddersen = game.getCardInHand(Player.PEDDERSEN, 2);
         game.playCard(Player.PEDDERSEN, cardPeddersen);
         game.attackCard(Player.FINDUS, cardFindus, cardPeddersen);
         // Then the third to last called method is OnAttackCard
         assertThat(gameObserver.getXToLastCall(3), is(not("onAttackCard")));
     }
+    @Test
+    public void shouldHavRightCallsOnAttackHero() {
+        // Given game
+        // When Findus attacks Peddersen hero with a minion
+        Card card = game.getCardInHand(Player.FINDUS, 2);
+        game.playCard(Player.FINDUS, card);
+        game.endTurn();
+        game.endTurn();
+        game.attackHero(Player.FINDUS, card);
+        // Then last call is onUpdateHero
+        assertThat(gameObserver.getLastCall(), is("onHeroUpdate"));
+        // And the second to last call is onAttackHero
+        assertThat(gameObserver.getXToLastCall(2), is("onAttackHero"));
+    }
+    @Test
+    public void shouldNotHavRightCallsOnAttackHeroWhenNotAllowed() {
+        // Given game
+        // When Findus attacks Peddersen hero with a minion
+        Card card = game.getCardInHand(Player.FINDUS, 2);
+        game.playCard(Player.FINDUS, card);
+        game.endTurn();
+        game.attackHero(Player.FINDUS, card);
+        // And the second to last call is onAttackHero
+        assertThat(gameObserver.getXToLastCall(2), is(not("onAttackHero")));
+    }
+    @Test
+    public void shouldHaveOnHeroUpdateWhenHeroHealthIncreases(){
+        // Given game
+        // When Findus' hero's health is increased
+        game.increaseHeroHealth(Player.FINDUS,1);
+        // Then last call is onHeroUpdate
+        assertThat(gameObserver.getLastCall(), is("onHeroUpdate"));
+    }
 
+    @Test
+    public void shouldHaveOnHeroUpdateWhenHeroManaDecreases(){
+        // Given game
+        // When Findus' hero's health is increased
+        game.decreaseHeroMana(Player.FINDUS,1);
+        // Then last call is onHeroUpdate
+        assertThat(gameObserver.getLastCall(), is("onHeroUpdate"));
+    }
+    @Test
+    public void shouldHaveOnHeroUpdateWhenHeroManaRestores(){
+        // Given game
+        // When Findus' hero's health is increased
+        game.restoreMana(Player.FINDUS);
+        // Then last call is onHeroUpdate
+        assertThat(gameObserver.getLastCall(), is("onHeroUpdate"));
+    }
 
 
 }
