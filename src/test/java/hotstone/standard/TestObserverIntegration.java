@@ -165,7 +165,21 @@ public class TestObserverIntegration {
         // Then the last called method should not be onUsePower
         assertThat(gameObserver.getLastCall(), is(not("onUsePower")));
     }
-
+    @Test
+    public void shouldHaveOnGameWonAsLastCalledMethod(){
+        // Given game
+        // When four rounds have passed
+        game.endTurn();
+        game.endTurn();
+        game.endTurn();
+        game.endTurn();
+        game.endTurn();
+        game.endTurn();
+        game.endTurn();
+        game.endTurn();
+        // Then the last called method should be onGameWon
+        assertThat(gameObserver.getLastCall(), is("onGameWon"));
+    }
     @Test
     public void shouldHaveOnDrawCardAsSecondToLastCalledMethod(){
         // When given game

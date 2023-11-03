@@ -167,6 +167,8 @@ public class StandardHotStoneGame implements Game, MutableGame {
     turnNumber++;
     // Restore mana for opponent player's hero
     restoreMana(otherPlayer);
+    // Check if winner found
+    checkIfWinner();
   }
 
   @Override
@@ -217,6 +219,8 @@ public class StandardHotStoneGame implements Game, MutableGame {
     moveCardFromHandToField(who, mutableCard);
     decreaseHeroMana(who, card.getManaCost());
     observerHandler.notifyPlayCard(who, card);
+    // Check if winner found
+    checkIfWinner();
     return status;
 
   }
@@ -271,6 +275,8 @@ public class StandardHotStoneGame implements Game, MutableGame {
     MutableCard defendingMutableCard = asMutableCard(defendingCard);
     executeAttackCard(attackingMutableCard, defendingMutableCard);
     winnerStrategy.increaseAttackSum(playerAttacking, attackingCard, turnNumber);
+    // Check if winner found
+    checkIfWinner();
     return status;
   }
 
@@ -317,6 +323,8 @@ public class StandardHotStoneGame implements Game, MutableGame {
     observerHandler.notifyAttackHero(playerAttacking, attackingCard);
     MutableCard mutableAttackingCard = asMutableCard(attackingCard);
     executeAttackHero(mutableAttackingCard);
+    // Check if winner found
+    checkIfWinner();
     return status;
   }
 
@@ -361,6 +369,8 @@ public class StandardHotStoneGame implements Game, MutableGame {
     heroes.get(who).execPower(this);
     observerHandler.notifyUsePower(who);
     setHeroPowerStatus(who, false);
+    // Check if winner found
+    checkIfWinner();
     return Status.OK;
     }
 
@@ -430,5 +440,13 @@ public class StandardHotStoneGame implements Game, MutableGame {
   @Override
   public void addObserver(GameObserver observer) {
     observerHandler.addObserver(observer);
+  }
+
+  private void checkIfWinner(){
+    Player player = getWinner();
+    boolean isWinnerFound = player != null;
+    if (isWinnerFound){
+      observerHandler.notifyGameWon(player);
+    }
   }
 }
