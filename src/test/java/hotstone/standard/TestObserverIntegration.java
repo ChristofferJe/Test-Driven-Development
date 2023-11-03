@@ -46,12 +46,12 @@ public class TestObserverIntegration {
         assertThat(gameObserver.getLastCall(), is("none"));
     }
     @Test
-    public void shouldHaveOnTurnChangeToAsLastCalledMethod(){
+    public void shouldHaveOnTurnChangeToAsThirdLastCalledMethod(){
         // Given game
         // When the turn changes
         game.endTurn();
         // Then last call is "onTurnChange"
-        assertThat(gameObserver.getLastCall(), is("onTurnChangeTo"));
+        assertThat(gameObserver.getXToLastCall(3), is("onTurnChangeTo"));
     }
     @Test
     public void shouldHaveNoneAsLastCallInStartOfGame(){
@@ -143,6 +143,38 @@ public class TestObserverIntegration {
         // Then last call is onHeroUpdate
         assertThat(gameObserver.getLastCall(), is("onHeroUpdate"));
     }
+
+    @Test
+    public void shouldHaveOnUsePowerAsLastCalledMethod(){
+        // Given game
+        // When Findus uses hero power
+        Status status = game.usePower(Player.FINDUS);
+        assertThat(status, is(Status.OK));
+        // Then the last called method should be onUsePower
+        assertThat(gameObserver.getLastCall(), is("onUsePower"));
+    }
+
+    @Test
+    public void shouldNotHaveOnUsePowerAsLastCalledMethodIfPowerFails(){
+        // Given game
+        // Findus plays Tres
+        game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 0));
+        // When Findus tires to use its hero power it doesn't have enough mana
+        Status status = game.usePower(Player.FINDUS);
+        assertThat(status, is(Status.NOT_ENOUGH_MANA));
+        // Then the last called method should not be onUsePower
+        assertThat(gameObserver.getLastCall(), is(not("onUsePower")));
+    }
+
+    @Test
+    public void shouldHaveOnDrawCardAsSecondToLastCalledMethod(){
+        // When given game
+        // And Pedersens turn starts and he draws a card
+        game.endTurn();
+        // Then last called method should be onDrawCard
+        assertThat(gameObserver.getXToLastCall(2), is("onCardDraw"));
+    }
+
 
 
 }

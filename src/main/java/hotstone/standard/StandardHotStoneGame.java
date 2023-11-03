@@ -159,6 +159,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
     Player otherPlayer = Utility.computeOpponent(player);
     // Set hero power to useable again
     setHeroPowerStatus(player, true);
+    observerHandler.notifyTurnChangeTo(player);
     // Draw card and activate minions for the player who is now in turn
     drawCard(otherPlayer);
     // Set active
@@ -166,7 +167,6 @@ public class StandardHotStoneGame implements Game, MutableGame {
     turnNumber++;
     // Restore mana for opponent player's hero
     restoreMana(otherPlayer);
-    observerHandler.notifyTurnChangeTo(player);
   }
 
   @Override
@@ -190,6 +190,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
     boolean isDeckEmpty = getDeck(who).isEmpty();
     if(!isDeckEmpty){
       addCardToHandFromDeck(who);
+      observerHandler.notifyCardDraw(who, getCardInHand(who, 0));
     } else {
       decreaseHeroHealth(who, GameConstants.HERO_HEALTH_PENALTY_ON_EMPTY_DECK);
     }
@@ -358,6 +359,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
     if (status != Status.OK) return status;
     decreaseHeroMana(who, GameConstants.HERO_POWER_COST);
     heroes.get(who).execPower(this);
+    observerHandler.notifyUsePower(who);
     setHeroPowerStatus(who, false);
     return Status.OK;
     }
