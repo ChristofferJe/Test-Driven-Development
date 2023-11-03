@@ -33,12 +33,12 @@ public class TestObserverGammaStone {
         game.endTurn();
         Status status = game.usePower(Player.PEDDERSEN);
         assertThat(status, is(Status.OK));
-        // Then the last called method should be onUsePower
-        assertThat(gameObserver.getLastCall(), is("onUsePower"));
-        // The second to last called method should be onCardPlay
-        assertThat(gameObserver.getXToLastCall(2), is("onCardPlay"));
-        // The third to last called method should be onHeroUpdate
-        assertThat(gameObserver.getXToLastCall(3), is("onHeroUpdate"));
+        // Then the last called method should be onCardPlay
+        assertThat(gameObserver.getLastCall(), is("onCardPlay"));
+        // Then The second to last called method should be onHeroUpdate
+        assertThat(gameObserver.getXToLastCall(2), is("onHeroUpdate"));
+        // Then the third to last called method should be onUsePower
+        assertThat(gameObserver.getXToLastCall(3), is("onUsePower"));
     }
 }
 

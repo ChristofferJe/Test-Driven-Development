@@ -225,9 +225,11 @@ public class StandardHotStoneGame implements Game, MutableGame {
   @Override
   public void decreaseHeroMana(Player who, int manaAmount) {
     // Cast and change mana
+    boolean freeRealEstate = manaAmount != 0;
+    if(freeRealEstate){
     MutableHero mutableHero = heroes.get(who);
     mutableHero.decreaseMana(manaAmount);
-    observerHandler.notifyHeroUpdate(who);
+    observerHandler.notifyHeroUpdate(who);}
   }
 
 
@@ -354,9 +356,9 @@ public class StandardHotStoneGame implements Game, MutableGame {
   public Status usePower(Player who) {
     Status status = isPowerAllowed(who);
     if (status != Status.OK) return status;
+    observerHandler.notifyUsePower(who);
     decreaseHeroMana(who, GameConstants.HERO_POWER_COST);
     heroes.get(who).execPower(this);
-    observerHandler.notifyUsePower(who);
     setHeroPowerStatus(who, false);
     // Check if winner found
     checkIfWinner();

@@ -146,8 +146,8 @@ public class TestObserverAlphaStone {
         // When Findus uses hero power
         Status status = game.usePower(Player.FINDUS);
         assertThat(status, is(Status.OK));
-        // Then the last called method should be onUsePower
-        assertThat(gameObserver.getLastCall(), is("onUsePower"));
+        // Then the second to last called method should be onUsePower
+        assertThat(gameObserver.getXToLastCall(2), is("onUsePower"));
     }
 
     @Test
