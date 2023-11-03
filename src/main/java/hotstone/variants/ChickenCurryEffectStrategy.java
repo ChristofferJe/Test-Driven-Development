@@ -25,8 +25,8 @@ public class ChickenCurryEffectStrategy implements EffectStrategy {
     private MutableCard getCardFromField(MutableGame game, Player who) {
         int fieldSize = game.getFieldSize(who);
         int index = pickNumberStrategy.getNumber(fieldSize);
-        Card card = game.getCardInField(who, index);
-        return game.asMutableCard(card);
+        MutableCard card = game.getCardInField(who, index);
+        return card;
     }
 
     @Override

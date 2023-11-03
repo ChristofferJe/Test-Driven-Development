@@ -25,8 +25,8 @@ public class TomatoSaladEffectStrategy implements EffectStrategy {
     private MutableCard getCardFromField(MutableGame game, Player owner) {
         int fieldSize = game.getFieldSize(owner);
         int index = pickNumberStrategy.getNumber(fieldSize);
-        Card card = game.getCardInField(owner, index);
-        return game.asMutableCard(card);
+        MutableCard card = game.getCardInField(owner, index);
+        return card;
     }
 
     @Override
