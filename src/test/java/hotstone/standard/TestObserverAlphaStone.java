@@ -3,19 +3,15 @@ package hotstone.standard;
 import hotstone.framework.Card;
 import hotstone.framework.Player;
 import hotstone.framework.Status;
-import hotstone.framework.TestMode;
-import hotstone.observer.GameObserver;
 import hotstone.observer.GameObserverSpy;
 import hotstone.variants.AlphaGameFactory;
-import hotstone.variants.ProgressiveManaStrategy;
-import hotstone.variants.SemiGameFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class TestObserverIntegration {
+public class TestObserverAlphaStone {
 
     private StandardHotStoneGame game;
     private GameObserverSpy gameObserver;
