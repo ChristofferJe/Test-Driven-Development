@@ -225,8 +225,8 @@ public class StandardHotStoneGame implements Game, MutableGame {
   @Override
   public void decreaseHeroMana(Player who, int manaAmount) {
     // Cast and change mana
-    boolean freeRealEstate = manaAmount != 0;
-    if(freeRealEstate){
+    boolean b = manaAmount != 0;
+    if(b){
     MutableHero mutableHero = heroes.get(who);
     mutableHero.decreaseMana(manaAmount);
     observerHandler.notifyHeroUpdate(who);}
