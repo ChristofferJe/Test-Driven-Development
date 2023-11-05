@@ -8,28 +8,32 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestTranscriptedGame {
     private Game game;
-    private TranscriptedGame transGame;
 
     @BeforeEach
     public void setUp() {
         game = new StandardHotStoneGame(new AlphaGameFactory());
-        transGame = new TranscriptedGame(game);
     }
 
     @Test
-    public void shouldCreateRighTranscript(){
+    public void shouldPrintRightTranscript(){
         // Given game
-        // Things happen
-        transGame.playCard(Player.FINDUS, transGame.getCardInHand(Player.FINDUS, 2));
-        transGame.usePower(Player.FINDUS);
-        transGame.endTurn();
-        transGame.playCard(Player.PEDDERSEN, transGame.getCardInHand(Player.PEDDERSEN, 1));
-        transGame.usePower(Player.PEDDERSEN);
-        transGame.endTurn();
-        transGame.attackCard(Player.FINDUS, transGame.getCardInField(Player.FINDUS,0), transGame.getCardInField(Player.PEDDERSEN,0));
-        transGame.endTurn();
-        transGame.attackHero(Player.PEDDERSEN, transGame.getCardInField(Player.PEDDERSEN,0));
-        transGame.printTranscript();
+        Game innerGame = game;
+        // And the decorator is enabled
+        game = new TranscriptedGame(game);
+        // Things happen and the decorater prints the right statement
+        game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
+        game.usePower(Player.FINDUS);
+        game.endTurn();
+        game.playCard(Player.PEDDERSEN, game.getCardInHand(Player.PEDDERSEN, 1));
+        game.usePower(Player.PEDDERSEN);
+        game.endTurn();
+        game.attackCard(Player.FINDUS, game.getCardInField(Player.FINDUS,0), game.getCardInField(Player.PEDDERSEN,0));
+        game.endTurn();
+        game.attackHero(Player.PEDDERSEN, game.getCardInField(Player.PEDDERSEN,0));
+        // When the decorator is disabled
+        game = innerGame;
+        // Nothing is printed.
+        game.endTurn();
     }
 
 }
