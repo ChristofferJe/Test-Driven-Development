@@ -1,20 +1,14 @@
 package hotstone.standard;
 
 import hotstone.framework.*;
-import hotstone.variants.DishDeckStrategy;
-import hotstone.variants.ProgressiveManaStrategy;
 import hotstone.variants.SevenManaStrategy;
-import hotstone.variants.TwoHeroStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 
 public class TestSevenManaStrategy {

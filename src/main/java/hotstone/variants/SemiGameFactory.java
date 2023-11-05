@@ -3,9 +3,15 @@ package hotstone.variants;
 import hotstone.framework.*;
 
 public class SemiGameFactory implements GameFactory {
-    private PickNumberStrategy pickNumberStrategy;
-    public SemiGameFactory(){
-        pickNumberStrategy = new RandomNumberStrategy();
+
+    public final PickNumberStrategy pickNumberStrategy;
+
+    public SemiGameFactory(TestMode mode){
+        if (mode == TestMode.IsTest){
+            pickNumberStrategy = new FixedNumberStrategy();
+        } else {
+            pickNumberStrategy = new RandomNumberStrategy();
+        }
     }
 
     @Override
@@ -28,8 +34,4 @@ public class SemiGameFactory implements GameFactory {
         return new DishEffectDeckStrategy(pickNumberStrategy);
     }
 
-    @Override
-    public PickNumberStrategy getNumberStrategy() {
-        return pickNumberStrategy;
-    }
 }

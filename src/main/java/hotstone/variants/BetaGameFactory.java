@@ -24,9 +24,4 @@ public class BetaGameFactory implements GameFactory {
         return new SpanishDeckStrategy();
     }
 
-    @Override
-    public PickNumberStrategy getNumberStrategy() {
-        return null;
-    }
-
 }

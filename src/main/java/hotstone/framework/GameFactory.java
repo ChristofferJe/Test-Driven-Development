@@ -9,5 +9,4 @@ public interface GameFactory {
 
     DeckStrategy createDeckStrategy();
 
-    PickNumberStrategy getNumberStrategy();
 }

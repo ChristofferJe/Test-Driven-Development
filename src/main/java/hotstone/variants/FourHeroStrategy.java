@@ -27,7 +27,7 @@ public class FourHeroStrategy implements HeroStrategy {
     }
 
     @Override
-    public StandardHero createHero(Player who) {
+    public MutableHero createHero(Player who) {
         int index = pickNumberStrategy.getNumber(4);
         return new StandardHero(who, types.get(index), powers.get(index));
     }

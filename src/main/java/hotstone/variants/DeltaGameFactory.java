@@ -28,8 +28,4 @@ public class DeltaGameFactory implements GameFactory {
         return new DishDeckStrategy();
     }
 
-    @Override
-    public PickNumberStrategy getNumberStrategy() {
-        return null;
-    }
 }

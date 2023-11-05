@@ -12,16 +12,16 @@ import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class TestDishEffectDeckCardEffectStrategy {
+public class TestDishEffectDeckStrategy {
 
-    private DishEffectCardsStrategy deckStrategy;
+    private DeckStrategy deckStrategy;
     private PickNumberStrategy pickNumberStrategy;
-    private ArrayList<Card> deck;
+    private ArrayList<MutableCard> deck;
 
     @BeforeEach
     public void setUp() {
-        deckStrategy = new DishEffectCardsStrategy(pickNumberStrategy);
-        deck = deckStrategy.generateCards(Player.FINDUS);
+        deckStrategy = new DishEffectDeckStrategy(pickNumberStrategy);
+        deck = deckStrategy.createDeck(Player.FINDUS);
     }
 
     @Test

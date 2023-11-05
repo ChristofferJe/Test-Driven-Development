@@ -11,22 +11,22 @@ public class ChickenCurryEffectStrategy implements EffectStrategy {
     }
 
     @Override
-    public void execEffect(StandardHotStoneGame game) {
+    public void execEffect(MutableGame game) {
         Player owner = game.getPlayerInTurn();
         Player opponent = Utility.computeOpponent(owner);
         int fieldSize = game.getFieldSize(opponent);
         boolean isFieldEmpty = fieldSize == 0;
         if (!isFieldEmpty) {
-            MutableCard stdCard = getCardFromField(game, opponent);
-            game.killMinion(stdCard);
+            MutableCard mutableCard = getCardFromField(game, opponent);
+            game.killMinion(mutableCard);
         }
     }
 
-    private MutableCard getCardFromField(StandardHotStoneGame game, Player who) {
+    private MutableCard getCardFromField(MutableGame game, Player who) {
         int fieldSize = game.getFieldSize(who);
         int index = pickNumberStrategy.getNumber(fieldSize);
-        Card card = game.getCardInField(who, index);
-        return game.asMutableCard(card);
+        MutableCard card = game.getCardInField(who, index);
+        return card;
     }
 
     @Override

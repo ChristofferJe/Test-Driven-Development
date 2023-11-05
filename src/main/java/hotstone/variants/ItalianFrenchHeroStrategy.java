@@ -26,8 +26,8 @@ public class ItalianFrenchHeroStrategy implements HeroStrategy {
 
     }
     @Override
-    public StandardHero createHero(Player who) {
-        StandardHero stdHero = new StandardHero(who, types.get(who), powers.get(who));
-        return stdHero;
+    public MutableHero createHero(Player who) {
+        MutableHero mutableHero = new StandardHero(who, types.get(who), powers.get(who));
+        return mutableHero;
     }
 }

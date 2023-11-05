@@ -15,17 +15,12 @@ public class GammaGameFactory implements GameFactory {
 
     @Override
     public HeroStrategy createHeroStrategy() {
-        return new TwoHeroStrategy();
+        return new ThaiDanishHeroStrategy();
     }
 
     @Override
     public DeckStrategy createDeckStrategy() {
         return new DishDeckStrategy();
-    }
-
-    @Override
-    public PickNumberStrategy getNumberStrategy() {
-        return null;
     }
 
 }

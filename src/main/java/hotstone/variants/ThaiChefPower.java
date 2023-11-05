@@ -9,7 +9,7 @@ public class ThaiChefPower implements hotstone.framework.PowerStrategy {
     @Override
     public void execPower(MutableGame game) {
         Player opponent = Utility.computeOpponent(game.getPlayerInTurn());
-        MutableHero mutableHero = game.asMutableHero(game.getHero(opponent));
+        MutableHero mutableHero = game.getHero(opponent);
         mutableHero.decreaseHealth(2);
     }
 

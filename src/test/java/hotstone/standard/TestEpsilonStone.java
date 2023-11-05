@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestEpsilonStone {
     private Game game;
-    private GameFactory factory;
+    private EpsilonGameFactory factory;
 
 
     /**
@@ -21,7 +21,7 @@ public class TestEpsilonStone {
      */
     @BeforeEach
     public void setUp(){
-        factory = new EpsilonTestGameFactory();
+        factory = new EpsilonGameFactory(TestMode.IsTest);
         game = new StandardHotStoneGame(factory);
     }
 
@@ -51,7 +51,7 @@ public class TestEpsilonStone {
         int healthBefore = dos.getHealth();
         assertThat(healthBefore, is(2));
         // When Findus uses hero power and the random number is set to 0
-        factory.getNumberStrategy().setNumber(0);
+        factory.pickNumberStrategy.setNumber(0);
         game.usePower(Player.FINDUS);
         // Then Dos has 0 health
         int healthAfter =  dos.getHealth();
@@ -65,7 +65,7 @@ public class TestEpsilonStone {
         // Dos is in Peddersen's field at index 0
         Card dos = game.getCardInField(Player.PEDDERSEN, 0);
         // When Findus uses hero power and the random number is set to 0
-        factory.getNumberStrategy().setNumber(0);
+        factory.pickNumberStrategy.setNumber(0);
         game.usePower(Player.FINDUS);
         // Then Dos has 0 health
         int health =  dos.getHealth();
@@ -90,7 +90,7 @@ public class TestEpsilonStone {
         // When it is Findus turn and
         // Findus uses hero power and the random number is set to 0
         game.endTurn();
-        factory.getNumberStrategy().setNumber(0);
+        factory.pickNumberStrategy.setNumber(0);
         game.usePower(Player.FINDUS);
         // Then Tres has 1 health
         int healthAfter =  tres.getHealth();
@@ -108,7 +108,7 @@ public class TestEpsilonStone {
         int attackBefore = dos.getAttack();
         assertThat(attackBefore, is(2));
         // When Peddersen uses hero power and the random number is set to 0
-        factory.getNumberStrategy().setNumber(0);
+        factory.pickNumberStrategy.setNumber(0);
         game.usePower(Player.PEDDERSEN);
         // Then Dos has 4 attack
         int attackAfter =  dos.getAttack();
@@ -126,7 +126,7 @@ public class TestEpsilonStone {
         int attackBefore = uno.getAttack();
         assertThat(attackBefore, is(1));
         // When Peddersen uses hero power and the random number is set to 0
-        factory.getNumberStrategy().setNumber(0);
+        factory.pickNumberStrategy.setNumber(0);
         game.usePower(Player.PEDDERSEN);
         // Then uno has 3 attack
         int attackAfter =  uno.getAttack();

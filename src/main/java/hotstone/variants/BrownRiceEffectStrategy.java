@@ -1,14 +1,10 @@
 package hotstone.variants;
 
-import hotstone.framework.Card;
-import hotstone.framework.EffectStrategy;
-import hotstone.framework.Player;
-import hotstone.framework.Utility;
-import hotstone.standard.StandardHotStoneGame;
+import hotstone.framework.*;
 
 public class BrownRiceEffectStrategy implements EffectStrategy {
     @Override
-    public void execEffect(StandardHotStoneGame game) {
+    public void execEffect(MutableGame game) {
         Player owner = game.getPlayerInTurn();
         Player opponent = Utility.computeOpponent(owner);
         game.decreaseHeroHealth(opponent, 1);

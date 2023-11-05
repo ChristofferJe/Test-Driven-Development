@@ -16,7 +16,7 @@ public class FrenchChefPowerStrategy implements PowerStrategy {
         boolean isFieldEmpty = fieldSize == 0;
         if(!isFieldEmpty) {
             int index = pickNumberStrategy.getNumber(fieldSize);
-            Card card = game.getCardInField(opponent, index);
+            MutableCard card = game.getCardInField(opponent, index);
             game.decreaseCardHealth(card, 2);
             game.removeIfDead(card);
         }

@@ -5,13 +5,13 @@ import hotstone.standard.*;
 
 import java.util.*;
 
-public class TwoHeroStrategy implements HeroStrategy {
+public class ThaiDanishHeroStrategy implements HeroStrategy {
 
     private final HashMap<Player, String> types;
     private final HashMap<Player, PowerStrategy> powers;
 
 
-    public TwoHeroStrategy(){
+    public ThaiDanishHeroStrategy(){
         types = new HashMap<>();
         types.put(Player.FINDUS, GameConstants.THAI_CHEF_HERO_TYPE);
         types.put(Player.PEDDERSEN, GameConstants.DANISH_CHEF_HERO_TYPE);
@@ -23,9 +23,9 @@ public class TwoHeroStrategy implements HeroStrategy {
 
     }
     @Override
-    public StandardHero createHero(Player who) {
-        StandardHero stdHero = new StandardHero(who, types.get(who), powers.get(who));
-        return stdHero;
+    public MutableHero createHero(Player who) {
+        MutableHero mutableHero = new StandardHero(who, types.get(who), powers.get(who));
+        return mutableHero;
     }
 
 

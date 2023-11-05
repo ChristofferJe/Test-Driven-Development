@@ -1,8 +1,6 @@
 package hotstone.framework;
 
-import hotstone.standard.StandardHotStoneGame;
-
 public interface EffectStrategy {
-    void execEffect(StandardHotStoneGame game);
+    void execEffect(MutableGame game);
     String getEffectDescription();
 }

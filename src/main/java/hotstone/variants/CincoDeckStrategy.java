@@ -1,23 +1,24 @@
 package hotstone.variants;
 
-import hotstone.framework.Card;
-import hotstone.framework.CardsStrategy;
-import hotstone.framework.DeckStrategy;
-import hotstone.framework.Player;
+import hotstone.framework.*;
 import hotstone.standard.GameConstants;
 import hotstone.standard.StandardCard;
 
 import java.util.ArrayList;
 
 public class CincoDeckStrategy implements DeckStrategy {
-    private final CardsStrategy cardsStrategy;
-
-    public CincoDeckStrategy(){
-        this.cardsStrategy = new CincoCardsStrategy();
-    }
     @Override
-    public ArrayList<Card> createDeck(Player owner) {
-        ArrayList<Card> deck = cardsStrategy.generateCards(owner);
+    public ArrayList<MutableCard> createDeck(Player owner) {
+        ArrayList<MutableCard> deck = generateCards(owner);
         return deck;
+    }
+    public ArrayList<MutableCard> generateCards(Player owner) {
+        ArrayList<MutableCard> cards = new ArrayList<>();
+        EffectStrategy doNothingEffectStrategy = new DoNothingEffectStrategy();
+        for (int i = 0; i < 7; i++) {
+            MutableCard card = new StandardCard(GameConstants.CINCO_CARD, 3, 5, 1, owner, doNothingEffectStrategy);
+            cards.add(i, card);
+        }
+        return cards;
     }
 }

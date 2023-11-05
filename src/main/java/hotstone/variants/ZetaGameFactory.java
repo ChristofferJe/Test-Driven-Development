@@ -26,9 +26,4 @@ public class ZetaGameFactory implements GameFactory {
         return new CincoDeckStrategy();
     }
 
-    @Override
-    public PickNumberStrategy getNumberStrategy() {
-        return null;
-    }
-
 }

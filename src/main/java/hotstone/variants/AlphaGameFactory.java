@@ -23,8 +23,4 @@ public class AlphaGameFactory implements GameFactory {
         return new SpanishDeckStrategy();
     }
 
-    @Override
-    public PickNumberStrategy getNumberStrategy() {
-        return null;
-    }
 }

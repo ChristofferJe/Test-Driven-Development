@@ -21,8 +21,12 @@ plugins {
     id 'jacoco'
 }
 
+// The deck building library is not an official library, so I have put it
+// in a SNAPSHOT repository that needs the full URL to pull.
 repositories {
-    // Tell where to get libraries: from 'mvnrepository.com'
+    maven {
+        url "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+    }
     mavenCentral()
 }
 
@@ -35,7 +39,10 @@ dependencies {
     // Use the Hamcrest matcher library
     testImplementation group: 'org.hamcrest',
             name: 'hamcrest-library', version: '2.2'
+
+    implementation 'com.baerbak.maven:hotstone-deck:1.0-SNAPSHOT'
 }
+
 
 test {
     // Use junit platform for unit tests

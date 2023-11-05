@@ -1,10 +1,8 @@
 package hotstone.standard;
 
 import hotstone.framework.Card;
-import hotstone.framework.CardsStrategy;
-import hotstone.framework.Game;
+import hotstone.framework.MutableCard;
 import hotstone.framework.Player;
-import hotstone.variants.DishCardsStrategy;
 import hotstone.variants.DishDeckStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +34,7 @@ public class TestDishDeckStrategy {
     public void DeckShouldBeSize24(){
         // Given delta deck strategy
         // When a DishDeck is initialized
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
+        ArrayList<MutableCard> deck = deckStrategy.createDeck(Player.FINDUS);
         // Then it should contain 24 cards
         assertThat(deck.size(), is(24));
     }
@@ -45,7 +43,7 @@ public class TestDishDeckStrategy {
     public void CardAtIndex0ShouldCost1() {
         // Given delta deck strategy
         // When a DishDeck is initialized
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
+        ArrayList<MutableCard> deck = deckStrategy.createDeck(Player.FINDUS);
         // Then the card at index 0 in the deck should cost 1
         int cost = deck.get(0).getManaCost();
         assertThat(cost, is(1));
@@ -55,7 +53,7 @@ public class TestDishDeckStrategy {
     public void CardAtIndex1ShouldCost2orLess() {
         // Given delta deck strategy
         // When a DishDeck is initialized
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
+        ArrayList<MutableCard> deck = deckStrategy.createDeck(Player.FINDUS);
         // Then the card at index 1 in the deck should cost 2 or less
         int cost = deck.get(1).getManaCost();
         assertThat(cost, lessThanOrEqualTo(2));
@@ -65,7 +63,7 @@ public class TestDishDeckStrategy {
     public void CardAtIndex2ShouldCost4orLess() {
         // Given delta deck strategy
         // When a DishDeck is initialized
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
+        ArrayList<MutableCard> deck = deckStrategy.createDeck(Player.FINDUS);
         // Then the card at index 2 in the deck should cost 4 or less
         int cost = deck.get(2).getManaCost();
         assertThat(cost, lessThanOrEqualTo(4));
@@ -75,7 +73,7 @@ public class TestDishDeckStrategy {
     public void CardAtIndex0ShouldBeBrownRiceOrFrenchFries() {
         // Given delta deck strategy
         // When a DishDeck is initialized
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
+        ArrayList<MutableCard> deck = deckStrategy.createDeck(Player.FINDUS);
         // Then the card at index 0 in the deck should be Brown Rice or French Fries
         String cardName = deck.get(0).getName();
         assertThat(cardName, anyOf(is(GameConstants.BROWN_RICE_CARD), is(GameConstants.FRENCH_FRIES_CARD)));
@@ -85,7 +83,7 @@ public class TestDishDeckStrategy {
     public void ShouldHaveTwoFiletMignonCards() {
         // Given delta deck strategy
         // When we create a delta deck
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
+        ArrayList<MutableCard> deck = deckStrategy.createDeck(Player.FINDUS);
         // Then it should contain two Filet Mignon cards
         long count = deck.stream().filter(card -> card.getName()
                 .equals(GameConstants.FILET_MIGNON_CARD)).count();
@@ -96,7 +94,7 @@ public class TestDishDeckStrategy {
     public void ShouldHaveTwoOfEachCard() {
         // Given delta deck strategy
         // When we create a delta deck
-        ArrayList<Card> deck = deckStrategy.createDeck(Player.FINDUS);
+        ArrayList<MutableCard> deck = deckStrategy.createDeck(Player.FINDUS);
         // Then it should contain two of each card
         for(Card c: deck){
             String cardName = c.getName();

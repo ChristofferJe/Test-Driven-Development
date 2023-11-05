@@ -3,6 +3,15 @@ package hotstone.variants;
 import hotstone.framework.*;
 
 public class EpsilonGameFactory implements GameFactory {
+    public final PickNumberStrategy pickNumberStrategy;
+
+    public EpsilonGameFactory(TestMode mode){
+        if (mode == TestMode.IsTest){
+            pickNumberStrategy = new FixedNumberStrategy();
+        } else {
+            pickNumberStrategy = new RandomNumberStrategy();
+        }
+    }
 
     @Override
     public WinnerStrategy createWinnerStrategy() {
@@ -16,7 +25,6 @@ public class EpsilonGameFactory implements GameFactory {
 
     @Override
     public HeroStrategy createHeroStrategy() {
-        PickNumberStrategy pickNumberStrategy = new RandomNumberStrategy();
         return new ItalianFrenchHeroStrategy(pickNumberStrategy);
     }
 
@@ -25,9 +33,5 @@ public class EpsilonGameFactory implements GameFactory {
         return new SpanishDeckStrategy();
     }
 
-    @Override
-    public PickNumberStrategy getNumberStrategy() {
-        return null;
-    }
 
 }
