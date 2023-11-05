@@ -19,7 +19,7 @@ public class TestTranscriptedGame {
         // Given game
         Game innerGame = game;
         // And the decorator is enabled
-        game = new TranscriptedGame(game);
+        game = new TranscriptedGame(innerGame);
         // Things happen and the decorater prints the right statement
         game.playCard(Player.FINDUS, game.getCardInHand(Player.FINDUS, 2));
         game.usePower(Player.FINDUS);
