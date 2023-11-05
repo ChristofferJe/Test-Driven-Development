@@ -1,9 +1,7 @@
 package hotstone.standard;
 
-import hotstone.framework.Card;
-import hotstone.framework.MutableCard;
-import hotstone.framework.Player;
-import hotstone.variants.DishDeckStrategy;
+import hotstone.framework.*;
+import hotstone.variants.PersonalizedDeckGameFactory;
 import hotstone.variants.PersonalizedDeckStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -125,5 +123,13 @@ public class TestPersonalizedDeckStrategy {
         long count = deck.stream().filter(card -> card.getName()
                 .equals("Odin")).count();
         assertThat(count, is(2L));
+    }
+    @Test
+    public void ShouldHaveHeimdallurAtIndex2InHand(){
+        // Given game with personalized norse deck
+        Game game = new StandardHotStoneGame(new PersonalizedDeckGameFactory("norsedeck.json"));
+        // Then the card at index 2 in Findus hand should be Heimdallur
+        Card card = game.getCardInHand(Player.FINDUS, 2);
+        assertThat(card.getName(), is("Heimdallur"));
     }
 }
