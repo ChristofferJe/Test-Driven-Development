@@ -400,7 +400,7 @@ public class HotStoneDrawing implements Drawing, GameObserver {
   @Override
   public void onAttackHero(Player playerAttacking, Card attackingCard) {
     // TODO: Inform player
-    addMessage("TODO: tell about attack");
+    addMessage("playerAttacking");
   }
 
   @Override

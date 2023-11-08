@@ -23,8 +23,10 @@ import hotstone.framework.Game;
 import hotstone.framework.Player;
 import hotstone.standard.StandardHotStoneGame;
 import hotstone.variants.AlphaGameFactory;
+import hotstone.view.core.HotStoneDrawing;
 import hotstone.view.core.HotStoneDrawingType;
 import hotstone.view.core.HotStoneFactory;
+import hotstone.view.tool.EndTurnTool;
 import minidraw.framework.DrawingEditor;
 import minidraw.standard.MiniDrawApplication;
 import minidraw.standard.NullTool;
@@ -57,9 +59,12 @@ class TriggerGameUpdateTool extends NullTool {
   private Game game;
   private int count;
 
+  private HotStoneDrawing hotstoneDrawing;
+
   public TriggerGameUpdateTool(DrawingEditor editor, Game game) {
     this.editor = editor;
     this.game = game;
+    hotstoneDrawing = (HotStoneDrawing) editor.drawing();
     count = 0;
   }
 
@@ -68,33 +73,52 @@ class TriggerGameUpdateTool extends NullTool {
     // Switch on 'which visual test case is the next to execute'
     switch (count) {
       case 0: {
-        editor.showStatus("Playing Findus Card # 0");
-        Card c = game.getCardInHand(Player.FINDUS, 0);
+        editor.showStatus("Playing Findus Card # 2");
+        Card c = game.getCardInHand(Player.FINDUS, 2);
         game.playCard(Player.FINDUS, c);
         break;
       }
       case 1: {
         editor.showStatus("Playing Findus Card # 1");
-        Card c = game.getCardInHand(Player.FINDUS, 0);
+        Card c = game.getCardInHand(Player.FINDUS, 1);
         game.playCard(Player.FINDUS, c);
         break;
+
       }
       case 2: {
-        editor.showStatus("Playing Findus Card # 2");
-        Card c = game.getCardInHand(Player.FINDUS, 0);
-        game.playCard(Player.FINDUS, c);
+        editor.showStatus("Findus ends turn");
+        game.endTurn();
         break;
       }
       case 3: {
-        Card attacker = game.getCardInField(Player.FINDUS, 2);
-        Card defender = game.getCardInField(Player.PEDDERSEN, 0);
-        editor.showStatus("Attack/Findus with " + attacker.getName() + " on " + defender.getName()
-                + "; Findus Card REMOVED; Peddersen's card Health reduced.");
-        game.attackCard(Player.FINDUS, attacker, defender);
+        editor.showStatus("Exits HotSeatState");
+        hotstoneDrawing.endHotSeatState();
         break;
       }
       case 4: {
-        // TODO: keep adding cases to this 'list' until all game mutator calls
+        editor.showStatus("Playing Peddersen Card # 3");
+        Card c = game.getCardInHand(Player.PEDDERSEN, 3);
+        game.playCard(Player.PEDDERSEN, c);
+        break;
+      }
+      case 5: {
+        editor.showStatus("Peddersen ends turn");
+        game.endTurn();
+        break;
+      }
+      case 6: {
+        hotstoneDrawing.endHotSeatState();
+        break;
+      }
+      case 7: {
+        Card attacker = game.getCardInField(Player.FINDUS, 0);
+        Card defender = game.getCardInField(Player.PEDDERSEN, 0);
+        editor.showStatus("Attack/Findus with " + attacker.getName() + " on " + defender.getName()
+                + "; Peddersen Card REMOVED; Findus' card Health reduced.");
+        game.attackCard(Player.FINDUS, attacker, defender);
+        break;
+      }
+      case 8: {
         // have been tested and verified that the UI responds correctly.
         editor.showStatus("TODO: ADD SOME MORE game.doSomething(x,y,z) and develop GUI behaviour");
         break;

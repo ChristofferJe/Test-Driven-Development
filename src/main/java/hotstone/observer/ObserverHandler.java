@@ -61,6 +61,7 @@ public class ObserverHandler {
                 .forEach( gameObserver -> gameObserver.onCardUpdate(card));
     }
 
+
     public void notifyCardRemove(Player who, Card card) {
         observerList
                 .forEach( gameObserver -> gameObserver.onCardRemove(who, card));
