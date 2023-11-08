@@ -21,6 +21,8 @@ import hotstone.doubles.FakeObjectGame;
 import hotstone.framework.Card;
 import hotstone.framework.Game;
 import hotstone.framework.Player;
+import hotstone.standard.StandardHotStoneGame;
+import hotstone.variants.AlphaGameFactory;
 import hotstone.view.core.HotStoneDrawingType;
 import hotstone.view.core.HotStoneFactory;
 import minidraw.framework.DrawingEditor;
@@ -35,9 +37,8 @@ import java.awt.event.MouseEvent;
  */
 public class ShowUpdate {
   public static void main(String[] args) {
-    // TODO: Replace the below assignment into a stable and well
-    // tested variant of HotStone
-    Game game = new FakeObjectGame();
+
+    Game game = new StandardHotStoneGame(new AlphaGameFactory());
 
     DrawingEditor editor =
       new MiniDrawApplication( "Click anywhere to progress in an update sequence...",

@@ -11,5 +11,4 @@ public interface MutableCard extends Card{
 
     void useEffect(StandardHotStoneGame game);
 
-    String getEffectDescription();
 }

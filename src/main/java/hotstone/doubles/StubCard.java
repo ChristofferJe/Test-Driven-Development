@@ -81,6 +81,11 @@ public class StubCard implements Card {
     return owner;
   }
 
+  @Override
+  public String getEffectDescription() {
+    return effDesc;
+  }
+
   public void setHealth(int newValue) {
     health = newValue;
   }

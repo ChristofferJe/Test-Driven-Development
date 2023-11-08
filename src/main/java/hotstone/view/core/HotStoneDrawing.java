@@ -296,8 +296,7 @@ public class HotStoneDrawing implements Drawing, GameObserver {
     createHeroFigureAndUpdateMapping(playerShown);
 
     Hero hero = game.getHero(playerShown);
-    // TODO: Add the text figure for the shown player's power
-    TextFigure myHeroPowerText = new TextFigure("(HERO POWER TEXT)",
+    TextFigure myHeroPowerText = new TextFigure(hero.getEffectDescription(),
             GfxConstants.MY_HERO_POWER_DESCRIPTION_POSITION,
             Color.YELLOW, GfxConstants.SMALL_FONT_SIZE);
     add(myHeroPowerText);
@@ -306,7 +305,7 @@ public class HotStoneDrawing implements Drawing, GameObserver {
 
     // Opponent power
     hero = game.getHero(Utility.computeOpponent(playerShown));
-    TextFigure oppHeroPowerText = new TextFigure("(HERO POWER TEXT)",
+    TextFigure oppHeroPowerText = new TextFigure(hero.getEffectDescription(),
             GfxConstants.OPPONENT_HERO_POWER_DESCRIPTION_POSITION,
             Color.YELLOW, GfxConstants.SMALL_FONT_SIZE);
     add(oppHeroPowerText);
@@ -351,7 +350,9 @@ public class HotStoneDrawing implements Drawing, GameObserver {
   @Override
   public void onCardPlay(Player who, Card card) {
     addMessage("" + who + " plays " + card.getName() + ".");
-    // TODO: Add another message if the card has an effect
+    if(card.getEffectDescription() != "has no effect"){
+      addMessage(card.getName() + " uses effect: " + card.getEffectDescription() + ".");
+    }
 
     // As this direct mutator call has known side effects which are
     // not represented by the indirect observer notifications, the
