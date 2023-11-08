@@ -83,14 +83,13 @@ class TriggerGameUpdateTool extends NullTool {
         Card c = game.getCardInHand(Player.FINDUS, 1);
         game.playCard(Player.FINDUS, c);
         break;
-
       }
       case 2: {
         editor.showStatus("Findus ends turn");
         game.endTurn();
         break;
       }
-      case 3: {
+      case 3, 6: {
         editor.showStatus("Exits HotSeatState");
         hotstoneDrawing.endHotSeatState();
         break;
@@ -106,10 +105,7 @@ class TriggerGameUpdateTool extends NullTool {
         game.endTurn();
         break;
       }
-      case 6: {
-        hotstoneDrawing.endHotSeatState();
-        break;
-      }
+
       case 7: {
         Card attacker = game.getCardInField(Player.FINDUS, 0);
         Card defender = game.getCardInField(Player.PEDDERSEN, 0);
@@ -119,8 +115,9 @@ class TriggerGameUpdateTool extends NullTool {
         break;
       }
       case 8: {
-        // have been tested and verified that the UI responds correctly.
-        editor.showStatus("TODO: ADD SOME MORE game.doSomething(x,y,z) and develop GUI behaviour");
+        Card attacker = game.getCardInField(Player.FINDUS, 1);
+        editor.showStatus("Findus attacks Peddersen's hero with " + attacker.getName());
+        game.attackHero(Player.FINDUS, attacker);
         break;
       }
       default: {

@@ -399,8 +399,8 @@ public class HotStoneDrawing implements Drawing, GameObserver {
 
   @Override
   public void onAttackHero(Player playerAttacking, Card attackingCard) {
-    // TODO: Inform player
-    addMessage("playerAttacking");
+    addMessage(playerAttacking
+            + " attacks " + "opponent" + "'s hero with " + attackingCard.getName() + ".");
   }
 
   @Override
@@ -428,25 +428,28 @@ public class HotStoneDrawing implements Drawing, GameObserver {
     // Opponent cards may not have an associated actor
     // for instance if they are in the hand.
     if (actor != null) {
-      // TODO: update the stats of the card/minion
-      addMessage("TODO: update card stats");
+      actor.updateStats();
     }
   }
 
   @Override
   public void onCardRemove(Player who, Card card) {
-    // TODO: Remove the minion and refresh field
     // NOTE: be SURE to use the
     // right internal data structure manipulation method
     // so both the figure collection AND the actorMap
     // is updated
-    addMessage("TODO: " + who + "'s minion " + card.getName()
+    removeActorAndUpdateMapping(card);
+
+    addMessage(who + "'s minion " + card.getName()
             + " is killed.");
   }
 
   @Override
   public void onHeroUpdate(Player who) {
-    // TODO: Refresh the hero's stats
+    HeroFigure heroFigure = heroMap.get(who);
+
+    if(heroFigure != null){
+    heroFigure.updateStats();}
   }
 
   @Override
