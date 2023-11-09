@@ -32,7 +32,6 @@ import java.awt.event.MouseEvent;
  * to play a card.
  */
 
-// TODO: Finish the implementation of PlayCard tool
 public class PlayCardTool extends NullTool {
   private DrawingEditor editor;
   private Game game;
@@ -82,13 +81,11 @@ public class PlayCardTool extends NullTool {
 
     if (isDraggingAnActor && isHittingField) {
       Card associatedCard = draggedActor.getAssociatedCard();
-      // TODO: Do the actual call instead of this fake code
-      System.out.println("TODO: Do the actual call to the domain code...");
-      Status status = Status.NOT_ENOUGH_MANA;
+      Status status = game.playCard(whoAmIPlaying, associatedCard);
       if (status == Status.OK) {
         moveCardBack = false;
       }
-      editor.showStatus("Draw card from hand. Result =" + status);
+      editor.showStatus("Play card from hand. Result =" + status);
     }
     if (moveCardBack) {
       // move the dragged card back to original position; we have
