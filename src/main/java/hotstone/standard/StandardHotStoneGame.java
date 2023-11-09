@@ -285,6 +285,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
 
   private void setCardStatus(MutableCard card, boolean status) {
     card.setStatus(status);
+    observerHandler.notifyCardUpdate(card);
   }
 
   @Override

@@ -1,9 +1,6 @@
 package hotstone.view.tool;
 
-import hotstone.framework.Card;
-import hotstone.framework.Game;
-import hotstone.framework.Player;
-import hotstone.framework.Status;
+import hotstone.framework.*;
 import hotstone.view.GfxConstants;
 import hotstone.view.figure.*;
 import minidraw.framework.*;
@@ -61,31 +58,34 @@ public class AttackTool extends NullTool {
 
     @Override
     public void mouseUp(MouseEvent e, int x, int y) {
+        draggedActor.moveBy(orgX - x, orgY - y);
         // define booleans
-        boolean isHittingHero = false;
+        boolean isHittingOpponentHero = false;
         boolean isHittingMinion = false;
         // Invoke related facade method, if figure is a card
         boolean isDraggingAnActor = draggedActor != null;
         // are we dropping the card on the opponent Hero
         Figure figureAtPosition = model.findFigure(e.getX(), e.getY());
         if (figureAtPosition instanceof HotStoneFigure hsf) {
-            isHittingHero = hsf.getType() == HotStoneFigureType.HERO_FIGURE;
+            if(hsf instanceof HeroFigure hf) {
+                Player owner = hf.getAssociatedHero().getOwner();
+                isHittingOpponentHero = (hsf.getType() == HotStoneFigureType.HERO_FIGURE) && owner != whoAmIPlaying;
+            }
             isHittingMinion = hsf.getType() == HotStoneFigureType.MINION_FIGURE;
         }
         // are we dropping the card on the opponents minion
 
         Card attackingCard = draggedActor.getAssociatedCard();
-        if (isDraggingAnActor && isHittingHero) {
+        if (isDraggingAnActor && isHittingOpponentHero) {
             Status status = game.attackHero(whoAmIPlaying, attackingCard);
-            editor.showStatus(whoAmIPlaying + " attack opponent hero. Result =" + status);
+            editor.showStatus(whoAmIPlaying + " attacks opponent hero. Result =" + status);
         }
         if (isDraggingAnActor && isHittingMinion) {
             HotStoneActorFigure hsf = (HotStoneActorFigure) figureAtPosition;
             Card defendingCard = hsf.getAssociatedCard();
             Status status = game.attackCard(whoAmIPlaying, attackingCard, defendingCard);
-            editor.showStatus(whoAmIPlaying + " attack opponent card. Result =" + status);
+            editor.showStatus(whoAmIPlaying + " attacks opponent card. Result =" + status);
         }
-        draggedActor.moveBy(orgX - x, orgY - y);
         draggedActor = null;
     }
 
