@@ -362,6 +362,7 @@ public class HotStoneDrawing implements Drawing, GameObserver {
     createActorAndUpdateMapping(card, HotStoneFigureType.MINION_FIGURE);
 
     refreshField(who);
+    refreshHand(who);
 
     opponentSummary.setText(computeHeroSummary(
             Utility.computeOpponent(playerShown)));
