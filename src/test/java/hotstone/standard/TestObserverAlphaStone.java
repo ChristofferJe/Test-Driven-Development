@@ -66,14 +66,12 @@ public class TestObserverAlphaStone {
         game.playCard(Player.PEDDERSEN, cardPeddersen);
         game.endTurn();
         game.attackCard(Player.FINDUS, cardFindus, cardPeddersen);
-        // Then the last called method is onCardRemove
-        assertThat(gameObserver.getLastCall(), is("onCardRemove"));
-        // Then the second to last called mehtod is onCardUpdate
-        assertThat(gameObserver.getXToLastCall(2), is("onCardUpdate"));
-        // Then the third to last called mehtod is onCardUpdate
-        assertThat(gameObserver.getXToLastCall(3), is("onCardUpdate"));
-        // Then the fourth to last called method is onAttackCard
-        assertThat(gameObserver.getXToLastCall(4), is("onAttackCard"));
+        // Then the last called method is onCardUpdate
+        assertThat(gameObserver.getLastCall(), is("onCardUpdate"));
+        // Then the second to last called mehtod is onCardRemove
+        assertThat(gameObserver.getXToLastCall(2), is("onCardRemove"));
+        // Then the third to last called mehtod is onAttackCard
+        assertThat(gameObserver.getXToLastCall(3), is("onAttackCard"));
 
     }
     @Test
