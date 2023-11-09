@@ -156,6 +156,8 @@ public class StandardHotStoneGame implements Game, MutableGame {
   public void endTurn() {
     Player player = getPlayerInTurn();
     Player otherPlayer = Utility.computeOpponent(player);
+    // Change turn
+    turnNumber++;
     // Set hero power to useable again
     setHeroPowerStatus(player, true);
     observerHandler.notifyTurnChangeTo(otherPlayer);
@@ -163,7 +165,6 @@ public class StandardHotStoneGame implements Game, MutableGame {
     drawCard(otherPlayer);
     // Set active
     activateMinionsInField(otherPlayer);
-    turnNumber++;
     // Restore mana for opponent player's hero
     restoreMana(otherPlayer);
     // Check if winner found

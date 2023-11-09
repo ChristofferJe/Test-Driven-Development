@@ -405,8 +405,8 @@ public class HotStoneDrawing implements Drawing, GameObserver {
 
   @Override
   public void onUsePower(Player who) {
-    // TODO: Inform player
-    addMessage("TODO: tell about power");
+    Hero hero = game.getHero(who);
+    addMessage(who + " uses hero power: " + hero.getEffectDescription());
   }
 
   @Override
@@ -415,9 +415,11 @@ public class HotStoneDrawing implements Drawing, GameObserver {
     // refresh the hand; otherwise just update the summary
     // of the opponent player
     if (who == playerShown) {
-      // TODO: add card to hand, refresh the hand Gfx
+      createActorAndUpdateMapping(drawnCard, HotStoneFigureType.CARD_FIGURE);
+      refreshHand(who);
     } else {
-      // TODO: update opponent's summary
+      opponentSummary.setText(computeHeroSummary(
+              Utility.computeOpponent(playerShown)));
     }
     addMessage(who + " draws a card.");
   }
