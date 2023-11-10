@@ -209,10 +209,10 @@ public class StandardHotStoneGame implements Game, MutableGame {
     Status status = isPlayCardAllowed(who, card);
     if (status != Status.OK) return status;
     MutableCard mutableCard = asMutableCard(card);
-    useCardEffect(mutableCard);
     moveCardFromHandToField(who, mutableCard);
     decreaseHeroMana(who, card.getManaCost());
     observerHandler.notifyPlayCard(who, card);
+    useCardEffect(mutableCard);
     // Check if winner found
     checkIfWinner();
     return status;
