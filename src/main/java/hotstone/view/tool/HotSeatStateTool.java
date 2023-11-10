@@ -67,11 +67,10 @@ public class HotSeatStateTool extends NullTool {
               hsf.getType() == HotStoneFigureType.SWAP_BUTTON) {
         state = new EndTurnTool(editor, game);
       } else if (hsf.getType() == HotStoneFigureType.MINION_FIGURE) {
-        // TODO: Handle moving minions -> attacks
         state = new AttackTool(editor, game, game.getPlayerInTurn());
       } else if (hsf.getType() == HotStoneFigureType.HERO_FIGURE) {
         // TODO: Handle clicking heroes -> use power
-        state = theNullTool;
+        state = new UsePowerTool(editor, game, game.getPlayerInTurn());
       } else if (hsf.getType() == HotStoneFigureType.WIN_BUTTON) {
         // Clicking the 'won button' should do nothing!
         state = theNullTool; // User have to close the window to restart.

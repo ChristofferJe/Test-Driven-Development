@@ -19,12 +19,10 @@ public class AttackTool extends NullTool {
     private int orgX;
     private int orgY;
     private Player whoAmIPlaying;
-    private PlayCardTool playcardTool;
     public AttackTool(DrawingEditor editor, Game game, Player playerInTurn) {
         this.editor = editor;
         this.game = game;
         this.whoAmIPlaying = playerInTurn;
-        playcardTool = new PlayCardTool(editor, game, playerInTurn);
     }
 
 
