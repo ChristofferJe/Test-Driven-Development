@@ -156,6 +156,8 @@ public class StandardHotStoneGame implements Game, MutableGame {
   public void endTurn() {
     Player player = getPlayerInTurn();
     Player otherPlayer = Utility.computeOpponent(player);
+    // Change turn
+    turnNumber++;
     // Set hero power to useable again
     setHeroPowerStatus(player, true);
     observerHandler.notifyTurnChangeTo(otherPlayer);
@@ -163,7 +165,6 @@ public class StandardHotStoneGame implements Game, MutableGame {
     drawCard(otherPlayer);
     // Set active
     activateMinionsInField(otherPlayer);
-    turnNumber++;
     // Restore mana for opponent player's hero
     restoreMana(otherPlayer);
     // Check if winner found
@@ -208,10 +209,10 @@ public class StandardHotStoneGame implements Game, MutableGame {
     Status status = isPlayCardAllowed(who, card);
     if (status != Status.OK) return status;
     MutableCard mutableCard = asMutableCard(card);
-    useCardEffect(mutableCard);
     moveCardFromHandToField(who, mutableCard);
     decreaseHeroMana(who, card.getManaCost());
     observerHandler.notifyPlayCard(who, card);
+    useCardEffect(mutableCard);
     // Check if winner found
     checkIfWinner();
     return status;
@@ -278,19 +279,24 @@ public class StandardHotStoneGame implements Game, MutableGame {
     decreaseCardHealth(defendingCard, attackingCard.getAttack());
     decreaseCardHealth(attackingCard, defendingCard.getAttack());
     // Check if card's health are below zero and set inactive
-    removeIfDead(defendingCard);
-    removeIfDead(attackingCard);
     // Set inactive if still alive
     setCardStatus(attackingCard, false);
   }
 
   private void setCardStatus(MutableCard card, boolean status) {
     card.setStatus(status);
+    observerHandler.notifyCardUpdate(card);
   }
 
   @Override
   public void decreaseCardHealth(MutableCard card, int amount) {
     card.decreaseHealth(amount);
+    removeIfDead(card);
+  }
+
+  @Override
+  public void increaseCardAttack(MutableCard card, int amount) {
+    card.increaseAttack(amount);
     observerHandler.notifyCardUpdate(card);
   }
 
@@ -388,6 +394,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
         removeFromField(card);
         observerHandler.notifyCardRemove(card.getOwner(), card);
       }
+      else{observerHandler.notifyCardUpdate(card);}
     }
 
   private void removeFromField(Card card) {
@@ -412,8 +419,7 @@ public class StandardHotStoneGame implements Game, MutableGame {
 
   @Override
   public void killMinion(MutableCard mutableCard) {
-    mutableCard.decreaseHealth(mutableCard.getHealth());
-    removeIfDead(mutableCard);
+    decreaseCardHealth(mutableCard, mutableCard.getHealth());
   }
   private boolean isOwner(Player who, Card card) {
     return card.getOwner() == who;

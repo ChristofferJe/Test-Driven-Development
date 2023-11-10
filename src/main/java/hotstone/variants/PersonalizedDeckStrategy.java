@@ -25,7 +25,9 @@ public class PersonalizedDeckStrategy implements DeckStrategy {
         ArrayList<MutableCard> cards = new ArrayList<>();
         for (CardPODO acard : reader) {
             for (int i = 0; i < 2; i++) {
-                MutableCard card = new StandardCard(acard.name(), acard.mana(), acard.attack(), acard.health(), owner, new DoNothingEffectStrategy());
+                MutableCard card = new StandardCard(acard.name(),
+                                                    acard.mana(), acard.attack(), acard.health(),
+                                                    owner, new DoNothingEffectStrategy());
                 cards.add(card);
             }
         }

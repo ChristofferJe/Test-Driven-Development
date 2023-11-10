@@ -17,7 +17,7 @@ public class ItalianChefPowerStrategy implements PowerStrategy {
         if (!isFieldEmpty) {
             int index = pickNumberStrategy.getNumber(fieldSize);
             MutableCard card = game.getCardInField(player, index);
-            card.increaseAttack(2);
+            game.increaseCardAttack(card, 2);
         }
     }
 

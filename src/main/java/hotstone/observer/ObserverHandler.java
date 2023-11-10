@@ -44,9 +44,9 @@ public class ObserverHandler {
                 .forEach( gameObserver -> gameObserver.onCardPlay(who, card) );
     }
 
-    public void notifyTurnChangeTo(Player playerInTurn) {
+    public void notifyTurnChangeTo(Player playerBecomingActive) {
         observerList
-                .forEach( gameObserver -> gameObserver.onTurnChangeTo(playerInTurn) );
+                .forEach( gameObserver -> gameObserver.onTurnChangeTo(playerBecomingActive) );
 
     }
 
@@ -60,6 +60,7 @@ public class ObserverHandler {
         observerList
                 .forEach( gameObserver -> gameObserver.onCardUpdate(card));
     }
+
 
     public void notifyCardRemove(Player who, Card card) {
         observerList

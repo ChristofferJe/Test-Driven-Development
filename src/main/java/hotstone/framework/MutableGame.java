@@ -13,6 +13,8 @@ public interface MutableGame extends Game {
 
     void decreaseCardHealth(MutableCard card, int amount);
 
+    void increaseCardAttack(MutableCard card, int amount);
+
     void decreaseHeroHealth(Player who, int amount);
 
     void increaseHeroHealth(Player who, int amount);

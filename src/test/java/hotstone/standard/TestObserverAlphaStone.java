@@ -56,7 +56,7 @@ public class TestObserverAlphaStone {
         assertThat(gameObserver.getLastCall(), is("none"));
     }
     @Test
-    public void shouldHaveRightCallsWhenAttackingCardAndDefendingCardDies(){
+    public void shouldHaveRightCallsWhenMinionAttacksAndDefendingCardDies(){
         // Given game
         // When Findus attack on of Peddersens Minions with his own
         Card cardFindus = game.getCardInHand(Player.FINDUS,0);
@@ -66,14 +66,16 @@ public class TestObserverAlphaStone {
         game.playCard(Player.PEDDERSEN, cardPeddersen);
         game.endTurn();
         game.attackCard(Player.FINDUS, cardFindus, cardPeddersen);
-        // Then the last called method is onCardRemove
-        assertThat(gameObserver.getLastCall(), is("onCardRemove"));
-        // Then the second to last called mehtod is onCardUpdate
+        // Then the last called method is onCardUpdate (Attacker inactive)
+        assertThat(gameObserver.getLastCall(), is("onCardUpdate"));
+        // Then the second to last called method is onCardUpdate (Attacker health)
         assertThat(gameObserver.getXToLastCall(2), is("onCardUpdate"));
-        // Then the third to last called mehtod is onCardUpdate
-        assertThat(gameObserver.getXToLastCall(3), is("onCardUpdate"));
-        // Then the fourth to last called method is onAttackCard
-        assertThat(gameObserver.getXToLastCall(4), is("onAttackCard"));
+        // Then the third to last called method is onCardRemove (Defender removed)
+        assertThat(gameObserver.getXToLastCall(3), is("onCardRemove"));
+        // Then the fourth to last called method is onCardUpdate (Defender inactive)
+        assertThat(gameObserver.getXToLastCall(4), is("onCardUpdate"));
+        // Then the fifth to last called method is onAttackCard
+        assertThat(gameObserver.getXToLastCall(5), is("onAttackCard"));
 
     }
     @Test
@@ -99,9 +101,11 @@ public class TestObserverAlphaStone {
         game.endTurn();
         game.attackHero(Player.FINDUS, card);
         // Then last call is onUpdateHero
-        assertThat(gameObserver.getLastCall(), is("onHeroUpdate"));
+        assertThat(gameObserver.getLastCall(), is("onCardUpdate"));
         // And the second to last call is onAttackHero
-        assertThat(gameObserver.getXToLastCall(2), is("onAttackHero"));
+        assertThat(gameObserver.getXToLastCall(2), is("onHeroUpdate"));
+        // And the third to last call is onAttackHero
+        assertThat(gameObserver.getXToLastCall(3), is("onAttackHero"));
     }
     @Test
     public void shouldNotHavRightCallsOnAttackHeroWhenNotAllowed() {

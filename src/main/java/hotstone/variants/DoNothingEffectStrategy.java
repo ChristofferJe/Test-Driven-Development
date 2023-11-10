@@ -11,6 +11,6 @@ public class DoNothingEffectStrategy implements EffectStrategy {
 
     @Override
     public String getEffectDescription() {
-        return null;
+        return "";
     }
 }

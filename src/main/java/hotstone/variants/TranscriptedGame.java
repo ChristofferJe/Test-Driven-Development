@@ -69,8 +69,7 @@ public class TranscriptedGame implements Game {
 
     @Override
     public void endTurn() {
-
-        String player = innerGame.getPlayerInTurn().toString();
+        Player player = innerGame.getPlayerInTurn();
         System.out.println(player + " ended turn.");
 
         innerGame.endTurn();
@@ -81,7 +80,7 @@ public class TranscriptedGame implements Game {
         Status status = innerGame.playCard(who, card);
         boolean statusOk = status == Status.OK;
         if(statusOk) {
-            String player = who.toString();
+            Player player = innerGame.getPlayerInTurn();
             String cardPlayed = card.getName();
             System.out.println(player + " played " + cardPlayed + ".");
         }
@@ -93,7 +92,7 @@ public class TranscriptedGame implements Game {
         Status status = innerGame.attackCard(playerAttacking, attackingCard, defendingCard);
         boolean statusOk = status == Status.OK;
         if(statusOk) {
-            String player = playerAttacking.toString();
+            Player player = innerGame.getPlayerInTurn();
             String cardAtt = attackingCard.getName();
             String cardDef = defendingCard.getName();
             System.out.println(player + " attacked " + cardDef + " with " + cardAtt + ".");
@@ -106,7 +105,7 @@ public class TranscriptedGame implements Game {
         Status status = innerGame.attackHero(playerAttacking, attackingCard);
         boolean statusOk = status == Status.OK;
         if(statusOk) {
-            String player = playerAttacking.toString();
+            Player player = innerGame.getPlayerInTurn();
             String cardAtt = attackingCard.getName();
             System.out.println(player + " attacked Hero with " + cardAtt+ ".");
         }
@@ -118,7 +117,7 @@ public class TranscriptedGame implements Game {
         Status status = innerGame.usePower(who);
         boolean statusOk = status == Status.OK;
         if(statusOk) {
-            String player = who.toString();
+            Player player = innerGame.getPlayerInTurn();
             System.out.println(player + " used Hero power.");
         }
         return status;

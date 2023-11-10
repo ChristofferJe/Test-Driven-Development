@@ -68,4 +68,7 @@ public interface Card {
    * @return owner
    */
   Player getOwner();
+
+  String getEffectDescription();
+
 }
