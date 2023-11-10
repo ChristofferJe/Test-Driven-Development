@@ -350,7 +350,7 @@ public class HotStoneDrawing implements Drawing, GameObserver {
   @Override
   public void onCardPlay(Player who, Card card) {
     addMessage("" + who + " plays " + card.getName() + ".");
-    if(card.getEffectDescription() != "has no effect"){
+    if(card.getEffectDescription() != ""){
       addMessage(card.getName() + " uses effect: " + card.getEffectDescription() + ".");
     }
 
