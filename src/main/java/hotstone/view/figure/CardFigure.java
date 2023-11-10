@@ -55,7 +55,7 @@ public class CardFigure extends HotStoneActorFigure implements HotStoneFigure  {
       // Add the Effect label
       Point effectPos = (Point) position.clone();
       effectPos.translate(32, 174);
-      effectText = new TextFigure("TODO",
+      effectText = new TextFigure(associatedCard.getEffectDescription(),
               effectPos, Color.WHITE, 14);
       add(effectText);
     } finally {
