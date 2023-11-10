@@ -294,6 +294,12 @@ public class StandardHotStoneGame implements Game, MutableGame {
     removeIfDead(card);
   }
 
+  @Override
+  public void increaseCardAttack(MutableCard card, int amount) {
+    card.increaseAttack(amount);
+    observerHandler.notifyCardUpdate(card);
+  }
+
 
   private Status isAttackCardAllowed(Player playerAttacking, Card attackingCard, Card defendingCard) {
     // Check if attacking player is in turn

@@ -18,7 +18,7 @@ public class BeefBurgerEffectStrategy implements EffectStrategy {
         boolean isFieldEmpty = fieldSize == 0;
         if (!isFieldEmpty) {
             MutableCard mutableCard = getCardFromField(game, opponent);
-            mutableCard.increaseAttack(2);
+            game.increaseCardAttack(mutableCard,2);
         }
     }
 

@@ -18,7 +18,7 @@ public class TomatoSaladEffectStrategy implements EffectStrategy {
         boolean isFieldEmpty = fieldSize == 0;
         if (!isFieldEmpty) {
             MutableCard mutableCard = getCardFromField(game, owner);
-            mutableCard.increaseAttack(1);
+            game.increaseCardAttack(mutableCard, 1);
         }
     }
 
