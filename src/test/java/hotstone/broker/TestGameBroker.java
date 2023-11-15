@@ -18,6 +18,7 @@ package hotstone.broker;
 
 import hotstone.framework.*;
 
+import hotstone.standard.GameConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -82,5 +83,27 @@ public class TestGameBroker {
   public void shouldHavePeddersenAsWinner() {
     // Test stub hard codes the turn number to 312
     assertThat(game.getWinner(), is(Player.PEDDERSEN));
+  }
+  @Test
+  public void shouldHaveFindusAsPlayerInTurn(){
+    // Test stub hard codes the player in turn as Findus
+    assertThat(game.getPlayerInTurn(), is(Player.FINDUS));
+  }
+
+  @Test
+  public void peddersenShouldHaveDeckSize102(){
+    // Test stub hard codes Peddersens decksize to 102
+    assertThat(game.getDeckSize(Player.PEDDERSEN), is(102));
+  }
+  @Test
+  public void findusShouldHaveDeckSize101(){
+    // Test stub hard codes Findus' decksize to 101
+    assertThat(game.getDeckSize(Player.FINDUS), is(101));
+  }
+
+  @Test
+  public void findusShouldHaveHandSize201(){
+    // Test stub hard codes Findus' handSize to 201
+    assertThat(game.getHandSize(Player.FINDUS), is(201));
   }
 }

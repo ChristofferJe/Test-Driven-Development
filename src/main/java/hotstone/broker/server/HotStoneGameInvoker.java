@@ -25,7 +25,10 @@ import frds.broker.ReplyObject;
 import frds.broker.RequestObject;
 import hotstone.broker.common.OperationNames;
 import hotstone.framework.Game;
+import hotstone.framework.Hero;
 import hotstone.framework.Player;
+
+import javax.servlet.http.HttpServletResponse;
 
 /** Template code for solving the Broker exercises */
 public class HotStoneGameInvoker implements Invoker {
@@ -48,19 +51,38 @@ public class HotStoneGameInvoker implements Invoker {
     try {
     if(requestObject.getOperationName().equals(OperationNames.GAME_GET_TURN_NUMBER)){
       int turnNumber = servant.getTurnNumber();
-      reply = new ReplyObject(200, Integer.toString(turnNumber));
-      return gson.toJson(reply);
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(turnNumber));
     }
-    if(requestObject.getOperationName().equals(OperationNames.GAME_GET_WINNER)){
-        Player winner = servant.getWinner();
-        reply = new ReplyObject(200, winner.toString());
-        return gson.toJson(reply);
+    else if(requestObject.getOperationName().equals(OperationNames.GAME_GET_WINNER)){
+      Player winner = servant.getWinner();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(winner));
       }
-    } catch (Exception e) {
-        throw new RuntimeException(e);
+    else if(requestObject.getOperationName().equals(OperationNames.GAME_GET_PLAYER_IN_TURN)){
+      Player playerInTurn = servant.getPlayerInTurn();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(playerInTurn));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.GAME_GET_DECK_SIZE)){
+      Player who = gson.fromJson(array.get(0), Player.class);
+      int deckSize = servant.getDeckSize(who);
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(deckSize));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.GAME_GET_HAND_SIZE)){
+      Player who = gson.fromJson(array.get(0), Player.class);
+      int handSize = servant.getHandSize(who);
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(handSize));
+    }
+    else {
+      // Unknown operation
+      reply = new ReplyObject(HttpServletResponse.SC_NOT_IMPLEMENTED,
+              "Server received unknown operation name: '"
+                      + requestObject.getOperationName() + "'.");
     }
 
-      return null;
+    } catch(Exception e) {
+      reply = new ReplyObject(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+    }
+
+    return gson.toJson(reply);
   }
 
 }

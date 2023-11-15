@@ -20,6 +20,11 @@ package hotstone.broker.doubles;
 import frds.broker.Servant;
 import hotstone.framework.*;
 import hotstone.observer.GameObserver;
+import hotstone.standard.GameConstants;
+import hotstone.standard.StandardHero;
+import hotstone.variants.BabyPowerStrategy;
+import hotstone.variants.DanishChefPower;
+import hotstone.variants.DoNothingEffectStrategy;
 
 /** A Test Stub for game, to make easily recognizable output
  * to assert on in the Broker test cases. Some methods have
@@ -40,12 +45,16 @@ public class StubGameForBroker implements Game, Servant {
   }
 
   @Override
-  public Hero getHero(Player who) {
-    return null;
-  }
+  public Hero getHero(Player who) {return null;}
 
   @Override
   public int getDeckSize(Player who) {
+    if(who == Player.FINDUS){
+      return 101;
+    }
+    if(who == Player.PEDDERSEN){
+      return 102;
+    }
     return 0;
   }
 
@@ -55,12 +64,16 @@ public class StubGameForBroker implements Game, Servant {
   }
 
   @Override
-  public Iterable<? extends Card> getHand(Player who) {
-    return null;
-  }
+  public Iterable<? extends Card> getHand(Player who) {return null;}
 
   @Override
   public int getHandSize(Player who) {
+    if(who == Player.FINDUS){
+      return 201;
+    }
+    if(who == Player.PEDDERSEN){
+      return 202;
+    }
     return 0;
   }
 
