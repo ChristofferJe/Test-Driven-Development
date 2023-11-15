@@ -106,4 +106,20 @@ public class TestGameBroker {
     // Test stub hard codes Findus' handSize to 201
     assertThat(game.getHandSize(Player.FINDUS), is(201));
   }
+  @Test
+  public void peddersenShouldHaveHandSize202(){
+    // Test stub hard codes Peddersen's handSize to 202
+    assertThat(game.getHandSize(Player.PEDDERSEN), is(202));
+  }
+  @Test
+  public void findusShouldHaveFieldSize301(){
+    // Test stub hard codes Findus' fieldSize to 301
+    assertThat(game.getFieldSize(Player.FINDUS), is(301));
+  }
+  @Test
+  public void peddersenShouldHaveFieldSize302(){
+    // Test stub hard codes Peddersen's fieldSize to 302
+    assertThat(game.getFieldSize(Player.PEDDERSEN), is(302));
+  }
+
 }
