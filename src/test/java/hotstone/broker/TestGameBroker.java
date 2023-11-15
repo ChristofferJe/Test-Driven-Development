@@ -77,4 +77,10 @@ public class TestGameBroker {
     // Test stub hard codes the turn number to 312
     assertThat(game.getTurnNumber(), is(312));
   }
+
+  @Test
+  public void shouldHavePeddersenAsWinner() {
+    // Test stub hard codes the turn number to 312
+    assertThat(game.getWinner(), is(Player.PEDDERSEN));
+  }
 }
