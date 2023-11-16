@@ -122,4 +122,5 @@ public class TestGameBroker {
     assertThat(game.getFieldSize(Player.PEDDERSEN), is(302));
   }
 
+
 }

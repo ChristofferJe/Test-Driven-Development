@@ -24,6 +24,9 @@ import frds.broker.Invoker;
 import frds.broker.ReplyObject;
 import frds.broker.RequestObject;
 import hotstone.broker.common.OperationNames;
+import hotstone.broker.doubles.StubCardForBroker;
+import hotstone.broker.doubles.StubHeroForBroker;
+import hotstone.doubles.StubCard;
 import hotstone.framework.Game;
 import hotstone.framework.Hero;
 import hotstone.framework.Player;
@@ -34,17 +37,22 @@ import javax.servlet.http.HttpServletResponse;
 public class HotStoneGameInvoker implements Invoker {
   private final Game servant;
   private final Gson gson;
+  private final Hero stubHero;
 
   public HotStoneGameInvoker(Game servant) {
     this.servant = servant;
     gson = new Gson();
+    stubHero = new StubHeroForBroker();
   }
+
+  private Hero lookupHero(String objectID){return stubHero;}
 
   @Override
   public String handleRequest(String request) {
 
     RequestObject requestObject = gson.fromJson(request,RequestObject.class);
     JsonArray array = JsonParser.parseString(requestObject.getPayload()).getAsJsonArray();
+    String objectID = requestObject.getObjectId();
 
     ReplyObject reply;
 
@@ -75,6 +83,36 @@ public class HotStoneGameInvoker implements Invoker {
       Player who = gson.fromJson(array.get(0), Player.class);
       int fieldSize = servant.getFieldSize(who);                                           
       reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(fieldSize));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.HERO_GET_MANA)){
+      Hero hero = lookupHero(objectID);
+      int mana = hero.getMana();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(mana));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.HERO_GET_HEALTH)){
+      Hero hero = lookupHero(objectID);
+      int health = hero.getHealth();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(health));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.HERO_IS_ACTIVE)){
+      Hero hero = lookupHero(objectID);
+      boolean isActive = hero.canUsePower();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(isActive));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.HERO_GET_TYPE)){
+      Hero hero = lookupHero(objectID);
+      String type = hero.getType();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(type));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.HERO_GET_OWNER)){
+      Hero hero = lookupHero(objectID);
+      Player owner = hero.getOwner();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(owner));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.HERO_GET_DESCRIPTION)){
+      Hero hero = lookupHero(objectID);
+      String description = hero.getEffectDescription();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(description));
     }
     else {
       // Unknown operation
