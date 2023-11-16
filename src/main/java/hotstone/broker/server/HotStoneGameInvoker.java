@@ -27,6 +27,7 @@ import hotstone.broker.common.OperationNames;
 import hotstone.broker.doubles.StubCardForBroker;
 import hotstone.broker.doubles.StubHeroForBroker;
 import hotstone.doubles.StubCard;
+import hotstone.framework.Card;
 import hotstone.framework.Game;
 import hotstone.framework.Hero;
 import hotstone.framework.Player;
@@ -38,14 +39,17 @@ public class HotStoneGameInvoker implements Invoker {
   private final Game servant;
   private final Gson gson;
   private final Hero stubHero;
+  private final Card stubCard;
 
   public HotStoneGameInvoker(Game servant) {
     this.servant = servant;
     gson = new Gson();
     stubHero = new StubHeroForBroker();
+    stubCard = new StubCardForBroker();
   }
 
   private Hero lookupHero(String objectID){return stubHero;}
+  private Card lookupCard(String objectID) {return stubCard; }
 
   @Override
   public String handleRequest(String request) {
@@ -114,6 +118,41 @@ public class HotStoneGameInvoker implements Invoker {
       String description = hero.getEffectDescription();
       reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(description));
     }
+    else if(requestObject.getOperationName().equals(OperationNames.CARD_GET_NAME)){
+      Card card = lookupCard(objectID);
+      String name = card.getName();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(name));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.CARD_GET_MANA_COST)){
+      Card card = lookupCard(objectID);
+      int manaCost = card.getManaCost();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(manaCost));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.CARD_GET_ATTACK)){
+      Card card = lookupCard(objectID);
+      int attack = card.getAttack();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(attack));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.CARD_GET_HEALTH)){
+      Card card = lookupCard(objectID);
+      int health = card.getHealth();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(health));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.CARD_IS_ACTIVE)){
+      Card card = lookupCard(objectID);
+      boolean isActive = card.isActive();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(isActive));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.CARD_GET_OWNER)){
+      Card card = lookupCard(objectID);
+      Player owner  = card.getOwner();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(owner));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.CARD_GET_DESCRIPTION)){
+      Card card = lookupCard(objectID);
+      String description  = card.getEffectDescription();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(description));
+    }
     else {
       // Unknown operation
       reply = new ReplyObject(HttpServletResponse.SC_NOT_IMPLEMENTED,
@@ -127,5 +166,6 @@ public class HotStoneGameInvoker implements Invoker {
 
     return gson.toJson(reply);
   }
+
 
 }
