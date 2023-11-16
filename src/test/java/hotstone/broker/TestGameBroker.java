@@ -121,6 +121,12 @@ public class TestGameBroker {
     // Test stub hard codes Peddersen's fieldSize to 302
     assertThat(game.getFieldSize(Player.PEDDERSEN), is(302));
   }
+  @Test
+  public void shouldEndTurn(){
+    // endTurn does not return anything
+    game.endTurn();
+  }
+
 
 
 }

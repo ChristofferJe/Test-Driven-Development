@@ -88,6 +88,10 @@ public class HotStoneGameInvoker implements Invoker {
       int fieldSize = servant.getFieldSize(who);                                           
       reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(fieldSize));
     }
+    else if(requestObject.getOperationName().equals(OperationNames.GAME_END_OF_TURN)){
+      servant.endTurn();
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson("Turn ended"));
+    }
     else if(requestObject.getOperationName().equals(OperationNames.HERO_GET_MANA)){
       Hero hero = lookupHero(objectID);
       int mana = hero.getMana();
