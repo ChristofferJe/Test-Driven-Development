@@ -38,4 +38,9 @@ public class StubCardForBroker implements Card, Servant {
     public String getEffectDescription() {
         return "EDescript";
     }
+
+    @Override
+    public String getId() {
+        return "pending";
+    }
 }

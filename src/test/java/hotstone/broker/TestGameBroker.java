@@ -89,7 +89,6 @@ public class TestGameBroker {
     // Test stub hard codes the player in turn as Findus
     assertThat(game.getPlayerInTurn(), is(Player.FINDUS));
   }
-
   @Test
   public void peddersenShouldHaveDeckSize102(){
     // Test stub hard codes Peddersens decksize to 102

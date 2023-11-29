@@ -10,9 +10,9 @@ public class CardClientProxy implements Card, ClientProxy {
     private final Requestor requestor;
     private final String id;
 
-    public CardClientProxy(Requestor requestor) {
+    public CardClientProxy(Requestor requestor, String id) {
         this.requestor = requestor;
-        id = "pending";
+        this.id = id;
     }
     @Override
     public String getName() {
@@ -53,5 +53,10 @@ public class CardClientProxy implements Card, ClientProxy {
     public String getEffectDescription() {
         String description = requestor.sendRequestAndAwaitReply(id, OperationNames.CARD_GET_DESCRIPTION, String.class);
         return description;
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 }

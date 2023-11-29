@@ -27,29 +27,31 @@ import hotstone.broker.common.OperationNames;
 import hotstone.broker.doubles.StubCardForBroker;
 import hotstone.broker.doubles.StubHeroForBroker;
 import hotstone.doubles.StubCard;
-import hotstone.framework.Card;
-import hotstone.framework.Game;
-import hotstone.framework.Hero;
-import hotstone.framework.Player;
+import hotstone.framework.*;
+import hotstone.standard.StandardCard;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 
 /** Template code for solving the Broker exercises */
 public class HotStoneGameInvoker implements Invoker {
   private final Game servant;
   private final Gson gson;
   private final Hero stubHero;
-  private final Card stubCard;
+  private final HashMap<String, Card> cardNameService;
 
   public HotStoneGameInvoker(Game servant) {
     this.servant = servant;
     gson = new Gson();
     stubHero = new StubHeroForBroker();
-    stubCard = new StubCardForBroker();
+
+    cardNameService = new HashMap<String, Card>();
   }
 
   private Hero lookupHero(String objectID){return stubHero;}
-  private Card lookupCard(String objectID) {return stubCard; }
+  private Card lookupCard(String objectID) {
+
+    return cardNameService.get(objectID); }
 
   @Override
   public String handleRequest(String request) {
@@ -91,6 +93,14 @@ public class HotStoneGameInvoker implements Invoker {
     else if(requestObject.getOperationName().equals(OperationNames.GAME_END_OF_TURN)){
       servant.endTurn();
       reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson("Turn ended"));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.GAME_GET_CARD_IN_HAND)){
+      Player who = gson.fromJson(array.get(0), Player.class);
+      int index = gson.fromJson(array.get(1), Integer.class);
+      Card card = servant.getCardInHand(who, index);
+      String id = card.getId();
+      cardNameService.put(id, card);
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(id));
     }
     else if(requestObject.getOperationName().equals(OperationNames.HERO_GET_MANA)){
       Hero hero = lookupHero(objectID);

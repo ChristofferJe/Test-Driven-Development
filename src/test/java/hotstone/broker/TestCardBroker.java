@@ -21,7 +21,7 @@ import hotstone.broker.doubles.StubGameForBroker;
 import hotstone.broker.server.HotStoneGameInvoker;
 
 public class TestCardBroker {
-    private Card card;
+    private Game game;
 
     @BeforeEach
     public void setup() {
@@ -48,43 +48,56 @@ public class TestCardBroker {
         Requestor requestor = new StandardJSONRequestor(crh);
 
 
-        card = new CardClientProxy(requestor);
+        game = new GameClientProxy(requestor);
+
     }
 
     @Test
     public void shouldHaveNameNoodleSoup(){
         // Stub is hard coded to Noodle Soup
+        Card card = game.getCardInHand(Player.FINDUS, 0);
         assertThat(card.getName(), is(GameConstants.NOODLE_SOUP_CARD));
     }
 
     @Test
     public void shouldHave14ManaCost(){
         // Stub is hard coded to14 mana cost
+        Card card = game.getCardInHand(Player.FINDUS, 0);
         assertThat(card.getManaCost(), is(14));
     }
     @Test
     public void shouldHave24Attack(){
         // Stub is hard coded to 24 attack
+        Card card = game.getCardInHand(Player.FINDUS, 0);
+
         assertThat(card.getAttack(), is(24));
     }
     @Test
     public void shouldHave34Attack(){
         // Stub is hard coded to 34 health
+        Card card = game.getCardInHand(Player.FINDUS, 0);
+
         assertThat(card.getHealth(), is(34));
     }
     @Test
     public void shouldBeActive(){
         // Stub is hard coded to be active
+        Card card = game.getCardInHand(Player.FINDUS, 0);
+
         assertThat(card.isActive(), is(true));
     }
     @Test
     public void ownerShouldBeFindus(){
         // Stub is hard coded to owned by Findus
+        Card card = game.getCardInHand(Player.FINDUS, 0);
+
         assertThat(card.getOwner(), is(Player.FINDUS));
     }
     @Test
     public void EffectDescriptionShouldBeEDescript(){
         // Stub is hard coded to owned by Findus
+        Card card = game.getCardInHand(Player.FINDUS, 0);
+
         assertThat(card.getEffectDescription(), is("EDescript"));
     }
 }

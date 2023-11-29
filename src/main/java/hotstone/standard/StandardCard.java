@@ -2,7 +2,9 @@ package hotstone.standard;
 
 import hotstone.framework.*;
 
-public class StandardCard implements Card, MutableCard {
+import java.util.UUID;
+
+public class StandardCard implements Card, MutableCard, Identifiable {
 
 
     private final String name;
@@ -12,6 +14,7 @@ public class StandardCard implements Card, MutableCard {
     private Player owner;
     private Boolean status;
     private EffectStrategy effectStrategy;
+    private String id;
 
     public StandardCard(String name, int cost, int attack, int health, Player owner, EffectStrategy effectStrategy){
         this.name = name;
@@ -20,6 +23,7 @@ public class StandardCard implements Card, MutableCard {
         this.health = health;
         this.owner = owner;
         this.effectStrategy = effectStrategy;
+        id = UUID.randomUUID().toString();
         status = false;
     }
     @Override
@@ -75,5 +79,10 @@ public class StandardCard implements Card, MutableCard {
             return effectStrategy.getEffectDescription();
         }
         return null;
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 }
