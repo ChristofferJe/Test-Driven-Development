@@ -23,6 +23,7 @@ import frds.broker.Requestor;
 import hotstone.broker.common.OperationNames;
 import hotstone.framework.*;
 import hotstone.observer.GameObserver;
+import hotstone.observer.ObserverHandler;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -33,11 +34,13 @@ import java.util.stream.Collectors;
  */
 public class GameClientProxy implements Game, ClientProxy {
   private final Requestor requestor;
-  private final String singletonID;
+  public static String singletonID;
+  private ObserverHandler observerHandler;
 
   public GameClientProxy(Requestor requestor) {
     this.requestor = requestor;
     singletonID = "singleton";
+    observerHandler = new ObserverHandler();
   }
 
   @Override
@@ -183,7 +186,5 @@ public class GameClientProxy implements Game, ClientProxy {
   }
 
   @Override
-  public void addObserver(GameObserver observer) {
-
-  }
+  public void addObserver(GameObserver observer) {observerHandler.addObserver(observer);}
 }

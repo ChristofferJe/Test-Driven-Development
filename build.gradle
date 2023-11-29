@@ -188,4 +188,12 @@ task hotstoneStorytest(type: JavaExec) {
   args host
 }
 
+task gameClient(type: JavaExec) {
+    group 'SWEA Distribution'
+    description 'Run Game Client'
+
+    mainClass = 'hotstone.broker.main.GameClient'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 
