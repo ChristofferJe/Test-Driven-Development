@@ -24,6 +24,13 @@ public class GameClient {
         Player whoToPlay = Player.FINDUS;
         String gameid = GameClientProxy.singletonID;
 
+
+        if(args.length == 1){
+            if(args[0].equals("peddersen") || args[0].equals("Peddersen")){
+                whoToPlay = Player.PEDDERSEN;
+            }
+        }
+
         // Create the client side Broker roles
         UriTunnelClientRequestHandler clientRequestHandler
                 = new UriTunnelClientRequestHandler(host, BrokerConstants.HOTSTONE_PORT,
@@ -34,8 +41,8 @@ public class GameClient {
 
 
         DrawingEditor editor =
-                new MiniDrawApplication( "HotSeat: Variant " + "semi",
-                        new HotStoneFactory(game, Player.FINDUS,
+                new MiniDrawApplication( "Hotstone GameClient for player: " + whoToPlay,
+                        new HotStoneFactory(game, whoToPlay,
                                 HotStoneDrawingType.OPPONENT_MODE) );
         editor.open();
 

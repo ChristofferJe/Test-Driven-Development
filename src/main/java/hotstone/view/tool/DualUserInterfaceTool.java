@@ -55,6 +55,8 @@ public class DualUserInterfaceTool extends NullTool {
                 state = new AttackTool(editor, game, who);
             } else if (hsf.getType() == HotStoneFigureType.HERO_FIGURE) {
                 state = new UsePowerTool(editor, game, who);
+            } else if (hsf.getType() == HotStoneFigureType.OPPONENT_ACTION_BUTTON) {
+                state = new UpdateTool(editor, game, who);
             } else if (hsf.getType() == HotStoneFigureType.WIN_BUTTON) {
                 // Clicking the 'won button' should do nothing!
                 state = theNullTool; // User have to close the window to restart.
