@@ -21,6 +21,9 @@ import hotstone.broker.doubles.LocalMethodClientRequestHandler;
 import hotstone.broker.doubles.StubGameForBroker;
 import hotstone.broker.server.HotStoneGameInvoker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class TestAlphaGameBroker {
     private Game game;
@@ -101,11 +104,48 @@ public class TestAlphaGameBroker {
         game.playCard(Player.FINDUS, uno);
         game.endTurn();
         game.endTurn();
-        // When Findus attacks Pedersens hero with uno
-        game.attackHero(Player.FINDUS, uno);
+        // When Findus attacks Pedersens hero with uno and status is OK
+        Status status = game.attackHero(Player.FINDUS, uno);
+        assertThat(status, is(Status.OK));
         // Then pedersens hero should have 20 health
         Hero hero = game.getHero(Player.PEDDERSEN);
         assertThat(hero.getHealth(), is(20));
+    }
+    @Test
+    public void shouldHave1ManaWhenUsePower(){
+        // Given alpha game
+        // When Findus uses hero power and status is OK
+        Status status = game.usePower(Player.FINDUS);
+        assertThat(status, is(Status.OK));
+        // Then Findus' hero has 1 mana
+        int mana = game.getHero(Player.FINDUS).getMana();
+        assertThat(mana, is(1));
+    }
+
+    @Test
+    public void handShouldHaveUnoDosTres(){
+        // Given alpha game
+        // Then Findus hand has uno at index 2
+        ArrayList<Card> hand = (ArrayList<Card>) game.getHand(Player.FINDUS);
+        assertThat(hand.get(2).getName(), is(GameConstants.UNO_CARD));
+        // And dos at index 1
+        assertThat(hand.get(1).getName(), is(GameConstants.DOS_CARD));
+        // and uno at index 0
+        assertThat(hand.get(0).getName(), is(GameConstants.TRES_CARD));
+    }
+    @Test
+    public void fieldShouldHaveUnoAndDos(){
+        // Given alpha game
+        // When Findus plays uno and dos
+        Card uno = game.getCardInHand(Player.FINDUS, 2);
+        Card dos = game.getCardInHand(Player.FINDUS, 1);
+        game.playCard(Player.FINDUS,uno);
+        game.playCard(Player.FINDUS,dos);
+        // Then Findus field has uno at index 1
+        ArrayList<Card> field = (ArrayList<Card>) game.getField(Player.FINDUS);
+        assertThat(field.get(1).getName(), is(GameConstants.UNO_CARD));
+        // And dos at index 0
+        assertThat(field.get(0).getName(), is(GameConstants.DOS_CARD));
     }
 
 

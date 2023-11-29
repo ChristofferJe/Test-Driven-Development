@@ -17,11 +17,17 @@
 
 package hotstone.broker.client;
 
+import com.google.gson.reflect.TypeToken;
 import frds.broker.ClientProxy;
 import frds.broker.Requestor;
 import hotstone.broker.common.OperationNames;
 import hotstone.framework.*;
 import hotstone.observer.GameObserver;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /** Template/starter code for your ClientProxy of Game.
  */
@@ -83,7 +89,13 @@ public class GameClientProxy implements Game, ClientProxy {
 
   @Override
   public Iterable<? extends Card> getHand(Player who) {
-    return null;
+    Type collectionType = new TypeToken<List<String>>(){}.getType();
+    List<String> idList = requestor.sendRequestAndAwaitReply(singletonID, OperationNames.GAME_GET_HAND, collectionType, who);
+    ArrayList<Card> hand = new ArrayList<>();
+    for(String i: idList){
+      hand.add(new CardClientProxy(requestor, i));
+    }
+    return hand;
   }
 
   @Override
@@ -107,7 +119,13 @@ public class GameClientProxy implements Game, ClientProxy {
 
   @Override
   public Iterable<? extends Card> getField(Player who) {
-    return null;
+    Type collectionType = new TypeToken<List<String>>(){}.getType();
+    List<String> idList = requestor.sendRequestAndAwaitReply(singletonID, OperationNames.GAME_GET_FIELD, collectionType, who);
+    ArrayList<Card> field = new ArrayList<>();
+    for(String i: idList){
+      field.add(new CardClientProxy(requestor, i));
+    }
+    return field;
   }
 
   @Override
@@ -157,7 +175,11 @@ public class GameClientProxy implements Game, ClientProxy {
 
   @Override
   public Status usePower(Player who) {
-    return null;
+    Status status = requestor.sendRequestAndAwaitReply(singletonID,
+            OperationNames.GAME_USE_POWER,
+            Status.class,
+            who);
+    return status;
   }
 
   @Override

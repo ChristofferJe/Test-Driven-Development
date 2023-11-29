@@ -23,6 +23,7 @@ import com.google.gson.JsonParser;
 import frds.broker.Invoker;
 import frds.broker.ReplyObject;
 import frds.broker.RequestObject;
+import hotstone.broker.client.CardClientProxy;
 import hotstone.broker.common.OperationNames;
 import hotstone.broker.doubles.StubCardForBroker;
 import hotstone.broker.doubles.StubHeroForBroker;
@@ -31,7 +32,10 @@ import hotstone.framework.*;
 import hotstone.standard.StandardCard;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /** Template code for solving the Broker exercises */
 public class HotStoneGameInvoker implements Invoker {
@@ -138,6 +142,33 @@ public class HotStoneGameInvoker implements Invoker {
       String id = hero.getId();
       heroNameService.put(id, hero);
       reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(id));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.GAME_USE_POWER)){
+      Player who = gson.fromJson(array.get(0), Player.class);
+      Status status = servant.usePower(who);
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(status));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.GAME_GET_HAND)){
+      Player who = gson.fromJson(array.get(0), Player.class);
+      Iterable<? extends Card> hand = servant.getHand(who);
+      ArrayList<String> idList = new ArrayList<>();
+      for(Card c: hand){
+        String id = c.getId();
+        cardNameService.put(id, c);
+        idList.add(id);
+      }
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(idList));
+    }
+    else if(requestObject.getOperationName().equals(OperationNames.GAME_GET_FIELD)){
+      Player who = gson.fromJson(array.get(0), Player.class);
+      Iterable<? extends Card> field = servant.getField(who);
+      ArrayList<String> idList = new ArrayList<>();
+      for(Card c: field){
+        String id = c.getId();
+        cardNameService.put(id, c);
+        idList.add(id);
+      }
+      reply = new ReplyObject(HttpServletResponse.SC_OK, gson.toJson(idList));
     }
     else if(requestObject.getOperationName().equals(OperationNames.HERO_GET_MANA)){
       Hero hero = lookupHero(objectID);
