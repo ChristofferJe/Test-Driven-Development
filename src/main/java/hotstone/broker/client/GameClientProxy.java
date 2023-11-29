@@ -47,7 +47,14 @@ public class GameClientProxy implements Game, ClientProxy {
   }
 
   @Override
-  public Hero getHero(Player who) {return null;}
+  public Hero getHero(Player who) {
+    String id = requestor.sendRequestAndAwaitReply(singletonID,
+            OperationNames.GAME_GET_HERO,
+            String.class,
+            who);
+    Hero hero = new HeroClientProxy(requestor, id);
+    return hero;
+  }
 
   @Override
   public Player getWinner() {
@@ -90,7 +97,12 @@ public class GameClientProxy implements Game, ClientProxy {
 
   @Override
   public Card getCardInField(Player who, int indexInField) {
-    return null;
+    String id = requestor.sendRequestAndAwaitReply(singletonID,
+            OperationNames.GAME_GET_CARD_IN_FIELD,
+            String.class,
+            who, indexInField);
+    Card card = new CardClientProxy(requestor, id);
+    return card;
   }
 
   @Override
@@ -114,17 +126,33 @@ public class GameClientProxy implements Game, ClientProxy {
 
   @Override
   public Status playCard(Player who, Card card) {
-    return null;
+    String id = card.getId();
+    Status status = requestor.sendRequestAndAwaitReply(singletonID,
+            OperationNames.GAME_PLAY_CARD,
+            Status.class,
+            who, id);
+    return status;
   }
 
   @Override
   public Status attackCard(Player playerAttacking, Card attackingCard, Card defendingCard) {
-    return null;
+    String attackingId = attackingCard.getId();
+    String defendingId = defendingCard.getId();
+    Status status = requestor.sendRequestAndAwaitReply(singletonID,
+            OperationNames.GAME_ATTACK_CARD,
+            Status.class,
+            playerAttacking, attackingId, defendingId);
+    return status;
   }
 
   @Override
   public Status attackHero(Player playerAttacking, Card attackingCard) {
-    return null;
+    String cardId = attackingCard.getId();
+    Status status = requestor.sendRequestAndAwaitReply(singletonID,
+            OperationNames.GAME_ATTACK_HERO,
+            Status.class,
+            playerAttacking, cardId);
+    return status;
   }
 
   @Override

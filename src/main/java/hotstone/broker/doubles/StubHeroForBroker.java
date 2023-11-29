@@ -35,4 +35,9 @@ public class StubHeroForBroker implements Hero, Servant {
     public String getEffectDescription() {
         return "EfDesc";
     }
+
+    @Override
+    public String getId() {
+        return null;
+    }
 }

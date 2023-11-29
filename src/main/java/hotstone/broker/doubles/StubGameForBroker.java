@@ -45,7 +45,7 @@ public class StubGameForBroker implements Game, Servant {
   }
 
   @Override
-  public Hero getHero(Player who) {return null;}
+  public Hero getHero(Player who) {return new StubHeroForBroker();}
 
   @Override
   public int getDeckSize(Player who) {

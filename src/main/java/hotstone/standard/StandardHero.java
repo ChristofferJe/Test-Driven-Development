@@ -3,10 +3,13 @@ package hotstone.standard;
 
 import hotstone.framework.*;
 
+import java.util.UUID;
+
 public class StandardHero implements Hero, MutableHero {
 
     private final String type;
     private final PowerStrategy powerStrategy;
+    private final String id;
     private boolean powerStatus;
     private int mana;
     private int health;
@@ -18,7 +21,7 @@ public class StandardHero implements Hero, MutableHero {
         this.powerStrategy = powerStrategy;
         powerStatus = true;
         health = GameConstants.HERO_MAX_HEALTH;
-
+        id = UUID.randomUUID().toString();
 
     }
     @Override
@@ -64,4 +67,9 @@ public class StandardHero implements Hero, MutableHero {
 
     @Override
     public void execPower(MutableGame game) {powerStrategy.execPower(game);}
+
+    @Override
+    public String getId() {
+        return id;
+    }
 }

@@ -21,7 +21,7 @@ import hotstone.broker.doubles.StubGameForBroker;
 import hotstone.broker.server.HotStoneGameInvoker;
 public class TestHeroBroker {
 
-    private Hero hero;
+    private Game game;
 
     @BeforeEach
     public void setup() {
@@ -48,38 +48,44 @@ public class TestHeroBroker {
         Requestor requestor = new StandardJSONRequestor(crh);
 
 
-        hero = new HeroClientProxy(requestor);
+        game = new GameClientProxy(requestor);
     }
 
     @Test
     public void shouldHave34mana(){
         // Stub is hard coded to 34 mana
+        Hero hero = game.getHero(Player.FINDUS);
         assertThat(hero.getMana(),is(34));
     }
 
     @Test
     public void shouldHave26Health(){
         // Stub is hard coded to 26 health
+        Hero hero = game.getHero(Player.FINDUS);
         assertThat(hero.getHealth(),is(26));
     }
     @Test
     public void canUsPowerShouldBeTrue(){
         // Stub is hard coded to true
+        Hero hero = game.getHero(Player.FINDUS);
         assertThat(hero.canUsePower(),is(true));
     }
     @Test
     public void shouldBeThaiHero(){
         // Stub is hard coded to Thai hero
+        Hero hero = game.getHero(Player.FINDUS);
         assertThat(hero.getType(), is(GameConstants.THAI_CHEF_HERO_TYPE));
     }
     @Test
     public void ownerShouldBeFindus(){
         // Stub is hard coded to Findus
+        Hero hero = game.getHero(Player.FINDUS);
         assertThat(hero.getOwner(), is(Player.FINDUS));
     }
     @Test
     public void shouldBeEfDesc(){
         // Stub is hard coded to "EfDesc"
+        Hero hero = game.getHero(Player.FINDUS);
         assertThat(hero.getEffectDescription(), is("EfDesc"));
     }
 }

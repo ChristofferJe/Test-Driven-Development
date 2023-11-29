@@ -10,9 +10,9 @@ public class HeroClientProxy implements Hero, ClientProxy {
     private final Requestor requestor;
     private final String id;
 
-    public HeroClientProxy(Requestor requestor) {
+    public HeroClientProxy(Requestor requestor, String id) {
         this.requestor = requestor;
-        id = "pending";
+        this.id = id;
     }
 
     @Override
@@ -48,5 +48,10 @@ public class HeroClientProxy implements Hero, ClientProxy {
     public String getEffectDescription() {
         String description = requestor.sendRequestAndAwaitReply(id, OperationNames.HERO_GET_DESCRIPTION, String.class);
         return description;
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 }

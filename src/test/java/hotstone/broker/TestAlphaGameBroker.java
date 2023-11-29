@@ -64,6 +64,49 @@ public class TestAlphaGameBroker {
         assertThat(tres.getName(), is(GameConstants.TRES_CARD));
         assertThat(tres.getAttack(), is(3));
     }
+    @Test
+    public void UnoShouldBeInFieldAtIndex0ForFindus(){
+        // Given alpha game
+        // When Findus plays uno
+        Card card = game.getCardInHand(Player.FINDUS, 2);
+        Status status = game.playCard(Player.FINDUS, card);
+        // Then status should be OK and uno should be in field at index 0
+        assertThat(status, is(Status.OK));
+        Card cardInField = game.getCardInField(Player.FINDUS, 0);
+        assertThat(cardInField.getName(), is(GameConstants.UNO_CARD));
+    }
+    @Test
+    public void UnoAttacksDos(){
+        // Given alpha game
+        // When Findus plays uno
+        Card uno = game.getCardInHand(Player.FINDUS, 2);
+        game.playCard(Player.FINDUS, uno);
+        game.endTurn();
+        // When Pedersen plays dos
+        Card dos = game.getCardInHand(Player.PEDDERSEN, 2);
+        game.endTurn();
+        // When Findus attacks dos with uno
+        game.attackCard(Player.FINDUS, uno, dos);
+        // Then dos should have 1 health
+        assertThat(dos.getHealth(), is(1));
+        // And Findus's Fieldsize should be 0
+        assertThat(game.getFieldSize(Player.FINDUS), is(0));
+    }
+
+    @Test
+    public void UnoAttacksHero(){
+        // Given alpha game
+        // When Findus plays uno
+        Card uno = game.getCardInHand(Player.FINDUS, 2);
+        game.playCard(Player.FINDUS, uno);
+        game.endTurn();
+        game.endTurn();
+        // When Findus attacks Pedersens hero with uno
+        game.attackHero(Player.FINDUS, uno);
+        // Then pedersens hero should have 20 health
+        Hero hero = game.getHero(Player.PEDDERSEN);
+        assertThat(hero.getHealth(), is(20));
+    }
 
 
 }
