@@ -1,11 +1,7 @@
 build/
-gradle/
 .gradle/
 .idea/
 out/
-
-gradlew
-gradlew.bat
 
 *~
 *.bak

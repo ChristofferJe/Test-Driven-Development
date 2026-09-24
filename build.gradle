@@ -19,12 +19,16 @@ plugins {
     id 'jacoco'
 }
 
+
 repositories {
+    /*
     maven {
         url "https://s01.oss.sonatype.org/content/repositories/snapshots/"
     }
+     */
     mavenCentral()
 }
+
 
 dependencies {
     // The FRDS.Broker lib
@@ -48,7 +52,7 @@ dependencies {
     testImplementation group: 'org.hamcrest',
             name: 'hamcrest-library', version: '2.2'
     
-    implementation 'com.baerbak.maven:hotstone-deck:1.0-SNAPSHOT'
+    // implementation 'com.baerbak.maven:hotstone-deck:1.0-SNAPSHOT'
 
 
 }
